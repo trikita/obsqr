@@ -1,0 +1,11 @@
+syntax: glob
+*.class
+*.dex
+*.orig
+*.swp
+*.pyc
+bin/*
+gen/*
+src/trikita/drel
+*.properties
+build.xml
