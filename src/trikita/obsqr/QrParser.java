@@ -47,6 +47,8 @@ public class QrParser {
 			return new QrContentGeo(mContext, s);
 		} else if (s.startsWith("tel:")) {
 			return new QrContentPhone(mContext, s);
+		} else if (s.startsWith("market://")) {
+			return new QrContentMarket(mContext, s);
 		} else {
 			return new QrContentText(mContext, s);
 		}
@@ -66,6 +68,27 @@ public class QrParser {
 			ClipboardManager clipboard = ClipboardManager.newInstance(mContext);
 			clipboard.setText(mContent);
 			Toast.makeText(mContext, "Copy text to buffer", Toast.LENGTH_LONG).show();
+		}
+
+		public String toString() {
+			return mTitle + "\n" + mContent;
+		}
+	}
+	
+	private class QrContentMarket implements QrContent {
+		private String mTitle = "Application on Market";
+		private String mContent;
+		private Context mContext;
+
+		public QrContentMarket(Context ctx, String s) {
+			mContext = ctx;
+			mContent = s;
+		}
+
+		public void launch() {
+			Intent intent = new Intent(Intent.ACTION_VIEW, 
+					Uri.parse(mContent));
+			mContext.startActivity(intent);
 		}
 
 		public String toString() {
