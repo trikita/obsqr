@@ -49,6 +49,8 @@ public class QrParser {
 			return new QrContentPhone(mContext, s);
 		} else if (s.startsWith("market://")) {
 			return new QrContentMarket(mContext, s);
+		} else if (s.startsWith("MECARD:")) {
+			return new QrContentContact(mContext, s);
 		} else {
 			return new QrContentText(mContext, s);
 		}
@@ -72,6 +74,84 @@ public class QrParser {
 
 		public String toString() {
 			return mTitle + "\n" + mContent;
+		}
+	}
+
+	private class QrContentContact implements QrContent {
+		private String mTitle = "Contact information";
+		private String mContent;
+		private Context mContext;
+
+		/* Contact info */
+		private String mName;
+		private String mPhone;
+		private String mAddress;
+		private String mEmail;
+		private String mCompany;
+
+		public QrContentContact(Context ctx, String s) {
+			mContext = ctx;
+			mContent = s;
+		}
+
+//MECARD:N:Owen,Sean;ADR:76 9th Avenue, 4th Floor, New York, NY 10011;TEL:+12125551212;EMAIL:srowen@example.com;;
+		public void launch() {
+			Intent intent = new Intent(Intent.ACTION_INSERT);
+			intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
+			if (mName != null) {
+				intent.putExtra(ContactsContract.Intents.Insert.NAME, mName);
+			}
+			if (mPhone != null) {
+				intent.putExtra(ContactsContract.Intents.Insert.PHONE, mPhone);
+			}
+			if (mAddress != null) {
+				intent.putExtra(ContactsContract.Intents.Insert.POSTAL, mAddress);
+			}
+			if (mEmail != null) {
+				intent.putExtra(ContactsContract.Intents.Insert.EMAIL, mEmail);
+			}
+			if (mCompany != null) {
+				intent.putExtra(ContactsContract.Intents.Insert.COMPANY, mCompany);
+			}
+			
+			mContext.startActivity(intent);
+		}
+
+		private void parseContact() {
+			String contact = mContent.substring(7);
+			Log.d(tag, "contact "+contact);
+			String[] tokens = contact.split("(?<!\\\\);");
+			for (int i = 0; i < tokens.length; i++) {
+				tokens[i] = tokens[i].replace("\\", "");
+				Log.d(tag, "token "+tokens[i]);
+				if (tokens[i].startsWith("N:")) {
+					mName = tokens[i].substring(2);
+				}
+				if (tokens[i].startsWith("TEL:")) {
+					mPhone = tokens[i].substring(4);
+				}
+				if (tokens[i].startsWith("ADR:")) {
+					mAddress = tokens[i].substring(4);
+				}
+				if (tokens[i].startsWith("EMAIL:")) {
+					mEmail = tokens[i].substring(6);
+				}
+				if (tokens[i].startsWith("ORG:")) {
+					mCompany = tokens[i].substring(4);
+				}
+			}
+		}
+
+		public String toString() {
+			parseContact();
+
+			StringBuilder res = new StringBuilder(mTitle + "\n");
+			if (mName != null) res.append("Name: " + mName + "\n");
+			if (mPhone != null) res.append("Phone: " + mPhone + "\n");
+			if (mAddress != null) res.append("Address: " + mAddress + "\n");
+			if (mEmail != null) res.append("Email: " + mEmail + "\n");
+			if (mCompany != null) res.append("Company: " + mCompany);
+			return res.toString();
 		}
 	}
 	
