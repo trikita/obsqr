@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Obsqr</string>
+
+    <string name="text_qr_type_name">Plain text</string>
+    <string name="contact_qr_type_name">Contact information</string>
+    <string name="market_qr_type_name">Application on Market</string>
+    <string name="phone_qr_type_name">Phone number</string>
+    <string name="geo_qr_type_name">Geolocation</string>
+    <string name="sms_qr_type_name">SMS</string>
+    <string name="email_qr_type_name">Email</string>
+    <string name="url_qr_type_name">URL</string>
 </resources>

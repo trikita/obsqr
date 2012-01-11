@@ -11,6 +11,13 @@ import android.provider.ContactsContract;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+/* This class provides QR content parsing for all the types of QRs.
+ * The parsers of the different types of QRs implement nested interface QrContent
+ * and consist of two basic methods toString() for getting decoded content
+ * and launch() for launching an appropriate service/application that is 
+ * connected with current type of information
+ */
+
 public class QrParser {
 	private final static String tag = "QrParser";
 	private Context mContext;
@@ -35,6 +42,7 @@ public class QrParser {
 		mContext = ctx;
 	}
 
+	/** Returns the appropriate parser for current type of decoded content */
 	public QrContent parse(String s) {
 		Log.d(tag, "parse()");
 		if (s.startsWith("http://")) {
@@ -56,14 +64,16 @@ public class QrParser {
 		}
 	}
 
+	/* ----------------------- QR type: plain text --------------------- */
 	private class QrContentText implements QrContent {
-		private String mTitle = "Plain text";
+		private String mTitle;
 		private String mContent;
 		private Context mContext;
 
 		public QrContentText(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
+			mTitle = mContext.getResources().getString(R.string.text_qr_type_name);
 		}
 
 		public void launch() {
@@ -77,8 +87,9 @@ public class QrParser {
 		}
 	}
 
+	/* ----------------------- QR type: MECARD contact information --------------------- */
 	private class QrContentContact implements QrContent {
-		private String mTitle = "Contact information";
+		private String mTitle;
 		private String mContent;
 		private Context mContext;
 
@@ -92,9 +103,9 @@ public class QrParser {
 		public QrContentContact(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
+			mTitle = mContext.getResources().getString(R.string.contact_qr_type_name);
 		}
 
-//MECARD:N:Owen,Sean;ADR:76 9th Avenue, 4th Floor, New York, NY 10011;TEL:+12125551212;EMAIL:srowen@example.com;;
 		public void launch() {
 			Intent intent = new Intent(Intent.ACTION_INSERT);
 			intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
@@ -155,14 +166,16 @@ public class QrParser {
 		}
 	}
 	
+	/* ----------------------- QR type: market links --------------------- */
 	private class QrContentMarket implements QrContent {
-		private String mTitle = "Application on Market";
+		private String mTitle;
 		private String mContent;
 		private Context mContext;
 
 		public QrContentMarket(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
+			mTitle = mContext.getResources().getString(R.string.market_qr_type_name);
 		}
 
 		public void launch() {
@@ -176,14 +189,16 @@ public class QrParser {
 		}
 	}	
 
+	/* ----------------------- QR type: phone number --------------------- */
 	private class QrContentPhone implements QrContent {
-		private String mTitle = "Dial";
+		private String mTitle;
 		private String mContent;
 		private Context mContext;
 
 		public QrContentPhone(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
+			mTitle = mContext.getResources().getString(R.string.phone_qr_type_name);
 		}
 
 		public void launch() {
@@ -192,19 +207,21 @@ public class QrParser {
 		}
 
 		public String toString() {
-			return mTitle + "\n" + "Phone number: " + mContent.substring(4);
+			return mTitle + "\n" + mContent.substring(4);
 		}
 	}	
 
 
+	/* ----------------------- QR type: geolocation --------------------- */
 	private class QrContentGeo implements QrContent {
-		private String mTitle = "Geolocation";
+		private String mTitle;
 		private String mContent;
 		private Context mContext;
 
 		public QrContentGeo(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
+			mTitle = mContext.getResources().getString(R.string.geo_qr_type_name);
 		}
 
 		public void launch() {
@@ -226,14 +243,16 @@ public class QrParser {
 		}
 	}	
 
+	/* ----------------------- QR type: sms --------------------- */
 	private class QrContentSms implements QrContent {
-		private String mTitle = "SMS";
+		private String mTitle;
 		private String mContent;
 		private Context mContext;
 
 		public QrContentSms(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
+			mTitle = mContext.getResources().getString(R.string.sms_qr_type_name);
 		}
 
 		public void launch() {
@@ -252,20 +271,22 @@ public class QrParser {
 			String[] s = mContent.split(":");
 			String res = "Phone number: " + s[1];
 			if (s.length > 2) {
-				res = res + "\n" + "Message: " + s[2];
+				res = res + "\n" + "Text: " + s[2];
 			}
 			return mTitle + "\n" + res;
 		}
 	}	
 	
+	/* ----------------------- QR type: email --------------------- */
 	private class QrContentMail implements QrContent {
-		private String mTitle = "Email";
+		private String mTitle;
 		private String mContent;
 		private Context mContext;
 
 		public QrContentMail(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
+			mTitle = mContext.getResources().getString(R.string.email_qr_type_name);
 		}
 
 		public void launch() {
@@ -280,14 +301,16 @@ public class QrParser {
 		}
 	}
 
+	/* ----------------------- QR type: url --------------------- */
 	private class QrContentUrl implements QrContent {
-		private String mTitle = "URL";
+		private String mTitle;
 		private String mContent;
 		private Context mContext;
 
 		public QrContentUrl(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
+			mTitle = mContext.getResources().getString(R.string.url_qr_type_name);
 		}
 
 		public void launch() {

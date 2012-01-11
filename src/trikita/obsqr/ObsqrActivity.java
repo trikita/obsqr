@@ -22,13 +22,18 @@ import android.os.Handler;
 import android.net.Uri;
 import android.view.MotionEvent;
 import android.view.KeyEvent;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.text.DateFormat;
 
-public class QrdentActivity extends Activity 
-	implements SurfaceHolder.Callback, Camera.PreviewCallback {
+public class ObsqrActivity extends Activity 
+	implements SurfaceHolder.Callback, Camera.PreviewCallback, Camera.AutoFocusCallback {
 
-	private final static String tag = "ZbarActivity";
+	private final static String tag = "ObsqrActivity";
 	/* Don't perceive click events on mTextView till 3 sec run out */
 	private final static int DURATION_OF_KEEPING_TEXT_ON = 3000; 
+	/* It'll be 2 sec between two autoFocus() calls */
+	private final static int AUTOFOCUS_FREQUENCY = 2000;
 
 	private QrParser mParser;
 	private QrParser.QrContent mQrContent;
@@ -40,6 +45,7 @@ public class QrdentActivity extends Activity
 
 	private Camera mCamera;
 	private Camera.Parameters mParams = null;	
+	private boolean mFocusModeOn;
 
 	private TextView mTextView;
 
@@ -48,7 +54,17 @@ public class QrdentActivity extends Activity
 		@Override
 		public void run() {
 			mTextView.setVisibility(View.INVISIBLE);
-			mTextView.setText("???");
+		}
+	};
+
+	private Handler mAutoFocusHandler = new Handler();
+	private Runnable mAutoFocusRunnable = new Runnable() {
+		@Override
+		public void run() {
+			mFocusModeOn = true;
+			if (mCamera != null) {
+				mCamera.autoFocus(ObsqrActivity.this);
+			}
 		}
 	};
 
@@ -64,18 +80,27 @@ public class QrdentActivity extends Activity
 		mParser.setContext(this);
 
 		mPreview = (SurfaceView) findViewById(R.id.surface);
+		// Decoded qr content will be shown in textview
 		mTextView = (TextView) findViewById(R.id.text);
 
+		// By tapping on textview user can deal with decoded qr content properly
 		mTextView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) { 
+					// Launch appropriate service for decoded content
+					// messenger - for qr code containing sms,
+					// browser - for qr code containing url,
+					// maps - for qr code containing geolocation, etc...
 					if (mQrContent != null) mQrContent.launch();	
+					// and hide textview 
 					mTextView.setVisibility(View.INVISIBLE);
 				}
 				return true;
 			}
 		});
+		
+		// By clicking on dpad button user can deal with decoded qr content properly as well
 		mTextView.setOnKeyListener(new View.OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -88,7 +113,6 @@ public class QrdentActivity extends Activity
 		}); 
 
 
-		// Make the activity a surface holder callback
 		mHolder = mPreview.getHolder();
 		mHolder.addCallback(this);
 		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -105,10 +129,13 @@ public class QrdentActivity extends Activity
 	protected void onPause() {
 		super.onPause();
 		Log.d(tag, "onPause()");
+		// Kill all the other threads that were created for periodic operations
 		mKeepTextOnScreenHandler.removeCallbacks(mTextVisibleRunnable);	
+		mAutoFocusHandler.removeCallbacks(mAutoFocusRunnable);
 		mTextView.setVisibility(View.INVISIBLE);
 	}
 
+	/* ---------------------- SurfaceHolder.Callback --------------------- */
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.d(tag, "surfaceCreated");
@@ -124,17 +151,17 @@ public class QrdentActivity extends Activity
 			mCamera = null;
 		}
 		mCamera.startPreview();
+		// Launch autofocus mode 
+		mAutoFocusHandler.postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
 	}
 
 	@Override
 		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-			// Ought to be override
 			Log.d(tag, "surfaceChanged: w="+width+",h="+height);
 		}
 
 	@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
-			// Ought to be override
 			Log.d(tag, "surfaceDestroyed");
 			if (mCamera != null) {
 				mCamera.stopPreview();
@@ -144,24 +171,36 @@ public class QrdentActivity extends Activity
 			}
 		}
 
+	/* ---------------------- PreviewCallback --------------------- */
 	public void onPreviewFrame(byte[] data, Camera camera) {
+		if (mFocusModeOn) return;
 		if (mParams == null) {
 			mParams = mCamera.getParameters();
 		}
 		mCamera.setPreviewCallback(null);
 		int width = mParams.getPreviewSize().width;  
 		int height = mParams.getPreviewSize().height;
+		// Get decoded string
 		String s = zbar.process(width, height, data);
 		if (s != null) {
 			Log.d(tag, "============= URL: " + s + " =================");
 			mKeepTextOnScreenHandler.removeCallbacks(mTextVisibleRunnable);
 			mQrContent = mParser.parse(s);
+			// Show textview with qr content
 			mTextView.setVisibility(View.VISIBLE);
 			mTextView.setText(mQrContent.toString());
+			// Keep textview on screen 3 sec and hide it
 			mKeepTextOnScreenHandler.postDelayed(mTextVisibleRunnable, 
 					DURATION_OF_KEEPING_TEXT_ON);
 		}
 		mCamera.setPreviewCallback(this);
 	}
 
+	/* ---------------------- AutoFocusCallback --------------------- */
+	@Override
+	public void onAutoFocus(boolean success, Camera camera) {
+		Log.d(tag, "onAutoFocus()");
+		mAutoFocusHandler.postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
+		mFocusModeOn = false;
+	}
 }
