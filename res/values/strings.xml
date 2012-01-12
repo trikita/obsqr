@@ -10,4 +10,9 @@
     <string name="sms_qr_type_name">SMS</string>
     <string name="email_qr_type_name">Email</string>
     <string name="url_qr_type_name">URL</string>
+
+    <string name="dlg_tv_question">If you really love this app please give your feedback on Market</string>
+    <string name="dlg_btn_ignore_caption">Ignore</string>
+    <string name="dlg_btn_rate_caption">Rate</string>
+
 </resources>

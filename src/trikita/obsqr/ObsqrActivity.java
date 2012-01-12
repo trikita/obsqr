@@ -25,6 +25,12 @@ import android.view.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.text.DateFormat;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.SharedPreferences;
 
 public class ObsqrActivity extends Activity 
 	implements SurfaceHolder.Callback, Camera.PreviewCallback, Camera.AutoFocusCallback {
@@ -34,6 +40,8 @@ public class ObsqrActivity extends Activity
 	private final static int DURATION_OF_KEEPING_TEXT_ON = 3000; 
 	/* It'll be 2 sec between two autoFocus() calls */
 	private final static int AUTOFOCUS_FREQUENCY = 2000;
+	/* Shared preferences title */
+	private final static String PREFS_NAME = "ObsqrSharedPreferences";
 
 	private QrParser mParser;
 	private QrParser.QrContent mQrContent;
@@ -133,6 +141,63 @@ public class ObsqrActivity extends Activity
 		mKeepTextOnScreenHandler.removeCallbacks(mTextVisibleRunnable);	
 		mAutoFocusHandler.removeCallbacks(mAutoFocusRunnable);
 		mTextView.setVisibility(View.INVISIBLE);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// Restore saved settings from shared preferences
+		SharedPreferences prefs = getSharedPreferences(PREFS_NAME, 0);
+		// if the boolean value exists there - it means don't show the dialog anymore
+		// and provide a common behavior after clicking on back button
+		boolean wasFirstVisit = prefs.getBoolean("first_visit_passed", false);
+		if (wasFirstVisit) {
+			super.onBackPressed();
+			return;
+		}
+
+		turnRateRequestOff();
+		final Dialog dialog = new Dialog(this);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.dlg_ask_to_rate);
+		dialog.setCancelable(false);
+
+		Button rateBtn = (Button) dialog.findViewById(R.id.dlg_btn_rate);
+		Button ignoreBtn = (Button) dialog.findViewById(R.id.dlg_btn_ignore);
+
+		rateBtn.setOnClickListener(new View.OnClickListener() {
+			@Override 
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_VIEW, 
+						Uri.parse("market://details?id=trikita.obsqr"));
+				ObsqrActivity.this.startActivity(intent);
+				dialog.dismiss();
+				ObsqrActivity.super.onBackPressed();
+			}
+		});
+
+		ignoreBtn.setOnClickListener(new View.OnClickListener() {
+			@Override 
+			public void onClick(View v) {
+				dialog.dismiss();
+				ObsqrActivity.super.onBackPressed();
+			}
+		});
+		
+		dialog.show();
+	}
+
+	private void turnRateRequestOff() {
+		// We need an Editor object to make preference changes.
+		// All objects are from android.context.Context
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+
+		// Save that user has already seen the request to give feedback so don't ask him to rate 
+		// this app anymore
+		editor.putBoolean("first_visit_passed", true);
+
+		// Commit the edits
+		editor.commit();
 	}
 
 	/* ---------------------- SurfaceHolder.Callback --------------------- */
