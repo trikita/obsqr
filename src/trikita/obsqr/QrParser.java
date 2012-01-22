@@ -134,7 +134,6 @@ public class QrParser {
 			String[] tokens = contact.split("(?<!\\\\);");
 			for (int i = 0; i < tokens.length; i++) {
 				tokens[i] = tokens[i].replace("\\", "");
-				Log.d(tag, "token "+tokens[i]);
 				if (tokens[i].startsWith("N:")) {
 					mName = tokens[i].substring(2);
 				}
@@ -217,6 +216,7 @@ public class QrParser {
 		private String mTitle;
 		private String mContent;
 		private Context mContext;
+		private boolean mIsValidData;
 
 		public QrContentGeo(Context ctx, String s) {
 			mContext = ctx;
@@ -225,21 +225,56 @@ public class QrParser {
 		}
 
 		public void launch() {
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mContent));
-			mContext.startActivity(intent);
+			if (mIsValidData) {
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mContent));
+				mContext.startActivity(intent);
+			}
 		}
 
 		public String toString() {
-			String[] s = mContent.substring(4).split(",");
-			float latitude = Float.parseFloat(s[0]);
-			float longtitude = Float.parseFloat(s[1]);
-			String res = "Latitude: " + Math.abs(latitude) + "\u00b0 " + (latitude < 0 ? "S" : "N") + 
-				"\n" + "Longtitude: " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? "W" : "E");
-			if (s.length > 2) {
-				float height = (Float.parseFloat(s[2]));
-				res = res + "\n" + "Meters above the ground: " + s[2];
+			String[] heads = mContent.substring(4).split(",");
+			if (heads.length <= 1) {
+				return "Unsupported data type";
 			}
-			return mTitle + "\n" + res;
+
+			try {
+				float latitude = Float.parseFloat(heads[0]);
+				StringBuilder res = new StringBuilder();
+				res.append("Latitude: " + Math.abs(latitude) + "\u00b0 " + (latitude < 0 ? "S" : "N"));
+				float longtitude;
+				if (heads.length == 2) {
+					if (heads[1].contains("?")) {
+						String[] tails = heads[1].split("\\?q=");
+						longtitude = Float.parseFloat(tails[0]);	
+						res.append("\nLongtitude: " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? "W" : "E"));
+						if (tails.length > 1) {
+							res.append("\nTitle: " + tails[1]);
+						}
+					} else {
+						longtitude = Float.parseFloat(heads[1]);
+						res.append("\nLongtitude: " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? "W" : "E"));
+					}
+				} else { 
+					longtitude = Float.parseFloat(heads[1]);
+					res.append("\nLongtitude: " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? "W" : "E"));
+					float altitude;
+					if (heads[2].contains("?")) {
+						String[] tails = heads[2].split("\\?q=");
+						altitude = Float.parseFloat(tails[0]);	
+						res.append("\nAltitude: " + altitude + " meters");
+						if (tails.length > 1) {
+							res.append("\nTitle: " + tails[1]);
+						}
+					} else {
+						altitude = Float.parseFloat(heads[2]);
+						res.append("\nAltitude: " + altitude + " meters");
+					}	
+				}
+				mIsValidData = true;
+				return mTitle + "\n" + res.toString();
+			} catch (NumberFormatException e) {
+				return "Unsupported data type";
+			}
 		}
 	}	
 
