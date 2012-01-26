@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Obsqr</string>
+
+	<!-- QR types -->
+    <string name="text_qr_type_name">Текст</string>
+    <string name="contact_qr_type_name">Контактная информация</string>
+    <string name="market_qr_type_name">Приложение на Маркете</string>
+    <string name="phone_qr_type_name">Телефонный номер</string>
+    <string name="geo_qr_type_name">Географические координаты</string>
+    <string name="sms_qr_type_name">SMS-сообщение</string>
+    <string name="email_qr_type_name">Электронная почта</string>
+    <string name="url_qr_type_name">Web-страница</string>
+
+	<string name="unsupported_data_text">Тип данных не поддерживается</string>
+
+	<!-- Plain text -->
+    <string name="text_qr_action_name">Текст скопирован в буфер обмена</string>
+
+	<!-- Contact information -->
+    <string name="contact_qr_name_title">Имя:</string>
+    <string name="contact_qr_phone_title">Телефон:</string>
+    <string name="contact_qr_address_title">Адрес:</string>
+    <string name="contact_qr_email_title">Электронная почта:</string>
+    <string name="contact_qr_company_title">Организация:</string>
+
+	<!-- Geolocation -->
+    <string name="geo_qr_title_title">Место:</string>
+    <string name="geo_qr_latitude_title">Широта:</string>
+    <string name="geo_qr_latitude_south">ю.ш.</string>
+    <string name="geo_qr_latitude_north">с.ш.</string>
+    <string name="geo_qr_longitude_title">Долгота:</string>
+    <string name="geo_qr_longitude_west">з.д.</string>
+    <string name="geo_qr_longitude_east">в.д.</string>
+    <string name="geo_qr_altitude_title">Высота:</string>
+    <string name="geo_qr_altitude_suffix">метров</string>
+
+	<!-- SMS -->
+    <string name="sms_qr_phone_title">Телефонный номер:</string>
+    <string name="sms_qr_message_title">Сообщение:</string>
+
+	<!-- Email -->
+    <string name="email_qr_send_dlg_title">Отправить письмо с помощью...</string>
+
+    <string name="dlg_tv_question">Если Вам действительно нравится это приложение, пожалуйста, оставьте свои комментарии о нем на Маркете</string>
+    <string name="dlg_btn_ignore_caption">Пропустить</string>
+    <string name="dlg_btn_rate_caption">Проголосовать</string>
+
+</resources>

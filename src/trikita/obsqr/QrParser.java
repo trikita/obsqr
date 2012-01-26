@@ -79,7 +79,8 @@ public class QrParser {
 		public void launch() {
 			ClipboardManager clipboard = ClipboardManager.newInstance(mContext);
 			clipboard.setText(mContent);
-			Toast.makeText(mContext, "Copy text to buffer", Toast.LENGTH_LONG).show();
+			String text = mContext.getResources().getString(R.string.text_qr_action_name);
+			Toast.makeText(mContext, text, Toast.LENGTH_LONG).show();
 		}
 
 		public String toString() {
@@ -156,11 +157,27 @@ public class QrParser {
 			parseContact();
 
 			StringBuilder res = new StringBuilder(mTitle + "\n");
-			if (mName != null) res.append("Name: " + mName + "\n");
-			if (mPhone != null) res.append("Phone: " + mPhone + "\n");
-			if (mAddress != null) res.append("Address: " + mAddress + "\n");
-			if (mEmail != null) res.append("Email: " + mEmail + "\n");
-			if (mCompany != null) res.append("Company: " + mCompany);
+			String text;
+			if (mName != null) { 
+				text = mContext.getResources().getString(R.string.contact_qr_name_title);
+				res.append(text + " " + mName + "\n");
+			}
+			if (mPhone != null) {
+				text = mContext.getResources().getString(R.string.contact_qr_phone_title);
+				res.append(text + " " + mPhone + "\n");
+			}
+			if (mAddress != null) {
+				text = mContext.getResources().getString(R.string.contact_qr_address_title);
+				res.append(text + " " + mAddress + "\n");
+			}
+			if (mEmail != null) {
+				text = mContext.getResources().getString(R.string.contact_qr_email_title);
+				res.append(text + " " + mEmail + "\n");
+			}
+			if (mCompany != null) { 
+				text = mContext.getResources().getString(R.string.contact_qr_company_title);
+				res.append(text + " " + mCompany);
+			}
 			return res.toString();
 		}
 	}
@@ -235,27 +252,35 @@ public class QrParser {
 			String[] tokens = mContent.substring(4).split("\\?q=");
 			StringBuilder res = new StringBuilder();
 			if (tokens.length == 2 && tokens[1].length() > 0) {
-				res.append("Title: " + tokens[1] + "\n");
+				res.append(mContext.getResources().getString(R.string.geo_qr_title_title) +
+						" " + tokens[1] + "\n");
 			}
 
 			String[] params = tokens[0].split(",");
 			if (params.length < 2 || params.length > 3) {
-				return "Unsupported data type";
+				return mContext.getResources().getString(R.string.unsupported_data_text);
 			}
 
 			try {
 				float latitude = Float.parseFloat(params[0]);
-				res.append("Latitude: " + Math.abs(latitude) + "\u00b0 " + (latitude < 0 ? "S" : "N"));
+				String southMark = mContext.getResources().getString(R.string.geo_qr_latitude_south);
+				String northMark = mContext.getResources().getString(R.string.geo_qr_latitude_north);
+				res.append(mContext.getResources().getString(R.string.geo_qr_latitude_title) +
+						" " + Math.abs(latitude) + "\u00b0 " + (latitude < 0 ? southMark : northMark));
 				float longtitude = Float.parseFloat(params[1]);	
-				res.append("\nLongitude: " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? "W" : "E"));
+				String westMark = mContext.getResources().getString(R.string.geo_qr_longitude_west);
+				String eastMark = mContext.getResources().getString(R.string.geo_qr_longitude_east);
+				res.append("\n" + mContext.getResources().getString(R.string.geo_qr_longitude_title) + 
+						" " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? westMark : eastMark));
 				if (params.length == 3) {
 					float altitude = Float.parseFloat(params[2]);	
-					res.append("\nAltitude: " + altitude + " meters");
+					res.append("\n" + mContext.getResources().getString(R.string.geo_qr_altitude_title) + 
+							" " + altitude + " " + mContext.getResources().getString(R.string.geo_qr_altitude_suffix));
 				}
 				mIsValidData = true;
 				return mTitle + "\n" + res.toString();
 			} catch (NumberFormatException e) {
-				return "Unsupported data type";
+				return mContext.getResources().getString(R.string.unsupported_data_text);
 			}
 		}
 	}	
@@ -286,9 +311,11 @@ public class QrParser {
 
 		public String toString() {
 			String[] s = mContent.split(":");
-			String res = "Phone number: " + s[1];
+			String text = mContext.getResources().getString(R.string.sms_qr_phone_title);
+			String res = text + " " + s[1];
 			if (s.length > 2) {
-				res = res + "\n" + "Text: " + s[2];
+				text = mContext.getResources().getString(R.string.sms_qr_message_title);
+				res = res + "\n" + text + " " + s[2];
 			}
 			return mTitle + "\n" + res;
 		}
@@ -310,7 +337,8 @@ public class QrParser {
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain"); 
 			intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mContent.substring(7)});
-			mContext.startActivity(Intent.createChooser(intent, "Send mail..."));
+			String text = mContext.getResources().getString(R.string.email_qr_send_dlg_title);
+			mContext.startActivity(Intent.createChooser(intent, text));
 		}
 
 		public String toString() {

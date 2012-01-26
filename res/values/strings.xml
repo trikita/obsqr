@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Obsqr</string>
 
+	<!-- QR types -->
     <string name="text_qr_type_name">Plain text</string>
     <string name="contact_qr_type_name">Contact information</string>
     <string name="market_qr_type_name">Application on Market</string>
@@ -10,6 +11,36 @@
     <string name="sms_qr_type_name">SMS</string>
     <string name="email_qr_type_name">Email</string>
     <string name="url_qr_type_name">URL</string>
+
+	<string name="unsupported_data_text">Unsupported data type</string>
+
+	<!-- Plain text -->
+    <string name="text_qr_action_name">Copy text to clipboard</string>
+
+	<!-- Contact information -->
+    <string name="contact_qr_name_title">Name:</string>
+    <string name="contact_qr_phone_title">Phone:</string>
+    <string name="contact_qr_address_title">Address:</string>
+    <string name="contact_qr_email_title">Email:</string>
+    <string name="contact_qr_company_title">Company:</string>
+
+	<!-- Geolocation -->
+    <string name="geo_qr_title_title">Title:</string>
+    <string name="geo_qr_latitude_title">Latitude:</string>
+    <string name="geo_qr_latitude_south">S</string>
+    <string name="geo_qr_latitude_north">N</string>
+    <string name="geo_qr_longitude_title">Longitude:</string>
+    <string name="geo_qr_longitude_west">W</string>
+    <string name="geo_qr_longitude_east">E</string>
+    <string name="geo_qr_altitude_title">Altitude:</string>
+    <string name="geo_qr_altitude_suffix">meters</string>
+
+	<!-- SMS -->
+    <string name="sms_qr_phone_title">Phone number:</string>
+    <string name="sms_qr_message_title">Text:</string>
+
+	<!-- Email -->
+    <string name="email_qr_send_dlg_title">Sent mail via...</string>
 
     <string name="dlg_tv_question">If you really love this app please give your feedback on Market</string>
     <string name="dlg_btn_ignore_caption">Ignore</string>
