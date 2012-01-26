@@ -232,43 +232,25 @@ public class QrParser {
 		}
 
 		public String toString() {
-			String[] heads = mContent.substring(4).split(",");
-			if (heads.length <= 1) {
+			String[] tokens = mContent.substring(4).split("\\?q=");
+			StringBuilder res = new StringBuilder();
+			if (tokens.length == 2 && tokens[1].length() > 0) {
+				res.append("Title: " + tokens[1] + "\n");
+			}
+
+			String[] params = tokens[0].split(",");
+			if (params.length < 2 || params.length > 3) {
 				return "Unsupported data type";
 			}
 
 			try {
-				float latitude = Float.parseFloat(heads[0]);
-				StringBuilder res = new StringBuilder();
+				float latitude = Float.parseFloat(params[0]);
 				res.append("Latitude: " + Math.abs(latitude) + "\u00b0 " + (latitude < 0 ? "S" : "N"));
-				float longtitude;
-				if (heads.length == 2) {
-					if (heads[1].contains("?")) {
-						String[] tails = heads[1].split("\\?q=");
-						longtitude = Float.parseFloat(tails[0]);	
-						res.append("\nLongtitude: " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? "W" : "E"));
-						if (tails.length > 1) {
-							res.append("\nTitle: " + tails[1]);
-						}
-					} else {
-						longtitude = Float.parseFloat(heads[1]);
-						res.append("\nLongtitude: " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? "W" : "E"));
-					}
-				} else { 
-					longtitude = Float.parseFloat(heads[1]);
-					res.append("\nLongtitude: " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? "W" : "E"));
-					float altitude;
-					if (heads[2].contains("?")) {
-						String[] tails = heads[2].split("\\?q=");
-						altitude = Float.parseFloat(tails[0]);	
-						res.append("\nAltitude: " + altitude + " meters");
-						if (tails.length > 1) {
-							res.append("\nTitle: " + tails[1]);
-						}
-					} else {
-						altitude = Float.parseFloat(heads[2]);
-						res.append("\nAltitude: " + altitude + " meters");
-					}	
+				float longtitude = Float.parseFloat(params[1]);	
+				res.append("\nLongitude: " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? "W" : "E"));
+				if (params.length == 3) {
+					float altitude = Float.parseFloat(params[2]);	
+					res.append("\nAltitude: " + altitude + " meters");
 				}
 				mIsValidData = true;
 				return mTitle + "\n" + res.toString();
