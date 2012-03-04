@@ -27,6 +27,21 @@ public class QrParser {
 	public interface QrContent {
 		public void launch();
 		public String toString();
+		public String getTitle();
+		public String getActionName();
+	}
+
+	public abstract class BaseQrContent {
+		protected String mContent;
+		protected String mTitle;
+
+		public abstract void launch();
+		public abstract String toString();
+		public abstract String getActionName();
+
+		public String getTitle() {
+			return mTitle;
+		}
 	}
 
 	private QrParser() { }
@@ -65,9 +80,7 @@ public class QrParser {
 	}
 
 	/* ----------------------- QR type: plain text --------------------- */
-	private class QrContentText implements QrContent {
-		private String mTitle;
-		private String mContent;
+	private class QrContentText extends BaseQrContent implements QrContent {
 		private Context mContext;
 
 		public QrContentText(Context ctx, String s) {
@@ -84,14 +97,16 @@ public class QrParser {
 		}
 
 		public String toString() {
-			return mTitle + "\n" + mContent;
+			return mContent;
+		}
+
+		public String getActionName() {
+			return mContext.getResources().getString(R.string.help_prompt_text); 
 		}
 	}
 
 	/* ----------------------- QR type: MECARD contact information --------------------- */
-	private class QrContentContact implements QrContent {
-		private String mTitle;
-		private String mContent;
+	private class QrContentContact extends BaseQrContent implements QrContent {
 		private Context mContext;
 
 		/* Contact info */
@@ -156,7 +171,7 @@ public class QrParser {
 		public String toString() {
 			parseContact();
 
-			StringBuilder res = new StringBuilder(mTitle + "\n");
+			StringBuilder res = new StringBuilder();
 			String text;
 			if (mName != null) { 
 				text = mContext.getResources().getString(R.string.contact_qr_name_title);
@@ -180,12 +195,14 @@ public class QrParser {
 			}
 			return res.toString();
 		}
+
+		public String getActionName() {
+			return mContext.getResources().getString(R.string.help_prompt_contact);
+		}
 	}
 	
 	/* ----------------------- QR type: market links --------------------- */
-	private class QrContentMarket implements QrContent {
-		private String mTitle;
-		private String mContent;
+	private class QrContentMarket extends BaseQrContent implements QrContent {
 		private Context mContext;
 
 		public QrContentMarket(Context ctx, String s) {
@@ -201,14 +218,16 @@ public class QrParser {
 		}
 
 		public String toString() {
-			return mTitle + "\n" + mContent;
+			return mContent;
+		}
+
+		public String getActionName() {
+			return mContext.getResources().getString(R.string.help_prompt_market);
 		}
 	}	
 
 	/* ----------------------- QR type: phone number --------------------- */
-	private class QrContentPhone implements QrContent {
-		private String mTitle;
-		private String mContent;
+	private class QrContentPhone extends BaseQrContent implements QrContent {
 		private Context mContext;
 
 		public QrContentPhone(Context ctx, String s) {
@@ -223,15 +242,17 @@ public class QrParser {
 		}
 
 		public String toString() {
-			return mTitle + "\n" + mContent.substring(4);
+			return mContent.substring(4);
+		}
+
+		public String getActionName() {
+			return mContext.getResources().getString(R.string.help_prompt_phone);
 		}
 	}	
 
 
 	/* ----------------------- QR type: geolocation --------------------- */
-	private class QrContentGeo implements QrContent {
-		private String mTitle;
-		private String mContent;
+	private class QrContentGeo extends BaseQrContent implements QrContent {
 		private Context mContext;
 		private boolean mIsValidData;
 
@@ -278,17 +299,19 @@ public class QrParser {
 							" " + altitude + " " + mContext.getResources().getString(R.string.geo_qr_altitude_suffix));
 				}
 				mIsValidData = true;
-				return mTitle + "\n" + res.toString();
+				return res.toString();
 			} catch (NumberFormatException e) {
 				return mContext.getResources().getString(R.string.unsupported_data_text);
 			}
 		}
+
+		public String getActionName() {
+			return mContext.getResources().getString(R.string.help_prompt_geo);
+		}
 	}	
 
 	/* ----------------------- QR type: sms --------------------- */
-	private class QrContentSms implements QrContent {
-		private String mTitle;
-		private String mContent;
+	private class QrContentSms extends BaseQrContent implements QrContent {
 		private Context mContext;
 
 		public QrContentSms(Context ctx, String s) {
@@ -317,14 +340,16 @@ public class QrParser {
 				text = mContext.getResources().getString(R.string.sms_qr_message_title);
 				res = res + "\n" + text + " " + s[2];
 			}
-			return mTitle + "\n" + res;
+			return res;
+		}
+
+		public String getActionName() {
+			return mContext.getResources().getString(R.string.help_prompt_sms);
 		}
 	}	
 	
 	/* ----------------------- QR type: email --------------------- */
-	private class QrContentMail implements QrContent {
-		private String mTitle;
-		private String mContent;
+	private class QrContentMail extends BaseQrContent implements QrContent {
 		private Context mContext;
 
 		public QrContentMail(Context ctx, String s) {
@@ -342,14 +367,16 @@ public class QrParser {
 		}
 
 		public String toString() {
-			return mTitle + "\n" + mContent.substring(7);
+			return mContent.substring(7);
+		}
+
+		public String getActionName() {
+			return mContext.getResources().getString(R.string.help_prompt_email);
 		}
 	}
 
 	/* ----------------------- QR type: url --------------------- */
-	private class QrContentUrl implements QrContent {
-		private String mTitle;
-		private String mContent;
+	private class QrContentUrl extends BaseQrContent implements QrContent {
 		private Context mContext;
 
 		public QrContentUrl(Context ctx, String s) {
@@ -364,7 +391,11 @@ public class QrParser {
 		}
 
 		public String toString() {
-			return mTitle + "\n" + mContent;
+			return mContent;
+		}
+
+		public String getActionName() {
+			return mContext.getResources().getString(R.string.help_prompt_url);
 		}
 	}
 

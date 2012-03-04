@@ -1,42 +1,46 @@
 package trikita.obsqr;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Build;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.DialogInterface;
 
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
-
-import android.widget.TextView;
-
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import android.view.MotionEvent;
+import android.view.KeyEvent;
+
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Button;
+
 import android.hardware.Camera;
 import android.graphics.ImageFormat;
 import java.io.IOException;
-
-import android.util.Log;
-import android.content.Intent;
-import android.os.Handler;
 import android.net.Uri;
-import android.view.MotionEvent;
-import android.view.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.text.DateFormat;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.SharedPreferences;
+
+import android.util.Log;
 
 public class ObsqrActivity extends Activity 
 	implements SurfaceHolder.Callback, Camera.PreviewCallback, Camera.AutoFocusCallback {
 
 	private final static String tag = "ObsqrActivity";
-	/* Don't perceive click events on mTextView till 3 sec run out */
+	/* Don't perceive click events on mTextContainer till 3 sec run out */
 	private final static int DURATION_OF_KEEPING_TEXT_ON = 3000; 
 	/* It'll be 2 sec between two autoFocus() calls */
 	private final static int AUTOFOCUS_FREQUENCY = 2000;
@@ -55,13 +59,16 @@ public class ObsqrActivity extends Activity
 	private Camera.Parameters mParams = null;	
 	private boolean mFocusModeOn;
 
-	private TextView mTextView;
+	private LinearLayout mTextContainer;
+	private TextView mQrTitleView;
+	private TextView mQrContentView;
+	private TextView mHelpView;
 
 	private Handler mKeepTextOnScreenHandler = new Handler();
 	private Runnable mTextVisibleRunnable = new Runnable() {
 		@Override
 		public void run() {
-			mTextView.setVisibility(View.INVISIBLE);
+			mTextContainer.setVisibility(View.INVISIBLE);
 		}
 	};
 
@@ -89,10 +96,13 @@ public class ObsqrActivity extends Activity
 
 		mPreview = (SurfaceView) findViewById(R.id.surface);
 		// Decoded qr content will be shown in textview
-		mTextView = (TextView) findViewById(R.id.text);
+		mTextContainer = (LinearLayout) findViewById(R.id.l_text_container);
+		mQrTitleView = (TextView) findViewById(R.id.tv_title);
+		mQrContentView = (TextView) findViewById(R.id.tv_qrcontent);
+		mHelpView = (TextView) findViewById(R.id.tv_help);
 
 		// By tapping on textview user can deal with decoded qr content properly
-		mTextView.setOnTouchListener(new View.OnTouchListener() {
+		mTextContainer.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) { 
@@ -102,19 +112,19 @@ public class ObsqrActivity extends Activity
 					// maps - for qr code containing geolocation, etc...
 					if (mQrContent != null) mQrContent.launch();	
 					// and hide textview 
-					mTextView.setVisibility(View.INVISIBLE);
+					mTextContainer.setVisibility(View.INVISIBLE);
 				}
 				return true;
 			}
 		});
 		
 		// By clicking on dpad button user can deal with decoded qr content properly as well
-		mTextView.setOnKeyListener(new View.OnKeyListener() {
+		mTextContainer.setOnKeyListener(new View.OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
 					if (mQrContent != null) mQrContent.launch();	
-					mTextView.setVisibility(View.INVISIBLE);
+					mTextContainer.setVisibility(View.INVISIBLE);
 				}
 				return true;
 			}
@@ -140,7 +150,7 @@ public class ObsqrActivity extends Activity
 		// Kill all the other threads that were created for periodic operations
 		mKeepTextOnScreenHandler.removeCallbacks(mTextVisibleRunnable);	
 		mAutoFocusHandler.removeCallbacks(mAutoFocusRunnable);
-		mTextView.setVisibility(View.INVISIBLE);
+		mTextContainer.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
@@ -200,12 +210,49 @@ public class ObsqrActivity extends Activity
 		editor.commit();
 	}
 
+	private Camera openCamera() {
+		Camera camera = Camera.open();
+
+		if (camera == null) {
+			final int sdkVersion = Integer.parseInt(Build.VERSION.SDK);
+			if (sdkVersion >= Build.VERSION_CODES.GINGERBREAD) {
+				int cameraCount = Camera.getNumberOfCameras();
+				for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
+					if (camera != null) break;
+					try {
+						camera = Camera.open(camIdx);
+					} catch (RuntimeException e) {
+						Log.d(tag, "Camera failed to open: " + e.toString());
+					}
+				}
+			}
+			else return null; 
+		}
+
+		return camera; 
+	}
+
 	/* ---------------------- SurfaceHolder.Callback --------------------- */
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.d(tag, "surfaceCreated");
 
-		mCamera = Camera.open();
+		mCamera = openCamera();
+		if (mCamera == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure you want to exit?")
+				.setCancelable(false)
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						ObsqrActivity.this.finish();
+						dialog.dismiss();
+					}
+				});
+			AlertDialog alert = builder.create();	
+			alert.show();
+			return;
+		}
+
 		try {
 			mCamera.setPreviewCallback(this);
 			mCamera.setPreviewDisplay(mHolder);
@@ -252,8 +299,10 @@ public class ObsqrActivity extends Activity
 			mKeepTextOnScreenHandler.removeCallbacks(mTextVisibleRunnable);
 			mQrContent = mParser.parse(s);
 			// Show textview with qr content
-			mTextView.setVisibility(View.VISIBLE);
-			mTextView.setText(mQrContent.toString());
+			mTextContainer.setVisibility(View.VISIBLE);
+			mQrContentView.setText(mQrContent.toString());
+			mQrTitleView.setText(mQrContent.getTitle());
+			mHelpView.setText(mQrContent.getActionName());
 			// Keep textview on screen 3 sec and hide it
 			mKeepTextOnScreenHandler.postDelayed(mTextVisibleRunnable, 
 					DURATION_OF_KEEPING_TEXT_ON);

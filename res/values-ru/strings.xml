@@ -2,6 +2,16 @@
 <resources>
     <string name="app_name">Obsqr</string>
 
+	<!-- Help prompts -->
+    <string name="help_prompt_text">Нажмите, чтобы скопировать текст в буфер обмена</string>
+    <string name="help_prompt_contact">Нажмите, чтобы просмотреть контакт</string>
+    <string name="help_prompt_market">Нажмите, чтобы открыть приложение на Маркете</string>
+    <string name="help_prompt_phone">Нажмите, чтобы сделать вызов</string>
+    <string name="help_prompt_geo">Нажмите, чтобы посмотреть расположение на карте</string>
+    <string name="help_prompt_sms">Нажмите, чтобы отправить сообщение</string>
+    <string name="help_prompt_email">Нажмите, чтобы отправить письмо</string>
+    <string name="help_prompt_url">Нажмите, чтобы перейти по ссылке</string>
+
 	<!-- QR types -->
     <string name="text_qr_type_name">Текст</string>
     <string name="contact_qr_type_name">Контактная информация</string>
@@ -45,5 +55,8 @@
     <string name="dlg_tv_question">Если Вам действительно нравится это приложение, пожалуйста, оставьте свои комментарии о нем на Маркете</string>
     <string name="dlg_btn_ignore_caption">Пропустить</string>
     <string name="dlg_btn_rate_caption">Проголосовать</string>
+
+    <string name="dlg_alert_msg">Ошибка при открытии камеры</string>
+    <string name="dlg_alert_ok_btn_caption">Заверщить</string>
 
 </resources>

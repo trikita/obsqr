@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Obsqr</string>
+	
+	<!-- Help prompts -->
+    <string name="help_prompt_text">Tap to copy text to the clipboard</string>
+    <string name="help_prompt_contact">Tap to view the contact</string>
+    <string name="help_prompt_market">Tap to open the app on Market</string>
+    <string name="help_prompt_phone">Tap to open dialer</string>
+    <string name="help_prompt_geo">Tap to view the location</string>
+    <string name="help_prompt_sms">Tap to send a message</string>
+    <string name="help_prompt_email">Tap to send an e-mail</string>
+    <string name="help_prompt_url">Tap to follow the link</string>
 
 	<!-- QR types -->
     <string name="text_qr_type_name">Plain text</string>
@@ -45,5 +55,8 @@
     <string name="dlg_tv_question">If you really love this app please give your feedback on Market</string>
     <string name="dlg_btn_ignore_caption">Ignore</string>
     <string name="dlg_btn_rate_caption">Rate</string>
+
+    <string name="dlg_alert_msg">Failed to open any camera</string>
+    <string name="dlg_alert_ok_btn_caption">Ok</string>
 
 </resources>
