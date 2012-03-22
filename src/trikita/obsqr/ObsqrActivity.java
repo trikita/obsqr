@@ -37,7 +37,7 @@ import java.text.DateFormat;
 import android.util.Log;
 
 public class ObsqrActivity extends Activity 
-	implements SurfaceHolder.Callback, Camera.PreviewCallback, Camera.AutoFocusCallback {
+	implements Camera.PreviewCallback, Camera.AutoFocusCallback {
 
 	private final static String tag = "ObsqrActivity";
 	/* Don't perceive click events on mTextContainer till 3 sec run out */
@@ -50,8 +50,7 @@ public class ObsqrActivity extends Activity
 	private QrParser mParser;
 	private QrParser.QrContent mQrContent;
 
-	private SurfaceView mPreview;
-	private SurfaceHolder mHolder;
+	private Preview mPreview;
 
 	private Zbar zbar = new Zbar();
 
@@ -94,7 +93,7 @@ public class ObsqrActivity extends Activity
 		mParser = QrParser.getInstance();
 		mParser.setContext(this);
 
-		mPreview = (SurfaceView) findViewById(R.id.surface);
+		mPreview = (Preview) findViewById(R.id.surface);
 		// Decoded qr content will be shown in textview
 		mTextContainer = (LinearLayout) findViewById(R.id.l_text_container);
 		mQrTitleView = (TextView) findViewById(R.id.tv_title);
@@ -129,11 +128,6 @@ public class ObsqrActivity extends Activity
 				return true;
 			}
 		}); 
-
-
-		mHolder = mPreview.getHolder();
-		mHolder.addCallback(this);
-		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 
 	@Override
@@ -141,6 +135,25 @@ public class ObsqrActivity extends Activity
 		super.onResume();
 		Log.d(tag, "onResume()");
 		mPreview.requestFocus();
+
+		mCamera = openCamera();
+		if (mCamera == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure you want to exit?")
+				.setCancelable(false)
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						ObsqrActivity.this.finish();
+						dialog.dismiss();
+					}
+				});
+			AlertDialog alert = builder.create();	
+			alert.show();
+			return;
+		}
+
+		mCamera.setPreviewCallback(this);
+		mPreview.setCamera(mCamera);
 	}
 
 	@Override
@@ -148,6 +161,13 @@ public class ObsqrActivity extends Activity
 		super.onPause();
 		Log.d(tag, "onPause()");
 		// Kill all the other threads that were created for periodic operations
+		if (mCamera != null) {
+			mPreview.setCamera(null);
+			mCamera.setPreviewCallback(null);
+			mCamera.release();
+			mCamera = null;
+		}
+
 		mKeepTextOnScreenHandler.removeCallbacks(mTextVisibleRunnable);	
 		mAutoFocusHandler.removeCallbacks(mAutoFocusRunnable);
 		mTextContainer.setVisibility(View.INVISIBLE);
@@ -231,57 +251,6 @@ public class ObsqrActivity extends Activity
 
 		return camera; 
 	}
-
-	/* ---------------------- SurfaceHolder.Callback --------------------- */
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		Log.d(tag, "surfaceCreated");
-
-		mCamera = openCamera();
-		if (mCamera == null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Are you sure you want to exit?")
-				.setCancelable(false)
-				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						ObsqrActivity.this.finish();
-						dialog.dismiss();
-					}
-				});
-			AlertDialog alert = builder.create();	
-			alert.show();
-			return;
-		}
-
-		try {
-			mCamera.setPreviewCallback(this);
-			mCamera.setPreviewDisplay(mHolder);
-			mCamera.getParameters().setPreviewFormat(ImageFormat.NV21);
-		} catch (IOException io) {
-			Log.d(tag, io.toString());
-			mCamera.release();
-			mCamera = null;
-		}
-		mCamera.startPreview();
-		// Launch autofocus mode 
-		mAutoFocusHandler.postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
-	}
-
-	@Override
-		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-			Log.d(tag, "surfaceChanged: w="+width+",h="+height);
-		}
-
-	@Override
-		public void surfaceDestroyed(SurfaceHolder holder) {
-			Log.d(tag, "surfaceDestroyed");
-			if (mCamera != null) {
-				mCamera.stopPreview();
-				mCamera.setPreviewCallback(null);
-				mCamera.release();
-				mCamera = null;
-			}
-		}
 
 	/* ---------------------- PreviewCallback --------------------- */
 	public void onPreviewFrame(byte[] data, Camera camera) {
