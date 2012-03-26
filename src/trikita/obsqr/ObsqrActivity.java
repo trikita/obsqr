@@ -233,7 +233,9 @@ public class ObsqrActivity extends Activity
 	private Camera openCamera() {
 		Camera camera = Camera.open();
 
-		if (camera == null) {
+		if (camera != null) {
+			Log.d(tag, "Back facing camera open by default");
+		} else {
 			final int sdkVersion = Integer.parseInt(Build.VERSION.SDK);
 			if (sdkVersion >= Build.VERSION_CODES.GINGERBREAD) {
 				int cameraCount = Camera.getNumberOfCameras();
@@ -241,6 +243,15 @@ public class ObsqrActivity extends Activity
 					if (camera != null) break;
 					try {
 						camera = Camera.open(camIdx);
+						Camera.CameraInfo info = new Camera.CameraInfo();
+						Camera.getCameraInfo(camIdx, info);
+						if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+							Log.d(tag, "Back camera open");
+						} else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+							Log.d(tag, "Front camera open");
+						} else {
+							Log.d(tag, "Unknown camera facing");
+						}
 					} catch (RuntimeException e) {
 						Log.d(tag, "Camera failed to open: " + e.toString());
 					}

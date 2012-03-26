@@ -60,7 +60,7 @@ public class QrParser {
 	/** Returns the appropriate parser for current type of decoded content */
 	public QrContent parse(String s) {
 		Log.d(tag, "parse()");
-		if (s.startsWith("http://")) {
+		if (s.startsWith("http://") || s.startsWith("https://")) {
 			return new QrContentUrl(mContext, s);
 		} else if (s.startsWith("mailto:")) {
 			return new QrContentMail(mContext, s);
