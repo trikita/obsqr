@@ -11,10 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface;
 
-import android.view.SurfaceView;
-import android.view.SurfaceHolder;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -26,37 +22,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Button;
 
-import android.hardware.Camera;
-import android.graphics.ImageFormat;
-import java.io.IOException;
 import android.net.Uri;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.text.DateFormat;
 
 import android.util.Log;
 
-public class ObsqrActivity extends Activity 
-	implements Camera.PreviewCallback, Camera.AutoFocusCallback {
+public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecodedListener { 
+	//implements Camera.PreviewCallback, Camera.AutoFocusCallback {
 
 	private final static String tag = "ObsqrActivity";
 	/* Don't perceive click events on mTextContainer till 3 sec run out */
 	private final static int DURATION_OF_KEEPING_TEXT_ON = 3000; 
-	/* It'll be 2 sec between two autoFocus() calls */
-	private final static int AUTOFOCUS_FREQUENCY = 2000;
 	/* Shared preferences title */
 	private final static String PREFS_NAME = "ObsqrSharedPreferences";
 
 	private QrParser mParser;
 	private QrParser.QrContent mQrContent;
 
-	private Preview mPreview;
-
-	private Zbar zbar = new Zbar();
-
-	private Camera mCamera;
-	private Camera.Parameters mParams = null;	
-	private boolean mFocusModeOn;
+	private CameraPreview mCameraPreview;
 
 	private LinearLayout mTextContainer;
 	private TextView mQrTitleView;
@@ -71,17 +53,6 @@ public class ObsqrActivity extends Activity
 		}
 	};
 
-	private Handler mAutoFocusHandler = new Handler();
-	private Runnable mAutoFocusRunnable = new Runnable() {
-		@Override
-		public void run() {
-			mFocusModeOn = true;
-			if (mCamera != null) {
-				mCamera.autoFocus(ObsqrActivity.this);
-			}
-		}
-	};
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,7 +64,8 @@ public class ObsqrActivity extends Activity
 		mParser = QrParser.getInstance();
 		mParser.setContext(this);
 
-		mPreview = (Preview) findViewById(R.id.surface);
+		mCameraPreview = (CameraPreview) findViewById(R.id.surface);
+		mCameraPreview.setOnQrDecodedListener(this);
 		// Decoded qr content will be shown in textview
 		mTextContainer = (LinearLayout) findViewById(R.id.l_text_container);
 		mQrTitleView = (TextView) findViewById(R.id.tv_title);
@@ -130,18 +102,31 @@ public class ObsqrActivity extends Activity
 		}); 
 	}
 
+	public void onQrDecoded(String s) {
+		mKeepTextOnScreenHandler.removeCallbacks(mTextVisibleRunnable);
+		mQrContent = mParser.parse(s);
+		// Show textview with qr content
+		mTextContainer.setVisibility(View.VISIBLE);
+		mQrContentView.setText(mQrContent.toString());
+		mQrTitleView.setText(mQrContent.getTitle());
+		mHelpView.setText(mQrContent.getActionName());
+		// Keep textview on screen 3 sec and hide it
+		mKeepTextOnScreenHandler.postDelayed(mTextVisibleRunnable, 
+				DURATION_OF_KEEPING_TEXT_ON);
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		Log.d(tag, "onResume()");
-		mPreview.requestFocus();
-
-		mCamera = openCamera();
-		if (mCamera == null) {
+		
+		boolean success = mCameraPreview.acquireCamera();
+		if (!success) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Are you sure you want to exit?")
+			builder.setMessage(getResources().getString(R.string.dlg_alert_msg))
 				.setCancelable(false)
-				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				.setPositiveButton(getResources().getString(R.string.dlg_alert_ok_btn_caption),
+						new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						ObsqrActivity.this.finish();
 						dialog.dismiss();
@@ -151,26 +136,16 @@ public class ObsqrActivity extends Activity
 			alert.show();
 			return;
 		}
-
-		mCamera.setPreviewCallback(this);
-		mPreview.setCamera(mCamera);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		Log.d(tag, "onPause()");
-		// Kill all the other threads that were created for periodic operations
-		if (mCamera != null) {
-			mPreview.setCamera(null);
-			mCamera.setPreviewCallback(null);
-			mCamera.release();
-			mCamera = null;
-		}
 
 		mKeepTextOnScreenHandler.removeCallbacks(mTextVisibleRunnable);	
-		mAutoFocusHandler.removeCallbacks(mAutoFocusRunnable);
 		mTextContainer.setVisibility(View.INVISIBLE);
+		mCameraPreview.releaseCamera();
 	}
 
 	@Override
@@ -230,71 +205,4 @@ public class ObsqrActivity extends Activity
 		editor.commit();
 	}
 
-	private Camera openCamera() {
-		Camera camera = Camera.open();
-
-		if (camera != null) {
-			Log.d(tag, "Back facing camera open by default");
-		} else {
-			final int sdkVersion = Integer.parseInt(Build.VERSION.SDK);
-			if (sdkVersion >= Build.VERSION_CODES.GINGERBREAD) {
-				int cameraCount = Camera.getNumberOfCameras();
-				for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
-					if (camera != null) break;
-					try {
-						camera = Camera.open(camIdx);
-						Camera.CameraInfo info = new Camera.CameraInfo();
-						Camera.getCameraInfo(camIdx, info);
-						if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-							Log.d(tag, "Back camera open");
-						} else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-							Log.d(tag, "Front camera open");
-						} else {
-							Log.d(tag, "Unknown camera facing");
-						}
-					} catch (RuntimeException e) {
-						Log.d(tag, "Camera failed to open: " + e.toString());
-					}
-				}
-			}
-			else return null; 
-		}
-
-		return camera; 
-	}
-
-	/* ---------------------- PreviewCallback --------------------- */
-	public void onPreviewFrame(byte[] data, Camera camera) {
-		if (mFocusModeOn) return;
-		if (mParams == null) {
-			mParams = mCamera.getParameters();
-		}
-		mCamera.setPreviewCallback(null);
-		int width = mParams.getPreviewSize().width;  
-		int height = mParams.getPreviewSize().height;
-		// Get decoded string
-		String s = zbar.process(width, height, data);
-		if (s != null) {
-			Log.d(tag, "============= URL: " + s + " =================");
-			mKeepTextOnScreenHandler.removeCallbacks(mTextVisibleRunnable);
-			mQrContent = mParser.parse(s);
-			// Show textview with qr content
-			mTextContainer.setVisibility(View.VISIBLE);
-			mQrContentView.setText(mQrContent.toString());
-			mQrTitleView.setText(mQrContent.getTitle());
-			mHelpView.setText(mQrContent.getActionName());
-			// Keep textview on screen 3 sec and hide it
-			mKeepTextOnScreenHandler.postDelayed(mTextVisibleRunnable, 
-					DURATION_OF_KEEPING_TEXT_ON);
-		}
-		mCamera.setPreviewCallback(this);
-	}
-
-	/* ---------------------- AutoFocusCallback --------------------- */
-	@Override
-	public void onAutoFocus(boolean success, Camera camera) {
-		Log.d(tag, "onAutoFocus()");
-		mAutoFocusHandler.postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
-		mFocusModeOn = false;
-	}
 }
