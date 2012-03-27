@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Obsqr</string>
+	
+	<!-- Swedish translation by jakob@oneegg.se -->
+	<!-- Help prompts -->
+    <string name="help_prompt_text">Tryck för att kopiera texten till urklippet</string>
+    <string name="help_prompt_contact">Tryck för att se kontakten</string>
+    <string name="help_prompt_market">Tryck för att öppna appen i Market</string> <!-- Tryck för att öppna appen i Play Store -->
+    <string name="help_prompt_phone">Tryck för att öppna samtalsappen</string>
+    <string name="help_prompt_geo">Tryck för att se positionen</string>
+    <string name="help_prompt_sms">Tryck för att skicka ett SMS</string>
+    <string name="help_prompt_email">Tryck för att skicka ett mejl</string>
+    <string name="help_prompt_url">Tryck för att följa länken</string>
+
+	<!-- QR types -->
+    <string name="text_qr_type_name">Vanlig text</string>
+    <string name="contact_qr_type_name">Kontaktinformation</string>
+    <string name="market_qr_type_name">App på Market</string> <!-- App på Play Store -->
+    <string name="phone_qr_type_name">Telefonnummer</string>
+    <string name="geo_qr_type_name">Geo-position</string>
+    <string name="sms_qr_type_name">SMS</string>
+    <string name="email_qr_type_name">E-post</string>
+    <string name="url_qr_type_name">URL</string>
+
+	<string name="unsupported_data_text">Icke understödd datatyp</string>
+
+	<!-- Plain text -->
+    <string name="text_qr_action_name">Kopiera texten till Urklipp</string>
+
+	<!-- Contact information -->
+    <string name="contact_qr_name_title">Namn:</string>
+    <string name="contact_qr_phone_title">Telefon:</string>
+    <string name="contact_qr_address_title">Adress:</string>
+    <string name="contact_qr_email_title">E-post:</string>
+    <string name="contact_qr_company_title">Företag:</string>
+
+	<!-- Geolocation -->
+    <string name="geo_qr_title_title">Titel:</string>
+    <string name="geo_qr_latitude_title">Latitud:</string>
+    <string name="geo_qr_latitude_south">S</string>
+    <string name="geo_qr_latitude_north">N</string>
+    <string name="geo_qr_longitude_title">Longitud:</string>
+    <string name="geo_qr_longitude_west">V</string>
+    <string name="geo_qr_longitude_east">Ö</string>
+    <string name="geo_qr_altitude_title">Altitud:</string>
+    <string name="geo_qr_altitude_suffix">meter</string>
+
+	<!-- SMS -->
+    <string name="sms_qr_phone_title">Telefonnummer:</string>
+    <string name="sms_qr_message_title">Text:</string>
+
+	<!-- Email -->
+    <string name="email_qr_send_dlg_title">Skickade e-post med...</string>
+
+    <string name="dlg_tv_question">Om du gillar den här appen får du mer än gärna ge oss feedback på Market</string> <!-- Om du gillar den här appen får du mer än gärna ge oss feedback på Play Store  -->
+    <string name="dlg_btn_ignore_caption">Nej tack</string>
+    <string name="dlg_btn_rate_caption">Ge feedback</string>
+
+    <string name="dlg_alert_msg">Kunde inte öppna någon kamera</string>
+    <string name="dlg_alert_ok_btn_caption">OK</string>
+
+</resources>
