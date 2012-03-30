@@ -52,6 +52,7 @@
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Отправить письмо с помощью...</string>
 
+	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Если Вам действительно нравится это приложение, пожалуйста, оставьте свои комментарии о нем на Маркете</string>
     <string name="dlg_btn_ignore_caption">Пропустить</string>
     <string name="dlg_btn_rate_caption">Проголосовать</string>
@@ -59,4 +60,5 @@
     <string name="dlg_alert_msg">Ошибка при открытии камеры</string>
     <string name="dlg_alert_ok_btn_caption">Заверщить</string>
 
+    <string name="alert_msg_invalid_market_link">Ошибка при открытии Google Play</string>
 </resources>

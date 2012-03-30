@@ -10,6 +10,7 @@ import android.app.Application;
 import android.provider.ContactsContract;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import android.content.ActivityNotFoundException;
 
 /* This class provides QR content parsing for all the types of QRs.
  * The parsers of the different types of QRs implement nested interface QrContent
@@ -212,9 +213,15 @@ public class QrParser {
 		}
 
 		public void launch() {
-			Intent intent = new Intent(Intent.ACTION_VIEW, 
-					Uri.parse(mContent));
-			mContext.startActivity(intent);
+			try {
+				Intent intent = new Intent(Intent.ACTION_VIEW, 
+						Uri.parse(mContent));
+				mContext.startActivity(intent);
+			} catch (ActivityNotFoundException e) {
+				Toast.makeText(mContext, mContext.getResources()
+						.getString(R.string.alert_msg_invalid_market_link),
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		public String toString() {

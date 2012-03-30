@@ -53,6 +53,7 @@
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Skickade e-post med...</string>
 
+	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Om du gillar den här appen får du mer än gärna ge oss feedback på Market</string> <!-- Om du gillar den här appen får du mer än gärna ge oss feedback på Play Store  -->
     <string name="dlg_btn_ignore_caption">Nej tack</string>
     <string name="dlg_btn_rate_caption">Ge feedback</string>
@@ -60,4 +61,5 @@
     <string name="dlg_alert_msg">Kunde inte öppna någon kamera</string>
     <string name="dlg_alert_ok_btn_caption">OK</string>
 
+    <string name="alert_msg_invalid_market_link">Kunde inte öppna Google Play</string>
 </resources>

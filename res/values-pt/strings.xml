@@ -53,6 +53,7 @@
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Enviar email via...</string>
 
+	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Se você gostou desse aplicativo, por favor, deixe o seu comentário no Google Play.</string>
     <string name="dlg_btn_ignore_caption">Ignorar</string>
     <string name="dlg_btn_rate_caption">Avaliar</string>
@@ -60,4 +61,5 @@
     <string name="dlg_alert_msg">Falha ao abrir a câmera.</string>
     <string name="dlg_alert_ok_btn_caption">Ok</string>
 
+    <string name="alert_msg_invalid_market_link">Falha ao abrir Google Play</string>
 </resources>

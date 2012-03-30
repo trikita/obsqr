@@ -53,6 +53,7 @@
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Email verstuurd via...</string>
 
+	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Als je de app goed vond kan je altijd een score geven op Google Play</string>
     <string name="dlg_btn_ignore_caption">Nu niet</string>
     <string name="dlg_btn_rate_caption">Score geven</string>
@@ -60,4 +61,5 @@
     <string name="dlg_alert_msg">Kon geen camera openen.</string>
     <string name="dlg_alert_ok_btn_caption">OK</string>
 
+    <string name="alert_msg_invalid_market_link">Kon geen Google Play openen</string>
 </resources>

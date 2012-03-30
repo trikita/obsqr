@@ -52,6 +52,7 @@
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Sent mail via...</string>
 
+	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">If you really love this app please give your feedback on Market</string>
     <string name="dlg_btn_ignore_caption">Ignore</string>
     <string name="dlg_btn_rate_caption">Rate</string>
@@ -59,4 +60,5 @@
     <string name="dlg_alert_msg">Failed to open any camera</string>
     <string name="dlg_alert_ok_btn_caption">Ok</string>
 
+    <string name="alert_msg_invalid_market_link">Failed to open Google Play</string>
 </resources>
