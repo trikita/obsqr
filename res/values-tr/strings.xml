@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Obsqr</string>
+	
+	<!-- Turkish translation by ncdlek @ XDA -->	
+	<!-- Help prompts -->
+    <string name="help_prompt_text">Metni kopyalamak için dokunun</string>
+    <string name="help_prompt_contact">Kişiyi görüntülemek için dokunun</string>
+    <string name="help_prompt_market">Uygulamayı Market\'te açmak için dokunun</string>
+    <string name="help_prompt_phone">Tuş takımını açmak için dokunun</string>
+    <string name="help_prompt_geo">Konumu görmek için dokunun</string>
+    <string name="help_prompt_sms">Mesaj göndermek için dokunun</string>
+    <string name="help_prompt_email">E-posta göndermek için dokunun</string>
+    <string name="help_prompt_url">Bağlantıyı takip etmek için dokunun</string>
+
+	<!-- QR types -->
+    <string name="text_qr_type_name">Normal metin</string>
+    <string name="contact_qr_type_name">Kişi bilgisi</string>
+    <string name="market_qr_type_name">Market\'te bir uygulama</string>
+    <string name="phone_qr_type_name">Telefon numarası</string>
+    <string name="geo_qr_type_name">Konum</string>
+    <string name="sms_qr_type_name">SMS</string>
+    <string name="email_qr_type_name">E-posta</string>
+    <string name="url_qr_type_name">URL</string>
+
+    <string name="unsupported_data_text">Desteklenmeyen veri çeşidi</string>
+
+	<!-- Plain text -->
+    <string name="text_qr_action_name">Metni kopyala</string>
+
+	<!-- Contact information -->
+    <string name="contact_qr_name_title">İsim:</string>
+    <string name="contact_qr_phone_title">Telefon:</string>
+    <string name="contact_qr_address_title">Adres:</string>
+    <string name="contact_qr_email_title">E-posta:</string>
+    <string name="contact_qr_company_title">Şirket:</string>
+
+	<!-- Geolocation -->
+    <string name="geo_qr_title_title">Başlık:</string>
+    <string name="geo_qr_latitude_title">Latitude:</string>
+    <string name="geo_qr_latitude_south">S</string>
+    <string name="geo_qr_latitude_north">N</string>
+    <string name="geo_qr_longitude_title">Longitude:</string>
+    <string name="geo_qr_longitude_west">W</string>
+    <string name="geo_qr_longitude_east">E</string>
+    <string name="geo_qr_altitude_title">Altitude:</string>
+    <string name="geo_qr_altitude_suffix">meters</string>
+
+	<!-- SMS -->
+    <string name="sms_qr_phone_title">Telefon numarası:</string>
+    <string name="sms_qr_message_title">Metin:</string>
+
+	<!-- Email -->
+    <string name="email_qr_send_dlg_title">...ile e-posta yolla</string>
+
+	<!-- Dialogs and alerts -->
+    <string name="dlg_tv_question">Eğer bu uygulamayı gerçekten sevdiyseniz, lütfen market\'te yorumunuzu yazın</string>
+    <string name="dlg_btn_ignore_caption">Yoksay</string>
+    <string name="dlg_btn_rate_caption">Puanla</string>
+
+    <string name="dlg_alert_msg">Herhangi bir kamera açılamadı</string>
+    <string name="dlg_alert_ok_btn_caption">Tamam</string>
+
+    <string name="alert_msg_invalid_market_link">Konnte Google Play nicht öffnen</string>
+</resources>

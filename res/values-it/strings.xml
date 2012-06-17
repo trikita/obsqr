@@ -6,11 +6,11 @@
 	<!-- Help prompts -->
     <string name="help_prompt_text">Tocca per copiare il testo negli appunti</string>
     <string name="help_prompt_contact">Tocca per aprire il contatto</string>
-    <string name="help_prompt_market">Tocca per aprire l'app nel Market</string>
+    <string name="help_prompt_market">Tocca per aprire l\'app nel Market</string>
     <string name="help_prompt_phone">Tocca per chiamare</string>
     <string name="help_prompt_geo">Tocca per vedere sulla mappa</string>
     <string name="help_prompt_sms">Tocca per spedire un messaggio</string>
-    <string name="help_prompt_email">Tocca per spedire un'email</string>
+    <string name="help_prompt_email">Tocca per spedire un\'email</string>
     <string name="help_prompt_url">Tocca per aprire il link</string>
 
 	<!-- QR types -->

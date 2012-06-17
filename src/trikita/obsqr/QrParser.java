@@ -32,13 +32,9 @@ public class QrParser {
 		public String getActionName();
 	}
 
-	public abstract class BaseQrContent {
+	public abstract static class BaseQrContent implements QrContent {
 		protected String mContent;
 		protected String mTitle;
-
-		public abstract void launch();
-		public abstract String toString();
-		public abstract String getActionName();
 
 		public String getTitle() {
 			return mTitle;
@@ -61,6 +57,24 @@ public class QrParser {
 	/** Returns the appropriate parser for current type of decoded content */
 	public QrContent parse(String s) {
 		Log.d(tag, "parse()");
+		if (QrContentUrl.match(s)) {
+			return new QrContentUrl(mContext, s);
+		} else if (QrContentMail.match(s)) {
+			return new QrContentMail(mContext, s);
+		} else if (QrContentSms.match(s)) {
+			return new QrContentSms(mContext, s);
+		} else if (QrContentGeo.match(s)) {
+			return new QrContentGeo(mContext, s);
+		} else if (QrContentPhone.match(s)) {
+			return new QrContentPhone(mContext, s);
+		} else if (QrContentMarket.match(s)) {
+			return new QrContentMarket(mContext, s);
+		} else if (QrContentContact.match(s)) {
+			return new QrContentContact(mContext, s);
+		} else {
+			return new QrContentText(mContext, s);
+		}
+		/*
 		if (s.startsWith("http://") || s.startsWith("https://")) {
 			return new QrContentUrl(mContext, s);
 		} else if (s.startsWith("mailto:")) {
@@ -78,10 +92,11 @@ public class QrParser {
 		} else {
 			return new QrContentText(mContext, s);
 		}
+		*/
 	}
 
 	/* ----------------------- QR type: plain text --------------------- */
-	private class QrContentText extends BaseQrContent implements QrContent {
+	private static class QrContentText extends BaseQrContent {
 		private Context mContext;
 
 		public QrContentText(Context ctx, String s) {
@@ -104,10 +119,14 @@ public class QrParser {
 		public String getActionName() {
 			return mContext.getResources().getString(R.string.help_prompt_text); 
 		}
+
+		public static boolean match(String s) {
+			return true;
+		}
 	}
 
 	/* ----------------------- QR type: MECARD contact information --------------------- */
-	private class QrContentContact extends BaseQrContent implements QrContent {
+	private static class QrContentContact extends BaseQrContent {
 		private Context mContext;
 
 		/* Contact info */
@@ -200,10 +219,14 @@ public class QrParser {
 		public String getActionName() {
 			return mContext.getResources().getString(R.string.help_prompt_contact);
 		}
+
+		public static boolean match(String s) {
+			return (s.startsWith("MECARD:"));
+		}
 	}
 	
 	/* ----------------------- QR type: market links --------------------- */
-	private class QrContentMarket extends BaseQrContent implements QrContent {
+	private static class QrContentMarket extends BaseQrContent {
 		private Context mContext;
 
 		public QrContentMarket(Context ctx, String s) {
@@ -231,10 +254,14 @@ public class QrParser {
 		public String getActionName() {
 			return mContext.getResources().getString(R.string.help_prompt_market);
 		}
+
+		public static boolean match(String s) {
+			return (s.startsWith("market://"));
+		}
 	}	
 
 	/* ----------------------- QR type: phone number --------------------- */
-	private class QrContentPhone extends BaseQrContent implements QrContent {
+	private static class QrContentPhone extends BaseQrContent {
 		private Context mContext;
 
 		public QrContentPhone(Context ctx, String s) {
@@ -255,11 +282,15 @@ public class QrParser {
 		public String getActionName() {
 			return mContext.getResources().getString(R.string.help_prompt_phone);
 		}
+
+		public static boolean match(String s) {
+			return (s.startsWith("tel:"));
+		}
 	}	
 
 
 	/* ----------------------- QR type: geolocation --------------------- */
-	private class QrContentGeo extends BaseQrContent implements QrContent {
+	private static class QrContentGeo extends BaseQrContent {
 		private Context mContext;
 		private boolean mIsValidData;
 
@@ -303,7 +334,8 @@ public class QrParser {
 				if (params.length == 3) {
 					float altitude = Float.parseFloat(params[2]);	
 					res.append("\n" + mContext.getResources().getString(R.string.geo_qr_altitude_title) + 
-							" " + altitude + " " + mContext.getResources().getString(R.string.geo_qr_altitude_suffix));
+							" " + altitude + " " + 
+							mContext.getResources().getString(R.string.geo_qr_altitude_suffix));
 				}
 				mIsValidData = true;
 				return res.toString();
@@ -315,10 +347,14 @@ public class QrParser {
 		public String getActionName() {
 			return mContext.getResources().getString(R.string.help_prompt_geo);
 		}
+
+		public static boolean match(String s) {
+			return (s.startsWith("geo:"));
+		}
 	}	
 
 	/* ----------------------- QR type: sms --------------------- */
-	private class QrContentSms extends BaseQrContent implements QrContent {
+	private static class QrContentSms extends BaseQrContent {
 		private Context mContext;
 
 		public QrContentSms(Context ctx, String s) {
@@ -353,10 +389,14 @@ public class QrParser {
 		public String getActionName() {
 			return mContext.getResources().getString(R.string.help_prompt_sms);
 		}
+
+		public static boolean match(String s) {
+			return (s.startsWith("smsto:"));
+		}
 	}	
 	
 	/* ----------------------- QR type: email --------------------- */
-	private class QrContentMail extends BaseQrContent implements QrContent {
+	private static class QrContentMail extends BaseQrContent {
 		private Context mContext;
 
 		public QrContentMail(Context ctx, String s) {
@@ -380,11 +420,22 @@ public class QrParser {
 		public String getActionName() {
 			return mContext.getResources().getString(R.string.help_prompt_email);
 		}
+
+		public static boolean match(String s) {
+			return (s.startsWith("mailto:"));
+		}
 	}
 
 	/* ----------------------- QR type: url --------------------- */
-	private class QrContentUrl extends BaseQrContent implements QrContent {
+	private static class QrContentUrl extends BaseQrContent {
 		private Context mContext;
+		private final static String URL_REGEX = "((https?|ftp)\\:\\/\\/)?" + // SCHEME
+			"([a-z0-9+!*(),;?&=\\$_.-]+(\\:[a-z0-9+!*(),;?&=\\$_.-]+)?@)?" + // User and Pass
+			"([a-z0-9-.]*)\\.([a-z]{2,3})" + // Host or IP
+			"(\\:[0-9]{2,5})?" + // Port
+			"(\\/([a-z0-9+\\$_-]\\.?)+)*\\/?" + // Path
+			"(\\?[a-z+&\\$_.-][a-z0-9;:@&%=+\\/\\$_.-]*)?" + // GET Query
+			"(#[a-z_.-][a-z0-9+\\$_.-]*)?"; // Anchor
 
 		public QrContentUrl(Context ctx, String s) {
 			mContext = ctx;
@@ -403,6 +454,12 @@ public class QrParser {
 
 		public String getActionName() {
 			return mContext.getResources().getString(R.string.help_prompt_url);
+		}
+
+		public static boolean match(String s) {
+			Pattern pattern = Pattern.compile(URL_REGEX);
+			Matcher matcher = pattern.matcher(s);
+			return matcher.matches();
 		}
 	}
 
