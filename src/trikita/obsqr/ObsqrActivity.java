@@ -136,6 +136,9 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 			alert.show();
 			return;
 		}
+
+		mCameraPreview.setCameraDisplayOrientation(getWindowManager()
+				.getDefaultDisplay().getRotation());
 	}
 
 	@Override
