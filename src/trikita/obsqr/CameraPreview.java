@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import android.util.Log;
 import android.view.Surface;
-import android.widget.Toast;
 
 /**
  * A simple wrapper around a Camera and a SurfaceView that renders a centered preview of the Camera
@@ -43,7 +42,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	private Camera.Parameters mParams = null;	
 	private int mCameraId;
 	private boolean mRotated = false;
-	private Context mContext;
 
 	private Zbar zbar = new Zbar();
 
@@ -101,9 +99,11 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
 		final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
 		setMeasuredDimension(width, height);
+		Log.d(tag, "setMeasuredDimension w=" + width + " h=" + height);
 
 		if (mSupportedPreviewSizes != null) {
 			mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, width, height);
+			Log.d(tag, "mPreviewSize w=" + mPreviewSize.width + " h=" + mPreviewSize.height);
 		}
 	}
 
