@@ -120,7 +120,8 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		super.onResume();
 		Log.d(tag, "onResume()");
 		
-		boolean success = mCameraPreview.acquireCamera();
+		boolean success = mCameraPreview.acquireCamera(getWindowManager()
+				.getDefaultDisplay().getRotation());
 		if (!success) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(getResources().getString(R.string.dlg_alert_msg))
