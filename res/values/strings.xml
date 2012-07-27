@@ -61,4 +61,5 @@
     <string name="dlg_alert_ok_btn_caption">Ok</string>
 
     <string name="alert_msg_invalid_market_link">Failed to open Google Play</string>
+    <string name="alert_msg_activity_not_found">No application found</string>
 </resources>

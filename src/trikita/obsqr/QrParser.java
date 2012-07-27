@@ -11,6 +11,7 @@ import android.provider.ContactsContract;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import android.content.ActivityNotFoundException;
+import java.net.URL;
 
 /* This class provides QR content parsing for all the types of QRs.
  * The parsers of the different types of QRs implement nested interface QrContent
@@ -26,7 +27,7 @@ public class QrParser {
 	private static QrParser mInstance = null;
 
 	public interface QrContent {
-		public void launch();
+		public void launch() throws android.content.ActivityNotFoundException;
 		public String toString();
 		public String getTitle();
 		public String getActionName();
@@ -57,10 +58,10 @@ public class QrParser {
 	/** Returns the appropriate parser for current type of decoded content */
 	public QrContent parse(String s) {
 		Log.d(tag, "parse()");
-		if (QrContentUrl.match(s)) {
-			return new QrContentUrl(mContext, s);
-		} else if (QrContentMail.match(s)) {
+		if (QrContentMail.match(s)) {
 			return new QrContentMail(mContext, s);
+		} else if (QrContentUrl.match(s)) {
+			return new QrContentUrl(mContext, s);
 		} else if (QrContentSms.match(s)) {
 			return new QrContentSms(mContext, s);
 		} else if (QrContentGeo.match(s)) {
@@ -74,25 +75,6 @@ public class QrParser {
 		} else {
 			return new QrContentText(mContext, s);
 		}
-		/*
-		if (s.startsWith("http://") || s.startsWith("https://")) {
-			return new QrContentUrl(mContext, s);
-		} else if (s.startsWith("mailto:")) {
-			return new QrContentMail(mContext, s);
-		} else if (s.startsWith("smsto:")) {
-			return new QrContentSms(mContext, s);
-		} else if (s.startsWith("geo:")) {
-			return new QrContentGeo(mContext, s);
-		} else if (s.startsWith("tel:")) {
-			return new QrContentPhone(mContext, s);
-		} else if (s.startsWith("market://")) {
-			return new QrContentMarket(mContext, s);
-		} else if (s.startsWith("MECARD:")) {
-			return new QrContentContact(mContext, s);
-		} else {
-			return new QrContentText(mContext, s);
-		}
-		*/
 	}
 
 	/* ----------------------- QR type: plain text --------------------- */
@@ -444,6 +426,10 @@ public class QrParser {
 		}
 
 		public void launch() {
+			if (!mContent.startsWith("http:") &&
+				!mContent.startsWith("https:") &&
+				!mContent.startsWith("ftp:")) { mContent = "http://" + mContent; }
+
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mContent));
 			mContext.startActivity(intent);
 		}

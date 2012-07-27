@@ -74,7 +74,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	public CameraPreview(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		Log.d(tag, "Create CameraPreview");
-		mContext = context;
 
 		mSurfaceView = new SurfaceView(context);
 		addView(mSurfaceView);

@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.net.Uri;
 
 import android.util.Log;
+import android.widget.Toast;
 
 public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecodedListener { 
 	//implements Camera.PreviewCallback, Camera.AutoFocusCallback {
@@ -81,9 +82,15 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 					// messenger - for qr code containing sms,
 					// browser - for qr code containing url,
 					// maps - for qr code containing geolocation, etc...
-					if (mQrContent != null) mQrContent.launch();	
-					// and hide textview 
-					mTextContainer.setVisibility(View.INVISIBLE);
+					try {
+						if (mQrContent != null) mQrContent.launch();	
+						// and hide textview 
+						mTextContainer.setVisibility(View.INVISIBLE);
+					} catch (android.content.ActivityNotFoundException e) {
+						Toast.makeText(ObsqrActivity.this, ObsqrActivity.this
+							.getString(R.string.alert_msg_activity_not_found),
+							Toast.LENGTH_LONG).show();
+					}
 				}
 				return true;
 			}
@@ -94,8 +101,14 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-					if (mQrContent != null) mQrContent.launch();	
-					mTextContainer.setVisibility(View.INVISIBLE);
+					try {
+						if (mQrContent != null) mQrContent.launch();	
+						mTextContainer.setVisibility(View.INVISIBLE);
+					} catch (android.content.ActivityNotFoundException e) {
+						Toast.makeText(ObsqrActivity.this, ObsqrActivity.this
+							.getString(R.string.alert_msg_activity_not_found),
+							Toast.LENGTH_LONG).show();
+					}
 				}
 				return true;
 			}
