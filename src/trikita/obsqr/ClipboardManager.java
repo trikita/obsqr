@@ -18,9 +18,11 @@ public abstract class ClipboardManager {
 		mContext = ctx;
 
 		final int sdkVersion = Integer.parseInt(Build.VERSION.SDK);
-		if (sdkVersion < Build.VERSION_CODES.HONEYCOMB)
+		if (sdkVersion < Build.VERSION_CODES.HONEYCOMB) {
 			return new OldClipboardManager();
-		else return new HoneycombClipboardManager();
+		} else {
+			return new HoneycombClipboardManager();
+		}
 	}
 	
 	/**
@@ -28,11 +30,11 @@ public abstract class ClipboardManager {
 	 * the version to use for all Android versions less than 3.0. 
 	 */
 	private static class OldClipboardManager extends ClipboardManager {
-		private static android.text.ClipboardManager clippy = null;
+		private final android.text.ClipboardManager clippy;
 		
 		public OldClipboardManager() {
-			clippy = (android.text.ClipboardManager)mContext.getSystemService(
-					android.content.Context.CLIPBOARD_SERVICE);
+			clippy = (android.text.ClipboardManager) mContext
+				.getSystemService(Context.CLIPBOARD_SERVICE);
 		}
 		
 		@Override
@@ -42,20 +44,19 @@ public abstract class ClipboardManager {
 	}
 	
 	private static class HoneycombClipboardManager extends ClipboardManager {
-		private static android.content.ClipboardManager clippy = null;
-		private static android.content.ClipData clipData = null;
+		private final android.content.ClipboardManager clippy;
+		private final android.content.ClipData clipData;
 		
 		public HoneycombClipboardManager() {
-			clippy = (android.content.ClipboardManager)mContext.getSystemService(
-					android.content.Context.CLIPBOARD_SERVICE);
+			clippy = (android.content.ClipboardManager) mContext
+				.getSystemService(Context.CLIPBOARD_SERVICE);
 		}
 		
 		@Override
 		public void setText(CharSequence text) {
-			clipData = android.content.ClipData.newPlainText(
-					android.content.ClipDescription.MIMETYPE_TEXT_PLAIN, text);
+			clipData = android.content.ClipData
+				.newPlainText(android.content.ClipDescription.MIMETYPE_TEXT_PLAIN, text);
 			clippy.setPrimaryClip(clipData);
 		}
 	}
-
 }

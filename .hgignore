@@ -1,11 +1,21 @@
 syntax: glob
+
 *.class
 *.dex
 *.orig
 *.swp
 *.pyc
-bin/*
-gen/*
-src/trikita/drel
+
 *.properties
 build.xml
+
+.lvimrc
+
+bin/*
+gen/*
+obj/*
+jni/*
+libs/*
+
+proguard.cfg
+proguard-project.txt

@@ -7,12 +7,12 @@ import android.view.SurfaceView;
 
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
+import android.hardware.Camera.CameraInfo;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
 import android.os.Handler;
-import android.os.Build;
 
 import java.util.List;
 import java.io.IOException;
@@ -33,6 +33,8 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	/* It'll be 2 sec between two autoFocus() calls */
 	private final static int AUTOFOCUS_FREQUENCY = 2000;
 
+	private final Zbar zbar = new Zbar();
+
 	private SurfaceView mSurfaceView;
 	private SurfaceHolder mHolder;
 
@@ -41,19 +43,14 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	private Camera mCamera;
 	private Camera.Parameters mParams = null;	
 	private int mCameraId;
+
 	private boolean mRotated = false;
-
-	private Zbar zbar = new Zbar();
-
 	private boolean mFocusModeOn;
+
 	private OnQrDecodedListener mOnQrDecodedListener;
 
-	public interface OnQrDecodedListener {
-		public void onQrDecoded(String url);
-	}
-
-	private Handler mAutoFocusHandler = new Handler();
-	private Runnable mAutoFocusRunnable = new Runnable() {
+	private final Handler mAutoFocusHandler = new Handler();
+	private final Runnable mAutoFocusRunnable = new Runnable() {
 		@Override
 		public void run() {
 			mFocusModeOn = true;
@@ -62,6 +59,10 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 			}
 		}
 	};
+
+	public interface OnQrDecodedListener {
+		public void onQrDecoded(String url);
+	}
 
 	public CameraPreview(Context context) {
 		this(context, null, 0);
@@ -78,7 +79,7 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		mSurfaceView = new SurfaceView(context);
 		addView(mSurfaceView);
 
-		// Install a SurfaceHolder.Callback so we get notified when the
+		// install a SurfaceHolder.Callback so we get notified when the
 		// underlying surface is created and destroyed.
 		mHolder = mSurfaceView.getHolder();
 		mHolder.addCallback(this);
@@ -193,7 +194,8 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	private void setCameraDisplayOrientation(int rotation) {
 		Log.d(tag, "setCameraDisplayOrientation");
 		if (mCamera == null) return;
-		Camera.CameraInfo info = new Camera.CameraInfo();
+
+		CameraInfo info = new CameraInfo();
 		Log.d(tag, "mCameraId="+mCameraId);
 		Camera.getCameraInfo(mCameraId, info);
 
@@ -203,12 +205,13 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 			case Surface.ROTATION_90: degrees = 90; mRotated = true; break;
 			case Surface.ROTATION_180: degrees = 180; mRotated = false; break;
 			case Surface.ROTATION_270: degrees = 270; mRotated = true; break;
+			default: mRotated = true;
 		}
 
 		Log.d(tag, "Camera rotated: " + degrees + " degrees");
 
 		int result;
-		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+		if (info.facing == CameraInfo.CAMERA_FACING_FRONT) {
 			Log.d(tag, "Front facing camera");
 			result = (info.orientation + degrees) % 360;
 			result = (360 - result) % 360;  // compensate the mirror
@@ -234,6 +237,9 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 			}
 
 			mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
+			if (mSupportedPreviewSizes == null) {
+				Log.d(tag, "mSupportedPreviewSizes is null");
+			}
 			for (Size s : mSupportedPreviewSizes) {
 				Log.d(tag, "Preview size: " + s.width + "x" + s.height);
 			}
@@ -255,31 +261,28 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 
 		if (camera != null) {
 			Log.d(tag, "Back facing camera open by default");
-			mCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+			mCameraId = CameraInfo.CAMERA_FACING_BACK;
 		} else {
-			final int sdkVersion = Integer.parseInt(Build.VERSION.SDK);
-			if (sdkVersion >= Build.VERSION_CODES.GINGERBREAD) {
-				int cameraCount = Camera.getNumberOfCameras();
-				for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
-					if (camera != null) break;
-					try {
-						camera = Camera.open(camIdx);
-						Camera.CameraInfo info = new Camera.CameraInfo();
-						Camera.getCameraInfo(camIdx, info);
-						mCameraId = camIdx;
-						if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-							Log.d(tag, "Back camera open");
-						} else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-							Log.d(tag, "Front camera open");
-						} else {
-							Log.d(tag, "Unknown camera facing");
-						}
-					} catch (RuntimeException e) {
-						Log.d(tag, "Camera failed to open: " + e.toString());
+			// open first found available camera on a device
+			int cameraCount = Camera.getNumberOfCameras();
+			for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
+				if (camera != null) break;
+				try {
+					camera = Camera.open(camIdx);
+					CameraInfo info = new CameraInfo();
+					Camera.getCameraInfo(camIdx, info);
+					mCameraId = camIdx;
+					if (info.facing == CameraInfo.CAMERA_FACING_BACK) {
+						Log.d(tag, "Back camera open");
+					} else if (info.facing == CameraInfo.CAMERA_FACING_FRONT) {
+						Log.d(tag, "Front camera open");
+					} else {
+						Log.d(tag, "Unknown camera facing");
 					}
+				} catch (RuntimeException e) {
+					Log.d(tag, "Camera failed to open: " + e.toString());
 				}
 			}
-			else return null; 
 		}
 		return camera; 
 	}
@@ -294,7 +297,7 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 
 	// ----------------------- SurfaceHolder.Callbacks ------------------- //
 	public void surfaceCreated(SurfaceHolder holder) {
-		// The Surface has been created, acquire the camera and tell it where
+		// the Surface has been created, acquire the camera and tell it where
 		// to draw.
 		Log.d(tag, "surfaceCreated");
 		try {
@@ -312,7 +315,7 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-		// Now that the size is known, set up the camera parameters and begin
+		// now that the size is known, set up the camera parameters and begin
 		// the preview.
 		Log.d(tag, "surfaceChanged: w="+w+",h="+h);
 		if (mCamera != null) {
@@ -329,7 +332,7 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		// Surface will be destroyed when we return, so stop the preview.
+		// the surface will be destroyed when we return, so stop the preview.
 		Log.d(tag, "surfaceDestroyed");
 
 		if (mCamera != null) {
@@ -365,5 +368,4 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		mAutoFocusHandler.postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
 		mFocusModeOn = false;
 	}
-
 }

@@ -5,13 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
-import android.content.ClipData;
-import android.app.Application;
 import android.provider.ContactsContract;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import android.content.ActivityNotFoundException;
-import java.net.URL;
 
 /* This class provides QR content parsing for all the types of QRs.
  * The parsers of the different types of QRs implement nested interface QrContent
@@ -22,6 +18,7 @@ import java.net.URL;
 
 public class QrParser {
 	private final static String tag = "QrParser";
+
 	private Context mContext;
 
 	private static QrParser mInstance = null;
@@ -79,7 +76,7 @@ public class QrParser {
 
 	/* ----------------------- QR type: plain text --------------------- */
 	private static class QrContentText extends BaseQrContent {
-		private Context mContext;
+		private final Context mContext;
 
 		public QrContentText(Context ctx, String s) {
 			mContext = ctx;
@@ -109,7 +106,7 @@ public class QrParser {
 
 	/* ----------------------- QR type: MECARD contact information --------------------- */
 	private static class QrContentContact extends BaseQrContent {
-		private Context mContext;
+		private final Context mContext;
 
 		/* Contact info */
 		private String mName;
@@ -203,13 +200,13 @@ public class QrParser {
 		}
 
 		public static boolean match(String s) {
-			return (s.startsWith("MECARD:"));
+			return s.startsWith("MECARD:");
 		}
 	}
 	
 	/* ----------------------- QR type: market links --------------------- */
 	private static class QrContentMarket extends BaseQrContent {
-		private Context mContext;
+		private final Context mContext;
 
 		public QrContentMarket(Context ctx, String s) {
 			mContext = ctx;
@@ -222,7 +219,7 @@ public class QrParser {
 				Intent intent = new Intent(Intent.ACTION_VIEW, 
 						Uri.parse(mContent));
 				mContext.startActivity(intent);
-			} catch (ActivityNotFoundException e) {
+			} catch (android.content.ActivityNotFoundException e) {
 				Toast.makeText(mContext, mContext.getResources()
 						.getString(R.string.alert_msg_invalid_market_link),
 						Toast.LENGTH_SHORT).show();
@@ -238,13 +235,13 @@ public class QrParser {
 		}
 
 		public static boolean match(String s) {
-			return (s.startsWith("market://"));
+			return s.startsWith("market://");
 		}
 	}	
 
 	/* ----------------------- QR type: phone number --------------------- */
 	private static class QrContentPhone extends BaseQrContent {
-		private Context mContext;
+		private final Context mContext;
 
 		public QrContentPhone(Context ctx, String s) {
 			mContext = ctx;
@@ -266,14 +263,14 @@ public class QrParser {
 		}
 
 		public static boolean match(String s) {
-			return (s.startsWith("tel:"));
+			return s.startsWith("tel:");
 		}
 	}	
 
 
 	/* ----------------------- QR type: geolocation --------------------- */
 	private static class QrContentGeo extends BaseQrContent {
-		private Context mContext;
+		private final Context mContext;
 		private boolean mIsValidData;
 
 		public QrContentGeo(Context ctx, String s) {
@@ -331,13 +328,13 @@ public class QrParser {
 		}
 
 		public static boolean match(String s) {
-			return (s.startsWith("geo:"));
+			return s.startsWith("geo:");
 		}
 	}	
 
 	/* ----------------------- QR type: sms --------------------- */
 	private static class QrContentSms extends BaseQrContent {
-		private Context mContext;
+		private final Context mContext;
 
 		public QrContentSms(Context ctx, String s) {
 			mContext = ctx;
@@ -373,13 +370,13 @@ public class QrParser {
 		}
 
 		public static boolean match(String s) {
-			return (s.startsWith("smsto:"));
+			return s.startsWith("smsto:");
 		}
 	}	
 	
 	/* ----------------------- QR type: email --------------------- */
 	private static class QrContentMail extends BaseQrContent {
-		private Context mContext;
+		private final Context mContext;
 
 		public QrContentMail(Context ctx, String s) {
 			mContext = ctx;
@@ -404,21 +401,13 @@ public class QrParser {
 		}
 
 		public static boolean match(String s) {
-			return (s.startsWith("mailto:"));
+			return s.startsWith("mailto:");
 		}
 	}
 
 	/* ----------------------- QR type: url --------------------- */
 	private static class QrContentUrl extends BaseQrContent {
-		private Context mContext;
-
-		private final static String URL_REGEX = "((https?|ftp)\\:\\/\\/)?" + // SCHEME
-			"([a-z0-9+!*(),;?&=\\$_.-]+(\\:[a-z0-9+!*(),;?&=\\$_.-]+)?@)?" + // User and Pass
-			"([a-z0-9-.]*)\\.([a-z]{2,3})" + // Host or IP
-			"(\\:[0-9]{2,5})?" + // Port
-			"(\\/([a-z0-9+\\$_-]\\.?)+)*\\/?" + // Path
-			"(\\?[a-z+&\\$_.-][a-z0-9;:@&%=+\\/\\$_.-]*)?" + // GET Query
-			"(#[a-z_.-][a-z0-9+\\$_.-]*)?"; // Anchor
+		private final Context mContext;
 
 		public static final String TOP_LEVEL_DOMAIN_STR_FOR_WEB_URL =
 			"(?:"
@@ -505,8 +494,6 @@ public class QrParser {
 		}
 
 		public static boolean match(String s) {
-			//Pattern pattern = Pattern.compile(URL_REGEX);
-			//Matcher matcher = pattern.matcher(s);
 			Matcher matcher = WEB_URL.matcher(s);
 			return matcher.matches();
 		}
