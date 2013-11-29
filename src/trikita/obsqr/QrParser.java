@@ -78,6 +78,40 @@ public class QrParser {
 		}
 	}
 
+	/**
+	 * Extracts tokens from string omitting escaped characters
+	 */
+	public static List<String> getTokens(String s) {
+		List<String> tokens = new ArrayList<String>();
+
+		int len = s.length();
+		StringBuilder builder = new StringBuilder();
+		boolean escaped = false;
+
+		// treat a char sequence between two non-escaped semicolons
+		// as a single token
+		for (int i = 0; i < len; i++) {
+			if (escaped) {
+				builder.append(s.charAt(i));
+				escaped = false;
+			} else {
+				if (s.charAt(i) == ';') {
+					tokens.add(builder.toString());
+					builder = new StringBuilder();
+				} else if (s.charAt(i) == '\\') {
+					escaped = true;
+				} else {
+					builder.append(s.charAt(i));
+				}
+			}
+		}
+
+		for (String t : tokens) {
+			Log.d(tag, "token: " + t);
+		}
+		return tokens;
+	}
+
 	/* ----------------------- QR type: plain text --------------------- */
 	private static class QrContentText extends BaseQrContent {
 		private final Context mContext;
@@ -149,24 +183,24 @@ public class QrParser {
 
 		private void parseContact() {
 			String contact = mContent.substring(7);
-			Log.d(tag, "contact "+contact);
-			String[] tokens = contact.split("(?<!\\\\);");
-			for (int i = 0; i < tokens.length; i++) {
-				tokens[i] = tokens[i].replace("\\", "");
-				if (tokens[i].startsWith("N:")) {
-					mName = tokens[i].substring(2);
+			Log.d(tag, "contact " + contact);
+
+			List<String> tokens = QrParser.getTokens(contact);
+			for (String token : tokens) {
+				if (token.startsWith("N:")) {
+					mName = token.substring(2);
 				}
-				if (tokens[i].startsWith("TEL:")) {
-					mPhone = tokens[i].substring(4);
+				if (token.startsWith("TEL:")) {
+					mPhone = token.substring(4);
 				}
-				if (tokens[i].startsWith("ADR:")) {
-					mAddress = tokens[i].substring(4);
+				if (token.startsWith("ADR:")) {
+					mAddress = token.substring(4);
 				}
-				if (tokens[i].startsWith("EMAIL:")) {
-					mEmail = tokens[i].substring(6);
+				if (token.startsWith("EMAIL:")) {
+					mEmail = token.substring(6);
 				}
-				if (tokens[i].startsWith("ORG:")) {
-					mCompany = tokens[i].substring(4);
+				if (token.startsWith("ORG:")) {
+					mCompany = token.substring(4);
 				}
 			}
 		}
@@ -374,7 +408,7 @@ public class QrParser {
 		}
 
 		public static boolean match(String s) {
-			return s.startsWith("smsto:") || s.startsWith("sms:");
+			return s.startsWith("smsto:");
 		}
 	}	
 	
@@ -527,51 +561,21 @@ public class QrParser {
 			String wifi = mContent.substring(5);
 			Log.d(tag, "wifi " + wifi);
 
-			getTokens(wifi);
-
-			String[] tokens = wifi.split("(?<!\\\\);");
-			for (int i = 0; i < tokens.length; i++) {
-				tokens[i] = tokens[i].replace("\\", "");
-				if (tokens[i].startsWith("T:")) {
-					mType = tokens[i].substring(2);
+			List<String> tokens = QrParser.getTokens(wifi);
+			for (String token : tokens) {
+				if (token.startsWith("T:")) {
+					mType = token.substring(2);
 				}
-				if (tokens[i].startsWith("S:")) {
-					mNetworkSsid = tokens[i].substring(2);
+				if (token.startsWith("S:")) {
+					mNetworkSsid = token.substring(2);
 				}
-				if (tokens[i].startsWith("P:")) {
-					mPassword = tokens[i].substring(2);
+				if (token.startsWith("P:")) {
+					mPassword = token.substring(2);
 				}
-				if (tokens[i].startsWith("H:")) {
-					mSsidHidden = Boolean.valueOf(tokens[i].substring(2));
+				if (token.startsWith("H:")) {
+					mSsidHidden = Boolean.valueOf(token.substring(2));
 				}
 			}
-		}
-
-		private List<String> getTokens(String s) {
-			List<String> tokens = new ArrayList<String>();
-			int len = s.length();
-			StringBuilder builder = new StringBuilder();
-			boolean escaped = false;
-			for (int i = 0; i < len; i++) {
-				if (escaped) {
-					builder.append(s.charAt(i));
-					escaped = false;
-				} else {
-					if (s.charAt(i) == ';') {
-						tokens.add(builder.toString());
-						builder = new StringBuilder();
-					} else if (s.charAt(i) == '\\') {
-						escaped = true;
-					} else {
-						builder.append(s.charAt(i));
-					}
-				}
-			}
-
-			for (String t : tokens) {
-				Log.d(tag, "token: " + t);
-			}
-			return tokens;
 		}
 
 		public String toString() {
