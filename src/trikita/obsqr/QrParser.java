@@ -8,6 +8,8 @@ import android.widget.Toast;
 import android.provider.ContactsContract;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.ArrayList;
+import java.util.List;
 
 /* This class provides QR content parsing for all the types of QRs.
  * The parsers of the different types of QRs implement nested interface QrContent
@@ -69,6 +71,8 @@ public class QrParser {
 			return new QrContentMarket(mContext, s);
 		} else if (QrContentContact.match(s)) {
 			return new QrContentContact(mContext, s);
+		} else if (QrContentWifi.match(s)) {
+			return new QrContentWifi(mContext, s);
 		} else {
 			return new QrContentText(mContext, s);
 		}
@@ -370,7 +374,7 @@ public class QrParser {
 		}
 
 		public static boolean match(String s) {
-			return s.startsWith("smsto:");
+			return s.startsWith("smsto:") || s.startsWith("sms:");
 		}
 	}	
 	
@@ -498,5 +502,107 @@ public class QrParser {
 			return matcher.matches();
 		}
 	}
+
+	/* ----------------------- QR type: wifi --------------------- */
+	private static class QrContentWifi extends BaseQrContent {
+		private final Context mContext;
+
+		/* Wi-Fi access point info */
+		private String mType;
+		private String mNetworkSsid;
+		private String mPassword;
+		private boolean mSsidHidden;
+
+		public QrContentWifi(Context ctx, String s) {
+			mContext = ctx;
+			mContent = s;
+			mTitle = mContext.getResources().getString(R.string.wifi_qr_type_name);
+		}
+
+		public void launch() {
+			// TODO
+		}
+
+		private void parseWifi() {
+			String wifi = mContent.substring(5);
+			Log.d(tag, "wifi " + wifi);
+
+			getTokens(wifi);
+
+			String[] tokens = wifi.split("(?<!\\\\);");
+			for (int i = 0; i < tokens.length; i++) {
+				tokens[i] = tokens[i].replace("\\", "");
+				if (tokens[i].startsWith("T:")) {
+					mType = tokens[i].substring(2);
+				}
+				if (tokens[i].startsWith("S:")) {
+					mNetworkSsid = tokens[i].substring(2);
+				}
+				if (tokens[i].startsWith("P:")) {
+					mPassword = tokens[i].substring(2);
+				}
+				if (tokens[i].startsWith("H:")) {
+					mSsidHidden = Boolean.valueOf(tokens[i].substring(2));
+				}
+			}
+		}
+
+		private List<String> getTokens(String s) {
+			List<String> tokens = new ArrayList<String>();
+			int len = s.length();
+			StringBuilder builder = new StringBuilder();
+			boolean escaped = false;
+			for (int i = 0; i < len; i++) {
+				if (escaped) {
+					builder.append(s.charAt(i));
+					escaped = false;
+				} else {
+					if (s.charAt(i) == ';') {
+						tokens.add(builder.toString());
+						builder = new StringBuilder();
+					} else if (s.charAt(i) == '\\') {
+						escaped = true;
+					} else {
+						builder.append(s.charAt(i));
+					}
+				}
+			}
+
+			for (String t : tokens) {
+				Log.d(tag, "token: " + t);
+			}
+			return tokens;
+		}
+
+		public String toString() {
+			parseWifi();
+
+			StringBuilder res = new StringBuilder();
+			String text;
+			if (mType != null) { 
+				text = mContext.getResources().getString(R.string.wifi_qr_security_title);
+				res.append(text + " " + mType + "\n");
+			}
+			if (mNetworkSsid != null) {
+				text = mContext.getResources().getString(R.string.wifi_qr_ssid_title);
+				res.append(text + " " + mNetworkSsid + "\n");
+			}
+			if (mPassword != null) {
+				text = mContext.getResources().getString(R.string.wifi_qr_password_title);
+				res.append(text + " " + mPassword + "\n");
+			}
+
+			return res.toString();
+		}
+
+		public String getActionName() {
+			//TODO add proper string to strings.xml for wi-fi QR
+			return mContext.getResources().getString(R.string.help_prompt_wifi);
+		}
+
+		public static boolean match(String s) {
+			return s.startsWith("WIFI:");
+		}
+	}	
 
 }

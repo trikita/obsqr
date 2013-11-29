@@ -45,7 +45,7 @@ public abstract class ClipboardManager {
 	
 	private static class HoneycombClipboardManager extends ClipboardManager {
 		private final android.content.ClipboardManager clippy;
-		private final android.content.ClipData clipData;
+		private android.content.ClipData clipData;
 		
 		public HoneycombClipboardManager() {
 			clippy = (android.content.ClipboardManager) mContext

@@ -11,6 +11,7 @@
     <string name="help_prompt_sms">Tap to send a message</string>
     <string name="help_prompt_email">Tap to send an e-mail</string>
     <string name="help_prompt_url">Tap to follow the link</string>
+    <string name="help_prompt_wifi">Tap to connect</string>
 
 	<!-- QR types -->
     <string name="text_qr_type_name">Plain text</string>
@@ -21,6 +22,7 @@
     <string name="sms_qr_type_name">SMS</string>
     <string name="email_qr_type_name">Email</string>
     <string name="url_qr_type_name">URL</string>
+    <string name="wifi_qr_type_name">Wi-Fi access point</string>
 
 	<string name="unsupported_data_text">Unsupported data type</string>
 
@@ -51,6 +53,11 @@
 
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Sent mail via...</string>
+
+	<!-- WiFi-->
+    <string name="wifi_qr_security_title">Security</string>
+    <string name="wifi_qr_ssid_title">Network SSID</string>
+    <string name="wifi_qr_password_title">Password</string>
 
 	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">If you really love this app please give your feedback on Market</string>

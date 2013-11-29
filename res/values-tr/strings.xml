@@ -22,6 +22,7 @@
     <string name="sms_qr_type_name">SMS</string>
     <string name="email_qr_type_name">E-posta</string>
     <string name="url_qr_type_name">URL</string>
+    <string name="wifi_qr_type_name">Wi-Fi erişim noktası</string>
 
     <string name="unsupported_data_text">Desteklenmeyen veri çeşidi</string>
 

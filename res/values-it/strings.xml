@@ -22,6 +22,7 @@
     <string name="sms_qr_type_name">SMS</string>
     <string name="email_qr_type_name">Email</string>
     <string name="url_qr_type_name">Link</string>
+    <string name="wifi_qr_type_name">Punto di accesso WiFi</string>
 
     <string name="unsupported_data_text">Formato dati non supportato</string>
 

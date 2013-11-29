@@ -21,6 +21,7 @@
     <string name="sms_qr_type_name">SMS-сообщение</string>
     <string name="email_qr_type_name">Электронная почта</string>
     <string name="url_qr_type_name">Web-страница</string>
+    <string name="wifi_qr_type_name">Точка доступа WiFi</string>
 
 	<string name="unsupported_data_text">Тип данных не поддерживается</string>
 
