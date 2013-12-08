@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 		package="trikita.obsqr"
 		android:installLocation="auto"
-		android:versionCode="10"
-		android:versionName="2.5">
+		android:versionCode="11"
+		android:versionName="2.6">
 	<application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
 		<activity android:name="ObsqrActivity"
 				android:launchMode="singleTop"
