@@ -12,6 +12,7 @@
     <string name="help_prompt_sms">Tryck för att skicka ett SMS</string>
     <string name="help_prompt_email">Tryck för att skicka ett mejl</string>
     <string name="help_prompt_url">Tryck för att följa länken</string>
+    <string name="help_prompt_wifi">Tryck för att koppla</string>
 
 	<!-- QR types -->
     <string name="text_qr_type_name">Vanlig text</string>
@@ -53,6 +54,11 @@
 
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Skickade e-post med...</string>
+
+	<!-- WiFi-->
+    <string name="wifi_qr_security_title">Säkerhet</string>
+    <string name="wifi_qr_ssid_title">Nätverksnamn</string>
+    <string name="wifi_qr_password_title">Lösenord</string>
 
 	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Om du gillar den här appen får du mer än gärna ge oss feedback på Market</string> <!-- Om du gillar den här appen får du mer än gärna ge oss feedback på Play Store  -->

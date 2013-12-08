@@ -12,6 +12,7 @@
     <string name="help_prompt_sms">Tocca per spedire un messaggio</string>
     <string name="help_prompt_email">Tocca per spedire un\'email</string>
     <string name="help_prompt_url">Tocca per aprire il link</string>
+    <string name="help_prompt_wifi">Tocca per collegare</string>
 
 	<!-- QR types -->
     <string name="text_qr_type_name">Testo</string>
@@ -53,6 +54,11 @@
 
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Invia email...</string>
+
+	<!-- WiFi-->
+    <string name="wifi_qr_security_title">Sicurezza</string>
+    <string name="wifi_qr_ssid_title">Nome della rete</string>
+    <string name="wifi_qr_password_title">Password</string>
 
 	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Se ti piace questa app, per favore votala sul Market!</string>

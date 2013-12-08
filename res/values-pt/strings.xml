@@ -12,6 +12,7 @@
     <string name="help_prompt_sms">Toque para enviar uma mensagem.</string>
     <string name="help_prompt_email">Toque para enviar um e-mail.</string>
     <string name="help_prompt_url">Toque para abrir o link.</string>
+    <string name="help_prompt_wifi">Toque para ligar.</string>
 
 	<!-- QR types -->
     <string name="text_qr_type_name">Texto simples</string>
@@ -53,6 +54,11 @@
 
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Enviar email via...</string>
+
+	<!-- WiFi-->
+    <string name="wifi_qr_security_title">Segurança</string>
+    <string name="wifi_qr_ssid_title">Nome da rede</string>
+    <string name="wifi_qr_password_title">Senha</string>
 
 	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Se você gostou desse aplicativo, por favor, deixe o seu comentário no Google Play.</string>

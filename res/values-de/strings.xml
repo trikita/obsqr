@@ -11,7 +11,8 @@
     <string name="help_prompt_geo">hier tippen um den Standort anzuzeigen</string>
     <string name="help_prompt_sms">hier tippen um eine Nachricht zu senden</string>
     <string name="help_prompt_email">hier tippen um eine E-Mail zu senden</string>
-    <string name="help_prompt_url">hier tippen um dem Link zu folgen.</string>
+    <string name="help_prompt_url">hier tippen um dem Link zu folgen</string>
+    <string name="help_prompt_wifi">hier tippen um zu verbinden</string>
 
 	<!-- QR types -->
     <string name="text_qr_type_name">Klartext</string>
@@ -53,6 +54,11 @@
 
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">E-Mail senden über...</string>
+
+	<!-- WiFi-->
+    <string name="wifi_qr_security_title">Sicherheit</string>
+    <string name="wifi_qr_ssid_title">Netzwerkname</string>
+    <string name="wifi_qr_password_title">Passwort</string>
 
 	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Wenn Ihnen diese Anwendung wirklich gefällt, geben Sie bitte ihre Bewertung im Market ab.</string>

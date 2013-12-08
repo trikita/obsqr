@@ -11,6 +11,7 @@
     <string name="help_prompt_sms">Нажмите, чтобы отправить сообщение</string>
     <string name="help_prompt_email">Нажмите, чтобы отправить письмо</string>
     <string name="help_prompt_url">Нажмите, чтобы перейти по ссылке</string>
+    <string name="help_prompt_wifi">Нажмите, чтобы подключиться</string>
 
 	<!-- QR types -->
     <string name="text_qr_type_name">Текст</string>
@@ -53,6 +54,11 @@
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Отправить письмо с помощью...</string>
 
+	<!-- WiFi-->
+    <string name="wifi_qr_security_title">Безопасность</string>
+    <string name="wifi_qr_ssid_title">SSID сети</string>
+    <string name="wifi_qr_password_title">Пароль</string>
+
 	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Если Вам действительно нравится это приложение, пожалуйста, оставьте свои комментарии о нем на Маркете</string>
     <string name="dlg_btn_ignore_caption">Пропустить</string>
@@ -63,4 +69,6 @@
 
     <string name="alert_msg_invalid_market_link">Ошибка при открытии Google Play</string>
     <string name="alert_msg_activity_not_found">Приложение не найдено</string>
+    <string name="alert_msg_wifi_connected">Соединение установлено</string>
+    <string name="alert_msg_wifi_failed">Не удалось подключиться к сети</string>
 </resources>

@@ -12,6 +12,7 @@
     <string name="help_prompt_sms">Mesaj göndermek için dokunun</string>
     <string name="help_prompt_email">E-posta göndermek için dokunun</string>
     <string name="help_prompt_url">Bağlantıyı takip etmek için dokunun</string>
+    <string name="help_prompt_wifi">Bağlanmak için dokunun</string>
 
 	<!-- QR types -->
     <string name="text_qr_type_name">Normal metin</string>
@@ -53,6 +54,11 @@
 
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">...ile e-posta yolla</string>
+
+	<!-- WiFi-->
+    <string name="wifi_qr_security_title">Güvenlik</string>
+    <string name="wifi_qr_ssid_title">Ağ adı</string>
+    <string name="wifi_qr_password_title">Şifre</string>
 
 	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Eğer bu uygulamayı gerçekten sevdiyseniz, lütfen market\'te yorumunuzu yazın</string>

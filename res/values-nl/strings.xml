@@ -12,6 +12,7 @@
     <string name="help_prompt_sms">Tap om een bericht te sturen</string>
     <string name="help_prompt_email">Tap om een email te sturen</string>
     <string name="help_prompt_url">Tap om de link te openen</string>
+    <string name="help_prompt_wifi">Tap om te verbinden</string>
 
 	<!-- QR types -->
     <string name="text_qr_type_name">Platte tekst</string>
@@ -53,6 +54,11 @@
 
 	<!-- Email -->
     <string name="email_qr_send_dlg_title">Email verstuurd via...</string>
+
+	<!-- WiFi-->
+    <string name="wifi_qr_security_title">Veiligheid</string>
+    <string name="wifi_qr_ssid_title">Netzwerkname</string>
+    <string name="wifi_qr_password_title">Wachtwoord</string>
 
 	<!-- Dialogs and alerts -->
     <string name="dlg_tv_question">Als je de app goed vond kan je altijd een score geven op Google Play</string>

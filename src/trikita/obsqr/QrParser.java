@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.ArrayList;
 import java.util.List;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 
 /* This class provides QR content parsing for all the types of QRs.
  * The parsers of the different types of QRs implement nested interface QrContent
@@ -105,10 +107,6 @@ public class QrParser {
 				}
 			}
 		}
-
-		for (String t : tokens) {
-			Log.d(tag, "token: " + t);
-		}
 		return tokens;
 	}
 
@@ -119,13 +117,13 @@ public class QrParser {
 		public QrContentText(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
-			mTitle = mContext.getResources().getString(R.string.text_qr_type_name);
+			mTitle = mContext.getString(R.string.text_qr_type_name);
 		}
 
 		public void launch() {
 			ClipboardManager clipboard = ClipboardManager.newInstance(mContext);
 			clipboard.setText(mContent);
-			String text = mContext.getResources().getString(R.string.text_qr_action_name);
+			String text = mContext.getString(R.string.text_qr_action_name);
 			Toast.makeText(mContext, text, Toast.LENGTH_LONG).show();
 		}
 
@@ -134,7 +132,7 @@ public class QrParser {
 		}
 
 		public String getActionName() {
-			return mContext.getResources().getString(R.string.help_prompt_text); 
+			return mContext.getString(R.string.help_prompt_text); 
 		}
 
 		public static boolean match(String s) {
@@ -156,7 +154,7 @@ public class QrParser {
 		public QrContentContact(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
-			mTitle = mContext.getResources().getString(R.string.contact_qr_type_name);
+			mTitle = mContext.getString(R.string.contact_qr_type_name);
 		}
 
 		public void launch() {
@@ -211,30 +209,30 @@ public class QrParser {
 			StringBuilder res = new StringBuilder();
 			String text;
 			if (mName != null) { 
-				text = mContext.getResources().getString(R.string.contact_qr_name_title);
+				text = mContext.getString(R.string.contact_qr_name_title);
 				res.append(text + " " + mName + "\n");
 			}
 			if (mPhone != null) {
-				text = mContext.getResources().getString(R.string.contact_qr_phone_title);
+				text = mContext.getString(R.string.contact_qr_phone_title);
 				res.append(text + " " + mPhone + "\n");
 			}
 			if (mAddress != null) {
-				text = mContext.getResources().getString(R.string.contact_qr_address_title);
+				text = mContext.getString(R.string.contact_qr_address_title);
 				res.append(text + " " + mAddress + "\n");
 			}
 			if (mEmail != null) {
-				text = mContext.getResources().getString(R.string.contact_qr_email_title);
+				text = mContext.getString(R.string.contact_qr_email_title);
 				res.append(text + " " + mEmail + "\n");
 			}
 			if (mCompany != null) { 
-				text = mContext.getResources().getString(R.string.contact_qr_company_title);
+				text = mContext.getString(R.string.contact_qr_company_title);
 				res.append(text + " " + mCompany);
 			}
 			return res.toString();
 		}
 
 		public String getActionName() {
-			return mContext.getResources().getString(R.string.help_prompt_contact);
+			return mContext.getString(R.string.help_prompt_contact);
 		}
 
 		public static boolean match(String s) {
@@ -249,7 +247,7 @@ public class QrParser {
 		public QrContentMarket(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
-			mTitle = mContext.getResources().getString(R.string.market_qr_type_name);
+			mTitle = mContext.getString(R.string.market_qr_type_name);
 		}
 
 		public void launch() {
@@ -269,7 +267,7 @@ public class QrParser {
 		}
 
 		public String getActionName() {
-			return mContext.getResources().getString(R.string.help_prompt_market);
+			return mContext.getString(R.string.help_prompt_market);
 		}
 
 		public static boolean match(String s) {
@@ -284,7 +282,7 @@ public class QrParser {
 		public QrContentPhone(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
-			mTitle = mContext.getResources().getString(R.string.phone_qr_type_name);
+			mTitle = mContext.getString(R.string.phone_qr_type_name);
 		}
 
 		public void launch() {
@@ -297,7 +295,7 @@ public class QrParser {
 		}
 
 		public String getActionName() {
-			return mContext.getResources().getString(R.string.help_prompt_phone);
+			return mContext.getString(R.string.help_prompt_phone);
 		}
 
 		public static boolean match(String s) {
@@ -314,7 +312,7 @@ public class QrParser {
 		public QrContentGeo(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
-			mTitle = mContext.getResources().getString(R.string.geo_qr_type_name);
+			mTitle = mContext.getString(R.string.geo_qr_type_name);
 		}
 
 		public void launch() {
@@ -328,41 +326,41 @@ public class QrParser {
 			String[] tokens = mContent.substring(4).split("\\?q=");
 			StringBuilder res = new StringBuilder();
 			if (tokens.length == 2 && tokens[1].length() > 0) {
-				res.append(mContext.getResources().getString(R.string.geo_qr_title_title) +
+				res.append(mContext.getString(R.string.geo_qr_title_title) +
 						" " + tokens[1] + "\n");
 			}
 
 			String[] params = tokens[0].split(",");
 			if (params.length < 2 || params.length > 3) {
-				return mContext.getResources().getString(R.string.unsupported_data_text);
+				return mContext.getString(R.string.unsupported_data_text);
 			}
 
 			try {
 				float latitude = Float.parseFloat(params[0]);
-				String southMark = mContext.getResources().getString(R.string.geo_qr_latitude_south);
-				String northMark = mContext.getResources().getString(R.string.geo_qr_latitude_north);
-				res.append(mContext.getResources().getString(R.string.geo_qr_latitude_title) +
+				String southMark = mContext.getString(R.string.geo_qr_latitude_south);
+				String northMark = mContext.getString(R.string.geo_qr_latitude_north);
+				res.append(mContext.getString(R.string.geo_qr_latitude_title) +
 						" " + Math.abs(latitude) + "\u00b0 " + (latitude < 0 ? southMark : northMark));
 				float longtitude = Float.parseFloat(params[1]);	
-				String westMark = mContext.getResources().getString(R.string.geo_qr_longitude_west);
-				String eastMark = mContext.getResources().getString(R.string.geo_qr_longitude_east);
-				res.append("\n" + mContext.getResources().getString(R.string.geo_qr_longitude_title) + 
+				String westMark = mContext.getString(R.string.geo_qr_longitude_west);
+				String eastMark = mContext.getString(R.string.geo_qr_longitude_east);
+				res.append("\n" + mContext.getString(R.string.geo_qr_longitude_title) + 
 						" " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? westMark : eastMark));
 				if (params.length == 3) {
 					float altitude = Float.parseFloat(params[2]);	
-					res.append("\n" + mContext.getResources().getString(R.string.geo_qr_altitude_title) + 
+					res.append("\n" + mContext.getString(R.string.geo_qr_altitude_title) + 
 							" " + altitude + " " + 
-							mContext.getResources().getString(R.string.geo_qr_altitude_suffix));
+							mContext.getString(R.string.geo_qr_altitude_suffix));
 				}
 				mIsValidData = true;
 				return res.toString();
 			} catch (NumberFormatException e) {
-				return mContext.getResources().getString(R.string.unsupported_data_text);
+				return mContext.getString(R.string.unsupported_data_text);
 			}
 		}
 
 		public String getActionName() {
-			return mContext.getResources().getString(R.string.help_prompt_geo);
+			return mContext.getString(R.string.help_prompt_geo);
 		}
 
 		public static boolean match(String s) {
@@ -377,7 +375,7 @@ public class QrParser {
 		public QrContentSms(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
-			mTitle = mContext.getResources().getString(R.string.sms_qr_type_name);
+			mTitle = mContext.getString(R.string.sms_qr_type_name);
 		}
 
 		public void launch() {
@@ -394,17 +392,17 @@ public class QrParser {
 
 		public String toString() {
 			String[] s = mContent.split(":");
-			String text = mContext.getResources().getString(R.string.sms_qr_phone_title);
+			String text = mContext.getString(R.string.sms_qr_phone_title);
 			String res = text + " " + s[1];
 			if (s.length > 2) {
-				text = mContext.getResources().getString(R.string.sms_qr_message_title);
+				text = mContext.getString(R.string.sms_qr_message_title);
 				res = res + "\n" + text + " " + s[2];
 			}
 			return res;
 		}
 
 		public String getActionName() {
-			return mContext.getResources().getString(R.string.help_prompt_sms);
+			return mContext.getString(R.string.help_prompt_sms);
 		}
 
 		public static boolean match(String s) {
@@ -419,14 +417,14 @@ public class QrParser {
 		public QrContentMail(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
-			mTitle = mContext.getResources().getString(R.string.email_qr_type_name);
+			mTitle = mContext.getString(R.string.email_qr_type_name);
 		}
 
 		public void launch() {
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain"); 
 			intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mContent.substring(7)});
-			String text = mContext.getResources().getString(R.string.email_qr_send_dlg_title);
+			String text = mContext.getString(R.string.email_qr_send_dlg_title);
 			mContext.startActivity(Intent.createChooser(intent, text));
 		}
 
@@ -435,7 +433,7 @@ public class QrParser {
 		}
 
 		public String getActionName() {
-			return mContext.getResources().getString(R.string.help_prompt_email);
+			return mContext.getString(R.string.help_prompt_email);
 		}
 
 		public static boolean match(String s) {
@@ -511,7 +509,7 @@ public class QrParser {
 		public QrContentUrl(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
-			mTitle = mContext.getResources().getString(R.string.url_qr_type_name);
+			mTitle = mContext.getString(R.string.url_qr_type_name);
 		}
 
 		public void launch() {
@@ -528,7 +526,7 @@ public class QrParser {
 		}
 
 		public String getActionName() {
-			return mContext.getResources().getString(R.string.help_prompt_url);
+			return mContext.getString(R.string.help_prompt_url);
 		}
 
 		public static boolean match(String s) {
@@ -550,11 +548,59 @@ public class QrParser {
 		public QrContentWifi(Context ctx, String s) {
 			mContext = ctx;
 			mContent = s;
-			mTitle = mContext.getResources().getString(R.string.wifi_qr_type_name);
+			mTitle = mContext.getString(R.string.wifi_qr_type_name);
 		}
 
 		public void launch() {
-			// TODO
+			WifiConfiguration conf = new WifiConfiguration();
+			conf.SSID = "\"" + mNetworkSsid + "\"";
+
+			if (mType.equals("WEP")) {
+				if (mPassword.matches("[0-9A-Fa-f]+")) {
+					conf.wepKeys[0] = mPassword;
+				} else {
+					conf.wepKeys[0] = "\"" + mPassword + "\""; 
+				}
+				conf.wepTxKeyIndex = 0;
+
+				conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+				conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+			} else if (mType.equals("WPA")) {
+				conf.preSharedKey = "\""+ mPassword +"\"";
+			} else if (mType.equals("nopass")) {
+				conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+			} else {
+				Log.d(tag, "failed to read wifi configuration");
+				return;
+			}
+
+			WifiManager wifiManager = (WifiManager) mContext
+				.getSystemService(Context.WIFI_SERVICE); 
+			if (!wifiManager.isWifiEnabled()) {
+				Log.d(tag, "enable wifi");
+				wifiManager.setWifiEnabled(true);
+			} else {
+				Log.d(tag, "wifi is already enabled");
+			}
+
+			int networkId = wifiManager.addNetwork(conf);
+			wifiManager.saveConfiguration();
+			if (networkId != -1) {
+				Log.d(tag, "added new network " + mNetworkSsid + " successfully");
+				if (wifiManager.enableNetwork(networkId, true)) {
+					Toast.makeText(mContext,
+						mContext.getString(R.string.alert_msg_wifi_connected),
+						Toast.LENGTH_LONG).show();
+					Log.d(tag, "connected to network " + mNetworkSsid + " successfully");
+				} else {
+					Toast.makeText(mContext,
+						mContext.getString(R.string.alert_msg_wifi_failed),
+						Toast.LENGTH_LONG).show();
+					Log.d(tag, "failed to connect to network " + mNetworkSsid);
+				}
+			} else {
+				Log.d(tag, "failed to add new wifi network");
+			}
 		}
 
 		private void parseWifi() {
@@ -576,6 +622,10 @@ public class QrParser {
 					mSsidHidden = Boolean.valueOf(token.substring(2));
 				}
 			}
+
+			if (mType == null) {
+				mType = "nopass";
+			}
 		}
 
 		public String toString() {
@@ -584,15 +634,15 @@ public class QrParser {
 			StringBuilder res = new StringBuilder();
 			String text;
 			if (mType != null) { 
-				text = mContext.getResources().getString(R.string.wifi_qr_security_title);
+				text = mContext.getString(R.string.wifi_qr_security_title);
 				res.append(text + " " + mType + "\n");
 			}
 			if (mNetworkSsid != null) {
-				text = mContext.getResources().getString(R.string.wifi_qr_ssid_title);
+				text = mContext.getString(R.string.wifi_qr_ssid_title);
 				res.append(text + " " + mNetworkSsid + "\n");
 			}
 			if (mPassword != null) {
-				text = mContext.getResources().getString(R.string.wifi_qr_password_title);
+				text = mContext.getString(R.string.wifi_qr_password_title);
 				res.append(text + " " + mPassword + "\n");
 			}
 
@@ -600,8 +650,7 @@ public class QrParser {
 		}
 
 		public String getActionName() {
-			//TODO add proper string to strings.xml for wi-fi QR
-			return mContext.getResources().getString(R.string.help_prompt_wifi);
+			return mContext.getString(R.string.help_prompt_wifi);
 		}
 
 		public static boolean match(String s) {
