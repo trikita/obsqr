@@ -21,10 +21,26 @@ android {
 	compileSdkVersion 'android-19'
 	buildToolsVersion '20.0.0'
 
+	defaultConfig {
+		minSdkVersion 4
+		targetSdkVersion 19
+		versionCode 12
+		versionName "2.6"
+	}
+
+	signingConfigs {
+		release
+	}
+
 	buildTypes {
 		release {
 			runProguard false
 			/*proguardFile getDefaultProguardFile('proguard-android.txt')*/
+			signingConfig signingConfigs.release
+			applicationVariants.all { variant ->
+				def file = variant.outputFile
+				variant.outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+			}
 		}
 	}
 
@@ -32,6 +48,7 @@ android {
 		ndk {
 			moduleName "zbar"
 			ldLibs "log"
+			cFlags "-std=c99"
 		}
 	}
 
@@ -58,6 +75,22 @@ android {
 		}
 		fat
 	}
+
+	lintOptions {
+		abortOnError false
+	}
+}
+
+if (project.hasProperty('storeFile') &&
+		project.hasProperty('storePassword') &&
+		project.hasProperty('keyAlias') &&
+		project.hasProperty('keyPassword')) {
+	android.signingConfigs.release.storeFile = file(storeFile)
+	android.signingConfigs.release.storePassword = storePassword
+	android.signingConfigs.release.keyAlias = keyAlias
+	android.signingConfigs.release.keyPassword = keyPassword
+} else {
+	buildTypes.release.signingConfig = null
 }
 
 task appStart(type: Exec, dependsOn: ':installArmDebug') {
