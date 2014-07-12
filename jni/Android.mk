@@ -37,8 +37,7 @@ LOCAL_MODULE    := zbar
 LOCAL_SRC_FILES := convert.c decoder.c error.c image.c img_scanner.c \
 	refcnt.c scanner.c symbol.c video.c window.c \
 	\
-	qrcode/bch15_5.c qrcode/binarize.c qrcode/isaac.c qrcode/qrdec.c qrcode/qrdectxt.c \
-	qrcode/rs.c qrcode/util.c \
+	bch15_5.c binarize.c isaac.c qrdec.c qrdectxt.c rs.c util.c \
 	\
 	processor/null.c video/null.c window/null.c decoder/qr_finder.c \
 	trikita_zbar.c

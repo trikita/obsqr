@@ -1,0 +1,1 @@
+../zbar/zbar/qrcode/bch15_5.c

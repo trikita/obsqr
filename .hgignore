@@ -14,7 +14,6 @@ build.xml
 bin/*
 gen/*
 obj/*
-jni/*
 libs/*
 
 proguard.cfg
