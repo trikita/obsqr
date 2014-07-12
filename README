@@ -12,17 +12,11 @@ Both, ARM and x86 architectures are supported.
 Build
 -----
 
-obsqr uses zbar library to decode QR images, so before building obsqr you need
-to install zbar first. 
+obsqr uses zbar library to decode QR images. Zbar mirror is added as a subrepo
+so it's fetched automatically. Zbar sources are added to the jni directory as
+symlinks.
 
-To make easier, there is a helper script called 'fetch-zbar.sh':
-
-	$ bash fetch-zbar.sh
-
-This will fetch zbar sources from the official repository and
-create symlinks to the zbar sources inside `jni` directory.
-
-Then, update project accodring to your SDK version:
+Update project accodring to your SDK version:
 
 	$ android update project -p . -t <your-target>
 
