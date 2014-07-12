@@ -1,20 +1,9 @@
 syntax: glob
 
-*.class
-*.dex
-*.orig
 *.swp
-*.pyc
-
 *.properties
-build.xml
 
 .lvimrc
-
-bin/*
-gen/*
-obj/*
-libs/*
-
-proguard.cfg
+build/*
+.gradle/*
 proguard-project.txt

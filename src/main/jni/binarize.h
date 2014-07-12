@@ -1,0 +1,1 @@
+../../../zbar/zbar/qrcode/binarize.h

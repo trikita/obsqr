@@ -1,0 +1,1 @@
+../../../zbar/zbar/img_scanner.h

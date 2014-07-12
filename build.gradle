@@ -1,0 +1,66 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.android.tools.build:gradle:0.11.1+'
+	}
+}
+
+apply plugin: 'android'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'com.jakewharton:butterknife:5.1.1+'
+}
+
+android {
+	compileSdkVersion 'android-19'
+	buildToolsVersion '20.0.0'
+
+	buildTypes {
+		release {
+			runProguard false
+			/*proguardFile getDefaultProguardFile('proguard-android.txt')*/
+		}
+	}
+
+	defaultConfig {
+		ndk {
+			moduleName "zbar"
+			ldLibs "log"
+		}
+	}
+
+	productFlavors {
+		x86 {
+			ndk {
+				abiFilter "x86"
+			}
+		}
+		mips {
+			ndk {
+				abiFilter "mips"
+			}
+		}
+		armv7 {
+			ndk {
+				abiFilter "armeabi-v7a"
+			}
+		}
+		arm {
+			ndk {
+				abiFilter "armeabi"
+			}
+		}
+		fat
+	}
+}
+
+task appStart(type: Exec, dependsOn: ':installArmDebug') {
+	commandLine 'adb', 'shell', 'am', 'start', '-n', 'trikita.obsqr/.ObsqrActivity'
+}
+
