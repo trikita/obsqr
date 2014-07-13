@@ -344,16 +344,24 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	}
 
 	/* ---------------------- PreviewCallback --------------------- */
+	private int mLastKnownWidth = -1;
+	private int mLastKnownHeight = -1;
+
 	public void onPreviewFrame(byte[] data, Camera camera) {
 		if (mFocusModeOn) return;
 		
 		mCamera.setPreviewCallback(null);
 		int width = mParams.getPreviewSize().width;  
 		int height = mParams.getPreviewSize().height;
+		
+		if (width != mLastKnownWidth || height != mLastKnownHeight) {
+			Log.d(tag, "onPreviewFrame w=" + width + " h=" + height);
+			mLastKnownWidth = width;
+			mLastKnownHeight = height;
+		}
+
 		// Get decoded string
-		Log.d(tag, "onPreviewFrame w=" + width + " h=" + height);
 		String s = zbar.process(width, height, data);
-		Log.d(tag, "Decoded string: " +s);
 		if (s != null) {
 			Log.d(tag, "============= URL: " + s + " =================");
 			mOnQrDecodedListener.onQrDecoded(s);
