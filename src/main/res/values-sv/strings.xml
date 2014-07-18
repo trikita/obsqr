@@ -1,72 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Obsqr</string>
-	
+	<string name="app_name">Obsqr</string>
+
 	<!-- Swedish translation by jakob@oneegg.se -->
-	<!-- Help prompts -->
-    <string name="help_prompt_text">Tryck för att kopiera texten till urklippet</string>
-    <string name="help_prompt_contact">Tryck för att se kontakten</string>
-    <string name="help_prompt_market">Tryck för att öppna appen i Market</string> <!-- Tryck för att öppna appen i Play Store -->
-    <string name="help_prompt_phone">Tryck för att öppna samtalsappen</string>
-    <string name="help_prompt_geo">Tryck för att se positionen</string>
-    <string name="help_prompt_sms">Tryck för att skicka ett SMS</string>
-    <string name="help_prompt_email">Tryck för att skicka ett mejl</string>
-    <string name="help_prompt_url">Tryck för att följa länken</string>
-    <string name="help_prompt_wifi">Tryck för att koppla</string>
+	<!--[> Help prompts <]-->
+	<!--<string name="action_text">Tryck för att kopiera texten till urklippet</string>-->
+	<!--<string name="action_contact">Tryck för att se kontakten</string>-->
+	<!--<string name="action_market">Tryck för att öppna appen i Market</string> [> Tryck för att öppna appen i Play Store <]-->
+	<!--<string name="action_phone">Tryck för att öppna samtalsappen</string>-->
+	<!--<string name="action_geo">Tryck för att se positionen</string>-->
+	<!--<string name="action_sms">Tryck för att skicka ett SMS</string>-->
+	<!--<string name="action_email">Tryck för att skicka ett mejl</string>-->
+	<!--<string name="action_url">Tryck för att följa länken</string>-->
+	<!--<string name="action_wifi">Tryck för att koppla</string>-->
 
 	<!-- QR types -->
-    <string name="text_qr_type_name">Vanlig text</string>
-    <string name="contact_qr_type_name">Kontaktinformation</string>
-    <string name="market_qr_type_name">App på Market</string> <!-- App på Play Store -->
-    <string name="phone_qr_type_name">Telefonnummer</string>
-    <string name="geo_qr_type_name">Geo-position</string>
-    <string name="sms_qr_type_name">SMS</string>
-    <string name="email_qr_type_name">E-post</string>
-    <string name="url_qr_type_name">URL</string>
-    <string name="wifi_qr_type_name">Wi-Fi-åtkomstpunkt</string>
+	<string name="title_text">Vanlig text</string>
+	<string name="title_contact">Kontaktinformation</string>
+	<string name="title_market">App på Market</string> <!-- App på Play Store -->
+	<string name="title_phone">Telefonnummer</string>
+	<string name="title_geo">Geo-position</string>
+	<string name="title_sms">SMS</string>
+	<string name="title_email">E-post</string>
+	<string name="title_url">URL</string>
+	<string name="title_wifi">Wi-Fi-åtkomstpunkt</string>
 
 	<string name="unsupported_data_text">Icke understödd datatyp</string>
 
 	<!-- Plain text -->
-    <string name="text_qr_action_name">Kopiera texten till Urklipp</string>
+	<string name="text_qr_action_name">Kopiera texten till Urklipp</string>
 
 	<!-- Contact information -->
-    <string name="contact_qr_name_title">Namn:</string>
-    <string name="contact_qr_phone_title">Telefon:</string>
-    <string name="contact_qr_address_title">Adress:</string>
-    <string name="contact_qr_email_title">E-post:</string>
-    <string name="contact_qr_company_title">Företag:</string>
+	<string name="contact_qr_name_title">Namn:</string>
+	<string name="contact_qr_phone_title">Telefon:</string>
+	<string name="contact_qr_address_title">Adress:</string>
+	<string name="contact_qr_email_title">E-post:</string>
+	<string name="contact_qr_company_title">Företag:</string>
 
 	<!-- Geolocation -->
-    <string name="geo_qr_title_title">Titel:</string>
-    <string name="geo_qr_latitude_title">Latitud:</string>
-    <string name="geo_qr_latitude_south">S</string>
-    <string name="geo_qr_latitude_north">N</string>
-    <string name="geo_qr_longitude_title">Longitud:</string>
-    <string name="geo_qr_longitude_west">V</string>
-    <string name="geo_qr_longitude_east">Ö</string>
-    <string name="geo_qr_altitude_title">Altitud:</string>
-    <string name="geo_qr_altitude_suffix">meter</string>
+	<string name="geo_qr_title_title">Titel:</string>
+	<string name="geo_qr_latitude_title">Latitud:</string>
+	<string name="geo_qr_latitude_south">S</string>
+	<string name="geo_qr_latitude_north">N</string>
+	<string name="geo_qr_longitude_title">Longitud:</string>
+	<string name="geo_qr_longitude_west">V</string>
+	<string name="geo_qr_longitude_east">Ö</string>
+	<string name="geo_qr_altitude_title">Altitud:</string>
+	<string name="geo_qr_altitude_suffix">meter</string>
 
 	<!-- SMS -->
-    <string name="sms_qr_phone_title">Telefonnummer:</string>
-    <string name="sms_qr_message_title">Text:</string>
+	<string name="sms_qr_phone_title">Telefonnummer:</string>
+	<string name="sms_qr_message_title">Text:</string>
 
 	<!-- Email -->
-    <string name="email_qr_send_dlg_title">Skickade e-post med...</string>
+	<string name="email_qr_send_dlg_title">Skickade e-post med…</string>
 
 	<!-- WiFi-->
-    <string name="wifi_qr_security_title">Säkerhet</string>
-    <string name="wifi_qr_ssid_title">Nätverksnamn</string>
-    <string name="wifi_qr_password_title">Lösenord</string>
+	<string name="wifi_qr_security_title">Säkerhet</string>
+	<string name="wifi_qr_ssid_title">Nätverksnamn</string>
+	<string name="wifi_qr_password_title">Lösenord</string>
 
 	<!-- Dialogs and alerts -->
-    <string name="dlg_tv_question">Om du gillar den här appen får du mer än gärna ge oss feedback på Market</string> <!-- Om du gillar den här appen får du mer än gärna ge oss feedback på Play Store  -->
-    <string name="dlg_btn_ignore_caption">Nej tack</string>
-    <string name="dlg_btn_rate_caption">Ge feedback</string>
+	<string name="dlg_alert_msg">Kunde inte öppna någon kamera</string>
+	<string name="dlg_alert_ok_btn_caption">OK</string>
 
-    <string name="dlg_alert_msg">Kunde inte öppna någon kamera</string>
-    <string name="dlg_alert_ok_btn_caption">OK</string>
-
-    <string name="alert_msg_invalid_market_link">Kunde inte öppna Google Play</string>
+	<string name="alert_msg_invalid_market_link">Kunde inte öppna Google Play</string>
 </resources>

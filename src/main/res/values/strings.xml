@@ -1,74 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Obsqr</string>
-	
+	<string name="app_name">Obsqr</string>
+
 	<!-- Help prompts -->
-    <string name="help_prompt_text">Tap to copy text to the clipboard</string>
-    <string name="help_prompt_contact">Tap to view the contact</string>
-    <string name="help_prompt_market">Tap to open the app on Market</string>
-    <string name="help_prompt_phone">Tap to open dialer</string>
-    <string name="help_prompt_geo">Tap to view the location</string>
-    <string name="help_prompt_sms">Tap to send a message</string>
-    <string name="help_prompt_email">Tap to send an e-mail</string>
-    <string name="help_prompt_url">Tap to follow the link</string>
-    <string name="help_prompt_wifi">Tap to connect</string>
+	<string name="action_text">Copy to clipboard</string>
+	<string name="action_contact">View contact</string>
+	<string name="action_market">Get on Google Play</string>
+	<string name="action_phone">Open dialer</string>
+	<string name="action_geo">View on map</string>
+	<string name="action_sms">Send sms</string>
+	<string name="action_email">Send email</string>
+	<string name="action_url">Open</string>
+	<string name="action_wifi">Connect</string>
 
 	<!-- QR types -->
-    <string name="text_qr_type_name">Plain text</string>
-    <string name="contact_qr_type_name">Contact information</string>
-    <string name="market_qr_type_name">Application on Market</string>
-    <string name="phone_qr_type_name">Phone number</string>
-    <string name="geo_qr_type_name">Geolocation</string>
-    <string name="sms_qr_type_name">SMS</string>
-    <string name="email_qr_type_name">Email</string>
-    <string name="url_qr_type_name">URL</string>
-    <string name="wifi_qr_type_name">Wi-Fi access point</string>
+	<string name="title_text">Plain text</string>
+	<string name="title_contact">Contact information</string>
+	<string name="title_market">Application on Market</string>
+	<string name="title_phone">Phone number</string>
+	<string name="title_geo">Geolocation</string>
+	<string name="title_sms">SMS</string>
+	<string name="title_email">Email</string>
+	<string name="title_url">URL</string>
+	<string name="title_wifi">Wi-Fi access point</string>
 
 	<string name="unsupported_data_text">Unsupported data type</string>
 
 	<!-- Plain text -->
-    <string name="text_qr_action_name">Copy text to clipboard</string>
+	<string name="text_qr_action_name">Copy text to clipboard</string>
 
 	<!-- Contact information -->
-    <string name="contact_qr_name_title">Name:</string>
-    <string name="contact_qr_phone_title">Phone:</string>
-    <string name="contact_qr_address_title">Address:</string>
-    <string name="contact_qr_email_title">Email:</string>
-    <string name="contact_qr_company_title">Company:</string>
+	<string name="contact_qr_name_title">Name:</string>
+	<string name="contact_qr_phone_title">Phone:</string>
+	<string name="contact_qr_address_title">Address:</string>
+	<string name="contact_qr_email_title">Email:</string>
+	<string name="contact_qr_company_title">Company:</string>
 
 	<!-- Geolocation -->
-    <string name="geo_qr_title_title">Title:</string>
-    <string name="geo_qr_latitude_title">Latitude:</string>
-    <string name="geo_qr_latitude_south">S</string>
-    <string name="geo_qr_latitude_north">N</string>
-    <string name="geo_qr_longitude_title">Longitude:</string>
-    <string name="geo_qr_longitude_west">W</string>
-    <string name="geo_qr_longitude_east">E</string>
-    <string name="geo_qr_altitude_title">Altitude:</string>
-    <string name="geo_qr_altitude_suffix">meters</string>
+	<string name="geo_qr_title_title">Title:</string>
+	<string name="geo_qr_latitude_title">Latitude:</string>
+	<string name="geo_qr_latitude_south">S</string>
+	<string name="geo_qr_latitude_north">N</string>
+	<string name="geo_qr_longitude_title">Longitude:</string>
+	<string name="geo_qr_longitude_west">W</string>
+	<string name="geo_qr_longitude_east">E</string>
+	<string name="geo_qr_altitude_title">Altitude:</string>
+	<string name="geo_qr_altitude_suffix">meters</string>
 
 	<!-- SMS -->
-    <string name="sms_qr_phone_title">Phone number:</string>
-    <string name="sms_qr_message_title">Text:</string>
+	<string name="sms_qr_phone_title">Phone number:</string>
+	<string name="sms_qr_message_title">Text:</string>
 
 	<!-- Email -->
-    <string name="email_qr_send_dlg_title">Sent mail via...</string>
+	<string name="email_qr_send_dlg_title">Sent mail via…</string>
 
 	<!-- WiFi-->
-    <string name="wifi_qr_security_title">Security</string>
-    <string name="wifi_qr_ssid_title">Network SSID</string>
-    <string name="wifi_qr_password_title">Password</string>
+	<string name="wifi_qr_security_title">Security</string>
+	<string name="wifi_qr_ssid_title">Network SSID</string>
+	<string name="wifi_qr_password_title">Password</string>
 
 	<!-- Dialogs and alerts -->
-    <string name="dlg_tv_question">If you really love this app please give your feedback on Market</string>
-    <string name="dlg_btn_ignore_caption">Ignore</string>
-    <string name="dlg_btn_rate_caption">Rate</string>
+	<string name="dlg_alert_msg">Failed to open any camera</string>
+	<string name="dlg_alert_ok_btn_caption">OK</string>
+	<string name="dlg_alert_cancel_btn_caption">Cancel</string>
 
-    <string name="dlg_alert_msg">Failed to open any camera</string>
-    <string name="dlg_alert_ok_btn_caption">Ok</string>
-
-    <string name="alert_msg_invalid_market_link">Failed to open Google Play</string>
-    <string name="alert_msg_activity_not_found">No application found</string>
-    <string name="alert_msg_wifi_connected">Connected successfully</string>
-    <string name="alert_msg_wifi_failed">Failed to connect</string>
+	<string name="alert_msg_invalid_market_link">Failed to open Google Play</string>
+	<string name="alert_msg_activity_not_found">No application found</string>
+	<string name="alert_msg_wifi_connected">Connected successfully</string>
+	<string name="alert_msg_wifi_failed">Failed to connect</string>
 </resources>

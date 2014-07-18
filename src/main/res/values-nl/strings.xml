@@ -1,72 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Obsqr</string>
+	<string name="app_name">Obsqr</string>
 
 	<!-- Dutch translation by Ambroos @ XDA -->
 	<!-- Help prompts -->
-    <string name="help_prompt_text">Tap om de tekst te kopiëren</string>
-    <string name="help_prompt_contact">Tap om het contact te bekijken</string>
-    <string name="help_prompt_market">Tap op de app in Google Play te bekijken</string>
-    <string name="help_prompt_phone">Tap om het nummer in de telefoon te openen</string>
-    <string name="help_prompt_geo">Tap om de locatie op kaart te zien</string>
-    <string name="help_prompt_sms">Tap om een bericht te sturen</string>
-    <string name="help_prompt_email">Tap om een email te sturen</string>
-    <string name="help_prompt_url">Tap om de link te openen</string>
-    <string name="help_prompt_wifi">Tap om te verbinden</string>
+	<!--<string name="action_text">Tap om de tekst te kopiëren</string>-->
+	<!--<string name="action_contact">Tap om het contact te bekijken</string>-->
+	<!--<string name="action_market">Tap op de app in Google Play te bekijken</string>-->
+	<!--<string name="action_phone">Tap om het nummer in de telefoon te openen</string>-->
+	<!--<string name="action_geo">Tap om de locatie op kaart te zien</string>-->
+	<!--<string name="action_sms">Tap om een bericht te sturen</string>-->
+	<!--<string name="action_email">Tap om een email te sturen</string>-->
+	<!--<string name="action_url">Tap om de link te openen</string>-->
+	<!--<string name="action_wifi">Tap om te verbinden</string>-->
 
 	<!-- QR types -->
-    <string name="text_qr_type_name">Platte tekst</string>
-    <string name="contact_qr_type_name">Contactinformatie</string>
-    <string name="market_qr_type_name">App op Google Play</string>
-    <string name="phone_qr_type_name">Telefoonnummer</string>
-    <string name="geo_qr_type_name">Locatie op kaart</string>
-    <string name="sms_qr_type_name">SMS</string>
-    <string name="email_qr_type_name">Email</string>
-    <string name="url_qr_type_name">URL</string>
-    <string name="wifi_qr_type_name">Wi-Fi access point</string>
+	<string name="title_text">Platte tekst</string>
+	<string name="title_contact">Contactinformatie</string>
+	<string name="title_market">App op Google Play</string>
+	<string name="title_phone">Telefoonnummer</string>
+	<string name="title_geo">Locatie op kaart</string>
+	<string name="title_sms">SMS</string>
+	<string name="title_email">Email</string>
+	<string name="title_url">URL</string>
+	<string name="title_wifi">Wi-Fi access point</string>
 
-    <string name="unsupported_data_text">Niet-ondersteund datatype</string>
+	<string name="unsupported_data_text">Niet-ondersteund datatype</string>
 
 	<!-- Plain text -->
-    <string name="text_qr_action_name">Kopiëer tekst</string>
+	<string name="text_qr_action_name">Kopiëer tekst</string>
 
 	<!-- Contact information -->
-    <string name="contact_qr_name_title">Naam:</string>
-    <string name="contact_qr_phone_title">Telefoonnummer:</string>
-    <string name="contact_qr_address_title">Adres:</string>
-    <string name="contact_qr_email_title">Email:</string>
-    <string name="contact_qr_company_title">Bedrijf:</string>
+	<string name="contact_qr_name_title">Naam:</string>
+	<string name="contact_qr_phone_title">Telefoonnummer:</string>
+	<string name="contact_qr_address_title">Adres:</string>
+	<string name="contact_qr_email_title">Email:</string>
+	<string name="contact_qr_company_title">Bedrijf:</string>
 
 	<!-- Geolocation -->
-    <string name="geo_qr_title_title">Titel:</string>
-    <string name="geo_qr_latitude_title">Breedtegraad:</string>
-    <string name="geo_qr_latitude_south">Z</string>
-    <string name="geo_qr_latitude_north">N</string>
-    <string name="geo_qr_longitude_title">Lengtegraad:</string>
-    <string name="geo_qr_longitude_west">W</string>
-    <string name="geo_qr_longitude_east">O</string>
-    <string name="geo_qr_altitude_title">Hoogte:</string>
-    <string name="geo_qr_altitude_suffix">meter</string>
+	<string name="geo_qr_title_title">Titel:</string>
+	<string name="geo_qr_latitude_title">Breedtegraad:</string>
+	<string name="geo_qr_latitude_south">Z</string>
+	<string name="geo_qr_latitude_north">N</string>
+	<string name="geo_qr_longitude_title">Lengtegraad:</string>
+	<string name="geo_qr_longitude_west">W</string>
+	<string name="geo_qr_longitude_east">O</string>
+	<string name="geo_qr_altitude_title">Hoogte:</string>
+	<string name="geo_qr_altitude_suffix">meter</string>
 
 	<!-- SMS -->
-    <string name="sms_qr_phone_title">Telefoonnummer:</string>
-    <string name="sms_qr_message_title">Tekst:</string>
+	<string name="sms_qr_phone_title">Telefoonnummer:</string>
+	<string name="sms_qr_message_title">Tekst:</string>
 
 	<!-- Email -->
-    <string name="email_qr_send_dlg_title">Email verstuurd via...</string>
+	<string name="email_qr_send_dlg_title">Email verstuurd via…</string>
 
 	<!-- WiFi-->
-    <string name="wifi_qr_security_title">Veiligheid</string>
-    <string name="wifi_qr_ssid_title">Netzwerkname</string>
-    <string name="wifi_qr_password_title">Wachtwoord</string>
+	<string name="wifi_qr_security_title">Veiligheid</string>
+	<string name="wifi_qr_ssid_title">Netzwerkname</string>
+	<string name="wifi_qr_password_title">Wachtwoord</string>
 
 	<!-- Dialogs and alerts -->
-    <string name="dlg_tv_question">Als je de app goed vond kan je altijd een score geven op Google Play</string>
-    <string name="dlg_btn_ignore_caption">Nu niet</string>
-    <string name="dlg_btn_rate_caption">Score geven</string>
+	<string name="dlg_alert_msg">Kon geen camera openen.</string>
+	<string name="dlg_alert_ok_btn_caption">OK</string>
 
-    <string name="dlg_alert_msg">Kon geen camera openen.</string>
-    <string name="dlg_alert_ok_btn_caption">OK</string>
-
-    <string name="alert_msg_invalid_market_link">Kon geen Google Play openen</string>
+	<string name="alert_msg_invalid_market_link">Kon geen Google Play openen</string>
 </resources>

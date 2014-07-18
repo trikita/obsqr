@@ -26,7 +26,7 @@ import android.view.Surface;
  * 
  */
 
-class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
+public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	Camera.AutoFocusCallback, Camera.PreviewCallback {
 
 	private final static String tag = "CameraPreview";
@@ -62,6 +62,7 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 
 	public interface OnQrDecodedListener {
 		public void onQrDecoded(String url);
+		public void onQrNotFound();
 	}
 
 	public CameraPreview(Context context) {
@@ -365,6 +366,8 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		if (s != null) {
 			Log.d(tag, "============= URL: " + s + " =================");
 			mOnQrDecodedListener.onQrDecoded(s);
+		} else {
+			mOnQrDecodedListener.onQrNotFound();
 		}
 		mCamera.setPreviewCallback(this);
 	}

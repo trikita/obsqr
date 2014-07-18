@@ -2,6 +2,7 @@ package trikita.obsqr;
 
 import android.os.Build;
 import android.content.Context;
+import android.annotation.TargetApi;
 
 /**
  * This class provides a basic wrapper around the built-in ClipboardManager
@@ -43,6 +44,7 @@ public abstract class ClipboardManager {
 		}
 	}
 	
+	@TargetApi(11)
 	private static class HoneycombClipboardManager extends ClipboardManager {
 		private final android.content.ClipboardManager clippy;
 		private android.content.ClipData clipData;

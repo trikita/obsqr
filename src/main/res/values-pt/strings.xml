@@ -1,72 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Obsqr</string>
-	
+	<string name="app_name">Obsqr</string>
+
 	<!-- Portuguese translation by diegosps @ XDA -->
 	<!-- Help prompts -->
-    <string name="help_prompt_text">Toque para copiar o texto.</string>
-    <string name="help_prompt_contact">Toque para ver o contato.</string>
-    <string name="help_prompt_market">Toque para abrir o aplicativo no Google Play.</string>
-    <string name="help_prompt_phone">Toque para abrir o discador.</string>
-    <string name="help_prompt_geo">Toque para ver a localização.</string>
-    <string name="help_prompt_sms">Toque para enviar uma mensagem.</string>
-    <string name="help_prompt_email">Toque para enviar um e-mail.</string>
-    <string name="help_prompt_url">Toque para abrir o link.</string>
-    <string name="help_prompt_wifi">Toque para ligar.</string>
+	<!--<string name="action_text">Toque para copiar o texto.</string>-->
+	<!--<string name="action_contact">Toque para ver o contato.</string>-->
+	<!--<string name="action_market">Toque para abrir o aplicativo no Google Play.</string>-->
+	<!--<string name="action_phone">Toque para abrir o discador.</string>-->
+	<!--<string name="action_geo">Toque para ver a localização.</string>-->
+	<!--<string name="action_sms">Toque para enviar uma mensagem.</string>-->
+	<!--<string name="action_email">Toque para enviar um e-mail.</string>-->
+	<!--<string name="action_url">Toque para abrir o link.</string>-->
+	<!--<string name="action_wifi">Toque para ligar.</string>-->
 
 	<!-- QR types -->
-    <string name="text_qr_type_name">Texto simples</string>
-    <string name="contact_qr_type_name">Informações para contato</string>
-    <string name="market_qr_type_name">Aplicação no Google Play</string>
-    <string name="phone_qr_type_name">Número do telefone</string>
-    <string name="geo_qr_type_name">Geolocalização</string>
-    <string name="sms_qr_type_name">SMS</string>
-    <string name="email_qr_type_name">Email</string>
-    <string name="url_qr_type_name">URL</string>
-    <string name="wifi_qr_type_name">Ponto de acesso Wi-Fi</string>
+	<string name="title_text">Texto simples</string>
+	<string name="title_contact">Informações para contato</string>
+	<string name="title_market">Aplicação no Google Play</string>
+	<string name="title_phone">Número do telefone</string>
+	<string name="title_geo">Geolocalização</string>
+	<string name="title_sms">SMS</string>
+	<string name="title_email">Email</string>
+	<string name="title_url">URL</string>
+	<string name="title_wifi">Ponto de acesso Wi-Fi</string>
 
-    <string name="unsupported_data_text">Tipo de dado não suportado.</string>
+	<string name="unsupported_data_text">Tipo de dado não suportado.</string>
 
 	<!-- Plain text -->
-    <string name="text_qr_action_name">Copiar o texto</string>
+	<string name="text_qr_action_name">Copiar o texto</string>
 
 	<!-- Contact information -->
-    <string name="contact_qr_name_title">Nome:</string>
-    <string name="contact_qr_phone_title">Telefone:</string>
-    <string name="contact_qr_address_title">Endereço:</string>
-    <string name="contact_qr_email_title">Email:</string>
-    <string name="contact_qr_company_title">Empresa:</string>
+	<string name="contact_qr_name_title">Nome:</string>
+	<string name="contact_qr_phone_title">Telefone:</string>
+	<string name="contact_qr_address_title">Endereço:</string>
+	<string name="contact_qr_email_title">Email:</string>
+	<string name="contact_qr_company_title">Empresa:</string>
 
 	<!-- Geolocation -->
-    <string name="geo_qr_title_title">Título:</string>
-    <string name="geo_qr_latitude_title">Latitude:</string>
-    <string name="geo_qr_latitude_south">S</string>
-    <string name="geo_qr_latitude_north">N</string>
-    <string name="geo_qr_longitude_title">Longitude:</string>
-    <string name="geo_qr_longitude_west">O</string>
-    <string name="geo_qr_longitude_east">L</string>
-    <string name="geo_qr_altitude_title">Altitude:</string>
-    <string name="geo_qr_altitude_suffix">metros</string>
+	<string name="geo_qr_title_title">Título:</string>
+	<string name="geo_qr_latitude_title">Latitude:</string>
+	<string name="geo_qr_latitude_south">S</string>
+	<string name="geo_qr_latitude_north">N</string>
+	<string name="geo_qr_longitude_title">Longitude:</string>
+	<string name="geo_qr_longitude_west">O</string>
+	<string name="geo_qr_longitude_east">L</string>
+	<string name="geo_qr_altitude_title">Altitude:</string>
+	<string name="geo_qr_altitude_suffix">metros</string>
 
 	<!-- SMS -->
-    <string name="sms_qr_phone_title">Número do Telefone:</string>
-    <string name="sms_qr_message_title">Texto:</string>
+	<string name="sms_qr_phone_title">Número do Telefone:</string>
+	<string name="sms_qr_message_title">Texto:</string>
 
 	<!-- Email -->
-    <string name="email_qr_send_dlg_title">Enviar email via...</string>
+	<string name="email_qr_send_dlg_title">Enviar email via…</string>
 
 	<!-- WiFi-->
-    <string name="wifi_qr_security_title">Segurança</string>
-    <string name="wifi_qr_ssid_title">Nome da rede</string>
-    <string name="wifi_qr_password_title">Senha</string>
+	<string name="wifi_qr_security_title">Segurança</string>
+	<string name="wifi_qr_ssid_title">Nome da rede</string>
+	<string name="wifi_qr_password_title">Senha</string>
 
 	<!-- Dialogs and alerts -->
-    <string name="dlg_tv_question">Se você gostou desse aplicativo, por favor, deixe o seu comentário no Google Play.</string>
-    <string name="dlg_btn_ignore_caption">Ignorar</string>
-    <string name="dlg_btn_rate_caption">Avaliar</string>
+	<string name="dlg_alert_msg">Falha ao abrir a câmera.</string>
+	<string name="dlg_alert_ok_btn_caption">Ok</string>
 
-    <string name="dlg_alert_msg">Falha ao abrir a câmera.</string>
-    <string name="dlg_alert_ok_btn_caption">Ok</string>
-
-    <string name="alert_msg_invalid_market_link">Falha ao abrir Google Play</string>
+	<string name="alert_msg_invalid_market_link">Falha ao abrir Google Play</string>
 </resources>
