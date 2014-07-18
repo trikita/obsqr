@@ -7,7 +7,7 @@ import android.view.View;
 
 public class WrappingScrollView extends ScrollView {
 
-	public final static int MAX_HEIGHT = 120;
+	public final static int MAX_HEIGHT = 100;
 
 	public WrappingScrollView(Context c) {
 		this(c, null);
