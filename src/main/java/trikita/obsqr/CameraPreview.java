@@ -61,8 +61,8 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	};
 
 	public interface OnQrDecodedListener {
-		public void onQrDecoded(String url);
-		public void onQrNotFound();
+		void onQrDecoded(String url);
+		void onQrNotFound();
 	}
 
 	public CameraPreview(Context context) {

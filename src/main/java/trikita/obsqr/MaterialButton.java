@@ -1,20 +1,12 @@
 package trikita.obsqr;
 
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RadialGradient;
-import android.graphics.Region;
-import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.animation.AccelerateInterpolator;
-import android.widget.Button;
-import android.widget.Toast;
 import android.widget.TextView;
 import android.animation.Animator;
 import android.os.Handler;

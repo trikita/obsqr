@@ -1,33 +1,19 @@
 package trikita.obsqr;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.DialogInterface;
-
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
+import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.net.Uri;
-
-import android.util.Log;
-
 import butterknife.*;
-import android.content.res.Configuration;
+import android.content.DialogInterface;
 
 public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecodedListener {
 
@@ -71,7 +57,12 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 	@OnClick({R.id.tv_vertical_action, R.id.tv_horizontal_action})
 	public void onActionClick(View v) {
 		if (mQrContent != null) {
-			mQrContent.action();
+			try {
+				mQrContent.action();
+			} catch (ActivityNotFoundException e) {
+				Toast.makeText(this, getString(R.string.alert_msg_activity_not_found),
+						Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 
@@ -96,8 +87,6 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		mQrTitleView.setText(mQrContent.getTitle());
 
 		String action = mQrContent.getAction();
-
-		int orientation = getResources().getConfiguration().orientation;
 
 		int maxHorizontalTextLength = MAX_HORIZONTAL_BUTTON_TEXT_LENGTH;
 			

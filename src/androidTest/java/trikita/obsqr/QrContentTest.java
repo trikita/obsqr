@@ -1,7 +1,6 @@
 package trikita.obsqr;
 
 import static junit.framework.Assert.*;
-import junit.framework.TestCase;
 import android.test.AndroidTestCase;
 import android.widget.TextView;
 
