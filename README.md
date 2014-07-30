@@ -8,8 +8,8 @@ obsqr is a fast and lightweight QR scanner application for Android.
 Requirements
 ------------
 
-To make it run on your Android device you need to have Andoird 1.6 or higher.
-Both, ARM and x86 architectures are supported.
+To make it run on your Android device you need to have Andoird 2.3 or higher,
+and of course your device should have a camera.
 
 Build
 -----
