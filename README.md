@@ -3,6 +3,8 @@ obsqr - minimalistic QR scanner for Android
 
 obsqr is a fast and lightweight QR scanner application for Android.
 
+![Obsqr screenshot](http://i.imgur.com/zSb1Jib.png)
+
 Requirements
 ------------
 
@@ -29,9 +31,12 @@ Edit local.properties by specifying path to the NDK:
 
 Finally, run ant to build obsqr:
 
-	$ ant debug
+	$ gradle build
 
-After this step, you should get an *.apk inside the 'bin' directory.
+After this step, you should get several `*.apk` files inside the `bin` directory.
+
+Supported architectures are ARM, ARMv7, MIPS and x86, also there is a "fat" APK
+for all architectures.
 
 License
 -------
