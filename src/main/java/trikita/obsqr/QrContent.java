@@ -429,7 +429,10 @@ public abstract class QrContent {
 		}
 
 		public int getTitleStringId() { return R.string.title_wifi; }
-		public int getActionStringId() { return R.string.action_wifi; }
+		public int getActionStringId() {
+			return BuildConfig.HAS_WIFI_PERMISSIONS ?
+				R.string.action_wifi : R.string.action_text;
+		}
 
 		private void parseWifi() {
 			String wifi = mOriginalUri.substring(5);
@@ -478,6 +481,14 @@ public abstract class QrContent {
 		}
 
 		public void action() {
+			if (BuildConfig.HAS_WIFI_PERMISSIONS) {
+				actionConnect();
+			} else {
+				actionCopyPassword();
+			}
+		}
+
+		public void actionConnect() {
 			WifiConfiguration conf = new WifiConfiguration();
 			conf.SSID = "\"" + mNetworkSsid + "\"";
 
@@ -527,6 +538,12 @@ public abstract class QrContent {
 			} else {
 				Log.d(tag, "failed to add new wifi network");
 			}
+		}
+
+		public void actionCopyPassword() {
+			ClipboardManager.newInstance(mContext).setText(mPassword);
+			Toast.makeText(mContext, mContext.getString(R.string.text_qr_action_name),
+					Toast.LENGTH_LONG).show();
 		}
 	}
 }

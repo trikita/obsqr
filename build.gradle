@@ -3,7 +3,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:0.11.1+'
+		classpath 'com.android.tools.build:gradle:1.0.+'
 	}
 }
 
@@ -14,18 +14,24 @@ repositories {
 }
 
 dependencies {
-	compile 'com.jakewharton:butterknife:5.1.1+'
+	compile 'co.trikita:knork:1.3.0+'
 }
 
 android {
-	compileSdkVersion 'android-19'
-	buildToolsVersion '20.0.0'
+	compileSdkVersion 'android-21'
+	buildToolsVersion '21.1.2'
 
 	defaultConfig {
 		minSdkVersion 9
 		targetSdkVersion 19
-		versionCode 13
-		versionName "2.7"
+		versionCode 14
+		versionName "2.8"
+		ndk {
+			abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+			moduleName "zbar"
+			ldLibs "log"
+			cFlags "-std=c99"
+		}
 	}
 
 	signingConfigs {
@@ -34,46 +40,24 @@ android {
 
 	buildTypes {
 		release {
-			runProguard false
-			/*proguardFile getDefaultProguardFile('proguard-android.txt')*/
+			minifyEnabled false
 			signingConfig signingConfigs.release
 			applicationVariants.all { variant ->
-				def file = variant.outputFile
-				variant.outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+				variant.outputs.each { output ->
+					output.outputFile = new File(output.outputFile.parentFile,
+							output.outputFile.name.replace(".apk", "-${variant.versionName}.apk"));
+				}
 			}
-		}
-	}
-
-	defaultConfig {
-		ndk {
-			moduleName "zbar"
-			ldLibs "log"
-			cFlags "-std=c99"
 		}
 	}
 
 	productFlavors {
-		x86 {
-			ndk {
-				abiFilter "x86"
-			}
+		full {
+			buildConfigField "boolean", "HAS_WIFI_PERMISSIONS", "true"
 		}
-		mips {
-			ndk {
-				abiFilter "mips"
-			}
+		noperm {
+			buildConfigField "boolean", "HAS_WIFI_PERMISSIONS", "false"
 		}
-		armv7 {
-			ndk {
-				abiFilter "armeabi-v7a"
-			}
-		}
-		arm {
-			ndk {
-				abiFilter "armeabi"
-			}
-		}
-		fat
 	}
 
 	lintOptions {
@@ -93,7 +77,12 @@ if (project.hasProperty('storeFile') &&
 	buildTypes.release.signingConfig = null
 }
 
-task appStart(type: Exec, dependsOn: ':installArmDebug') {
+task run(type: Exec, dependsOn: ':installFullDebug') {
 	commandLine 'adb', 'shell', 'am', 'start', '-n', 'trikita.obsqr/.ObsqrActivity'
 }
+
+task runNoPerm(type: Exec, dependsOn: ':installNopermDebug') {
+	commandLine 'adb', 'shell', 'am', 'start', '-n', 'trikita.obsqr/.ObsqrActivity'
+}
+
 

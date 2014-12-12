@@ -3,6 +3,7 @@ package trikita.obsqr;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,8 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import butterknife.*;
-import android.content.DialogInterface;
+import static trikita.knork.Knork.*;
 
 public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecodedListener {
 
@@ -24,18 +24,18 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 
 	public final static int MAX_HORIZONTAL_BUTTON_TEXT_LENGTH = 12;
 
-	@InjectView(R.id.surface) CameraPreview mCameraPreview;
-	@InjectView(R.id.container) ViewGroup mContainer;
-	@InjectView(R.id.tv_title) TextView mQrTitleView;
-	@InjectView(R.id.dialog_content) ViewGroup mDialogContent;
+	@Id(R.id.surface) CameraPreview mCameraPreview;
+	@Id(R.id.container) ViewGroup mContainer;
+	@Id(R.id.tv_title) TextView mQrTitleView;
+	@Id(R.id.dialog_content) ViewGroup mDialogContent;
 
-	@InjectView(R.id.vertical_buttons_container) ViewGroup mVerticalButtonsContainer;
-	@InjectView(R.id.tv_vertical_action) TextView mVerticalActionView;
-	@InjectView(R.id.tv_vertical_cancel) TextView mVerticalCancelView;
+	@Id(R.id.vertical_buttons_container) ViewGroup mVerticalButtonsContainer;
+	@Id(R.id.tv_vertical_action) TextView mVerticalActionView;
+	@Id(R.id.tv_vertical_cancel) TextView mVerticalCancelView;
 
-	@InjectView(R.id.horizontal_buttons_container) ViewGroup mHorizontalButtonsContainer;
-	@InjectView(R.id.tv_horizontal_action) TextView mHorizontalActionView;
-	@InjectView(R.id.tv_horizontal_cancel) TextView mHorizontalCancelView;
+	@Id(R.id.horizontal_buttons_container) ViewGroup mHorizontalButtonsContainer;
+	@Id(R.id.tv_horizontal_action) TextView mHorizontalActionView;
+	@Id(R.id.tv_horizontal_cancel) TextView mHorizontalCancelView;
 
 	private QrContent mQrContent = null;
 
@@ -47,14 +47,14 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.act_camera);
-		ButterKnife.inject(this);
+		inject(getWindow().getDecorView(), this);
 
 		mHorizontalCancelView.setText(mHorizontalCancelView.getText().toString().toUpperCase());
 		mVerticalCancelView.setText(mVerticalCancelView.getText().toString().toUpperCase());
 		mCameraPreview.setOnQrDecodedListener(this);
 	}
 
-	@OnClick({R.id.tv_vertical_action, R.id.tv_horizontal_action})
+	@On({CLICK + R.id.tv_vertical_action, R.id.tv_horizontal_action})
 	public void onActionClick(View v) {
 		if (mQrContent != null) {
 			try {
@@ -66,7 +66,7 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		}
 	}
 
-	@OnClick({R.id.container, R.id.tv_vertical_cancel, R.id.tv_horizontal_cancel})
+	@On({CLICK + R.id.container, R.id.tv_vertical_cancel, R.id.tv_horizontal_cancel})
 	public void onDialogCancelClick(View v) {
 		cancel();
 	}
