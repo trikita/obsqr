@@ -1,28 +1,34 @@
 buildscript {
 	repositories {
 		mavenCentral()
+		jcenter()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:1.0.+'
+		classpath 'com.android.tools.build:gradle:1.3.+'
 	}
 }
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 repositories {
+	jcenter()
 	mavenCentral()
 }
 
 dependencies {
-	compile 'co.trikita:knork:1.3.0+'
+	compile 'co.trikita:knork:+'
 }
 
 android {
-	compileSdkVersion 'android-21'
-	buildToolsVersion '21.1.2'
+	compileSdkVersion 'android-22'
+	buildToolsVersion '22.0.1'
+
+	signingConfigs {
+		release
+	}
 
 	defaultConfig {
-		minSdkVersion 9
+		minSdkVersion 15
 		targetSdkVersion 19
 		versionCode 14
 		versionName "2.8"
@@ -32,10 +38,6 @@ android {
 			ldLibs "log"
 			cFlags "-std=c99"
 		}
-	}
-
-	signingConfigs {
-		release
 	}
 
 	buildTypes {
@@ -65,18 +67,6 @@ android {
 	}
 }
 
-if (project.hasProperty('storeFile') &&
-		project.hasProperty('storePassword') &&
-		project.hasProperty('keyAlias') &&
-		project.hasProperty('keyPassword')) {
-	android.signingConfigs.release.storeFile = file(storeFile)
-	android.signingConfigs.release.storePassword = storePassword
-	android.signingConfigs.release.keyAlias = keyAlias
-	android.signingConfigs.release.keyPassword = keyPassword
-} else {
-	buildTypes.release.signingConfig = null
-}
-
 task run(type: Exec, dependsOn: ':installFullDebug') {
 	commandLine 'adb', 'shell', 'am', 'start', '-n', 'trikita.obsqr/.ObsqrActivity'
 }
@@ -85,4 +75,4 @@ task runNoPerm(type: Exec, dependsOn: ':installNopermDebug') {
 	commandLine 'adb', 'shell', 'am', 'start', '-n', 'trikita.obsqr/.ObsqrActivity'
 }
 
-
+apply from: 'https://raw.github.com/trikita/gradle-android-signing/master/gradle-android-signing.gradle'
