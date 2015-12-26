@@ -7,7 +7,7 @@ android:
   components:
     - tools
     - build-tools-23.0.2
-    - android-21
+    - android-23
     - extra
     - addon
     - sys-img-armeabi-v7a-android-21
