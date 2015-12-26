@@ -5,6 +5,7 @@ env:
 
 android:
   components:
+    - tools
     - build-tools-23.0.2
     - android-21
     - extra
