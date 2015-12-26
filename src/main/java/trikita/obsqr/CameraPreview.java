@@ -35,7 +35,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 
 	private final Zbar zbar = new Zbar();
 
-	private SurfaceView mSurfaceView;
 	private SurfaceHolder mHolder;
 
 	private Size mPreviewSize;
@@ -77,7 +76,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		super(context, attrs, defStyle);
 		Log.d(tag, "Create CameraPreview");
 
-		mSurfaceView = new SurfaceView(context);
+		SurfaceView mSurfaceView = new SurfaceView(context);
 		addView(mSurfaceView);
 
 		// install a SurfaceHolder.Callback so we get notified when the

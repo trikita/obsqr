@@ -53,7 +53,7 @@ public abstract class QrContent {
 	}
 
 	public static List<String> getTokens(String s) {
-		List<String> tokens = new ArrayList<String>();
+		List<String> tokens = new ArrayList<>();
 
 		int len = s.length();
 		StringBuilder builder = new StringBuilder();
@@ -419,7 +419,6 @@ public abstract class QrContent {
 		private String mType;
 		private String mNetworkSsid;
 		private String mPassword;
-		private boolean mSsidHidden;
 		private String mOriginalUri;
 
 		public WifiContent(Context c, String s) {
@@ -450,7 +449,6 @@ public abstract class QrContent {
 					mPassword = token.substring(2);
 				}
 				if (token.startsWith("H:")) {
-					mSsidHidden = Boolean.valueOf(token.substring(2));
 				}
 			}
 
