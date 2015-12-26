@@ -307,7 +307,6 @@ public abstract class QrContent {
 
 		private void parseContact() {
 			String contact = mText.substring(7);
-			Log.d(tag, "contact " + contact);
 
 			List<String> tokens = getTokens(contact);
 			for (String token : tokens) {
@@ -435,7 +434,6 @@ public abstract class QrContent {
 
 		private void parseWifi() {
 			String wifi = mOriginalUri.substring(5);
-			Log.d(tag, "wifi " + wifi);
 
 			List<String> tokens = getTokens(wifi);
 			for (String token : tokens) {

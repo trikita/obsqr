@@ -1,24 +1,22 @@
 package trikita.obsqr;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-
-import android.hardware.Camera;
-import android.hardware.Camera.Size;
-import android.hardware.Camera.CameraInfo;
-
 import android.content.Context;
-import android.util.AttributeSet;
-
+import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Size;
 import android.os.Handler;
-
-import java.util.List;
-import java.io.IOException;
-
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
+
+import hugo.weaving.DebugLog;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A simple wrapper around a Camera and a SurfaceView that renders a centered preview of the Camera
@@ -72,9 +70,9 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		this(context, attrs, 0);
 	}
 
+	@DebugLog
 	public CameraPreview(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		Log.d(tag, "Create CameraPreview");
 
 		SurfaceView mSurfaceView = new SurfaceView(context);
 		addView(mSurfaceView);
@@ -90,26 +88,24 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		mOnQrDecodedListener = l; 
 	}
 
+	@DebugLog
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		// We purposely disregard child measurements because act as a
 		// wrapper to a SurfaceView that centers the camera preview instead
 		// of stretching it.
-		Log.d(tag, "onMeasure");
 		final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
 		final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
 		setMeasuredDimension(width, height);
-		Log.d(tag, "setMeasuredDimension w=" + width + " h=" + height);
 
 		if (mSupportedPreviewSizes != null) {
 			mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, width, height);
-			Log.d(tag, "mPreviewSize w=" + mPreviewSize.width + " h=" + mPreviewSize.height);
 		}
 	}
 
+	@DebugLog
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-		Log.d(tag, "onLayout");
 		if (changed && getChildCount() > 0) {
 			final View child = getChildAt(0);
 
@@ -153,6 +149,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		}
 	}
 
+	@DebugLog
 	private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
 		final double ASPECT_TOLERANCE = 0.1;
 		double targetRatio = (double) w / h;
@@ -160,8 +157,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 
 		Size optimalSize = null;
 		double minDiff = Double.MAX_VALUE;
-
-		Log.d(tag, "getOptimalPreviewSize for w=" + w + " h=" + h);
 
 		// Try to find an size match aspect ratio and size
 		for (Size size : sizes) {
@@ -187,12 +182,11 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 				}
 			}
 		}
-		Log.d(tag, "Optimal size is " + optimalSize.width + "x" + optimalSize.height);
 		return optimalSize;
 	}
 	
+	@DebugLog
 	private void setCameraDisplayOrientation(int rotation) {
-		Log.d(tag, "setCameraDisplayOrientation");
 		if (mCamera == null) return;
 
 		CameraInfo info = new CameraInfo();
@@ -223,8 +217,8 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		mCamera.setDisplayOrientation(result);
 	}
 
+	@DebugLog
 	public boolean acquireCamera(int rotation) {
-		Log.d(tag, "acquireCamera");
 		if (mCamera != null) {
 			setCameraDisplayOrientation(rotation);
 			mCamera.startPreview();
@@ -239,6 +233,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 			mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
 			if (mSupportedPreviewSizes == null) {
 				Log.d(tag, "mSupportedPreviewSizes is null");
+				return false;
 			}
 			for (Size s : mSupportedPreviewSizes) {
 				Log.d(tag, "Preview size: " + s.width + "x" + s.height);
@@ -251,11 +246,11 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	}
 
 	private Camera openCamera() {
-		Camera camera = null;
+		Camera camera;
 		try {
 			camera = Camera.open();
 		} catch (RuntimeException e) {
-			Log.d(tag, "RuntimeException was thrown while opening the camera");
+			e.printStackTrace();
 			return null;
 		}
 
@@ -296,28 +291,28 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	}
 
 	// ----------------------- SurfaceHolder.Callbacks ------------------- //
+	@DebugLog
 	public void surfaceCreated(SurfaceHolder holder) {
 		// the Surface has been created, acquire the camera and tell it where
 		// to draw.
-		Log.d(tag, "surfaceCreated");
 		try {
 			if (mCamera != null) {
 				mCamera.setPreviewDisplay(mHolder);
 				mCamera.setPreviewCallback(this);
 			}
-		} catch (IOException exception) {
+		} catch (IOException e) {
+			e.printStackTrace();
 			if (mCamera != null) {
 				mCamera.release();
 				mCamera = null;
 			}
-			Log.e(tag, "IOException caused by setPreviewDisplay()", exception);
 		}
 	}
 
+	@DebugLog
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 		// now that the size is known, set up the camera parameters and begin
 		// the preview.
-		Log.d(tag, "surfaceChanged: w="+w+",h="+h);
 		if (mCamera != null) {
 			mParams = mCamera.getParameters();
 			
@@ -331,10 +326,9 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		}
 	}
 
+	@DebugLog
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// the surface will be destroyed when we return, so stop the preview.
-		Log.d(tag, "surfaceDestroyed");
-
 		if (mCamera != null) {
 			mCamera.stopPreview();
 			mCamera.setPreviewCallback(null);
@@ -372,9 +366,9 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	}
 
 	/* ---------------------- AutoFocusCallback --------------------- */
+	@DebugLog
 	@Override
 	public void onAutoFocus(boolean success, Camera camera) {
-		Log.d(tag, "onAutoFocus()");
 		mAutoFocusHandler.postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
 		mFocusModeOn = false;
 	}

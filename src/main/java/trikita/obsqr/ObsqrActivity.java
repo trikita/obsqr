@@ -6,12 +6,13 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import hugo.weaving.DebugLog;
 
 import static trikita.knork.Knork.*;
 
@@ -131,11 +132,10 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		return super.onKeyDown(keyCode, event);
 	}
 
+	@DebugLog
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(tag, "onResume()");
-		
 		boolean success = mCameraPreview.acquireCamera(getWindowManager()
 			.getDefaultDisplay().getRotation());
 		if (!success) {
@@ -143,18 +143,17 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		}
 	}
 
+	@DebugLog
 	@Override
 	protected void onPause() {
-		super.onPause();
-		Log.d(tag, "onPause()");
-
 		cancel();
 		mCameraPreview.releaseCamera();
+		super.onPause();
 	}
 
+	@DebugLog
 	@Override
 	public void onBackPressed() {
-		Log.d(tag, "onBackPressed()");
 		if (mQrContent != null) {
 			cancel();
 		} else {
