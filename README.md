@@ -1,6 +1,8 @@
 obsqr - minimalistic QR scanner for Android
 ===========================================
 
+[![Build Status](https://travis-ci.org/trikita/obsqr.svg?branch=master)](https://travis-ci.org/trikita/obsqr)
+
 obsqr is a fast and lightweight QR scanner application for Android.
 
 ![Obsqr screenshot](http://i.imgur.com/zSb1Jib.png)
