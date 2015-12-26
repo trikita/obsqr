@@ -8,35 +8,34 @@ obsqr is a fast and lightweight QR scanner application for Android.
 Requirements
 ------------
 
-To make it run on your Android device you need to have Andoird 2.3 or higher,
+To make it run on your Android device you need to have Andoird 4.0 or higher,
 and of course your device should have a camera.
 
 Build
 -----
 
-obsqr uses zbar library to decode QR images. Zbar mirror is added as a subrepo
-so it's fetched automatically. Zbar sources are added to the jni directory as
-symlinks.
+obsqr uses zbar library to decode QR images. Zbar sources has been added into
+libzbar subdirectory, modified to be compiled with NDK, also added minimal
+iconv implementation.
 
-Update project accodring to your SDK version:
+Since Android NDK is still a second-class citizen - the best way to deal with
+native code is to build it manually, then copy `*.so` into `src/main/jniLibs`
+of the main project tree.
 
-	$ android update project -p . -t <your-target>
+To rebuild ZBar from the sources (optional step):
 
-Edit local.properties by specifying path to the NDK:
+	cd libzbar
+	export NDK_PATH=/path/to/your/ndk
+	NDK_PROJECT_PATH=$(pwd) $NDK_PATH/ndk-build
+	cp -rv libs/* ../src/main/jniLibs/
 
-	...
-	sdk.path=/path/to/sdk
-	ndk.path=/path/to/ndk
-	...
+To build obsqr APK:
 
-Finally, run ant to build obsqr:
+	./gradlew build
 
-	$ gradle build
+To run tests:
 
-After this step, you should get several `*.apk` files inside the `bin` directory.
-
-Supported architectures are ARM, ARMv7, MIPS and x86, also there is a "fat" APK
-for all architectures.
+	./gradlew check
 
 License
 -------
