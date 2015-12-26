@@ -35,7 +35,7 @@ To build obsqr APK:
 
 To run tests:
 
-	./gradlew check
+	./gradlew connectedAndroidTest
 
 License
 -------
