@@ -1,1 +1,0 @@
-../../../../zbar/zbar/window/null.c

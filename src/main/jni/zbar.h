@@ -1,1 +1,0 @@
-../../../zbar/include/zbar.h

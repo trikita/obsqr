@@ -1,1 +1,0 @@
-../zbar/zbar/qrcode/rs.c

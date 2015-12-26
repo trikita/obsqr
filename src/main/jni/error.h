@@ -1,1 +1,0 @@
-../../../zbar/zbar/error.h
