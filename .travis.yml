@@ -25,6 +25,9 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+script:
+  - ./gradlew build connectedZbarDebugAndroidTest
+
 deploy:
   provider: releases
   api_key: '$GITHUB_ACCESS_TOKEN'
