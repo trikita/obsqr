@@ -4,8 +4,9 @@
 
 #include "zbar.h"
 
-#include "trikita_obsqr_Zbar.h"
-JNIEXPORT jstring JNICALL Java_trikita_obsqr_Zbar_process
+#include "trikita_obsqr_QrDecoder.h"
+
+JNIEXPORT jstring JNICALL Java_trikita_obsqr_QrDecoder_decode
 	(JNIEnv *env, jobject obj, jint w, jint h, jbyteArray img) {
 
 	zbar_image_scanner_t *scanner;
