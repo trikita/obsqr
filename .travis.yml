@@ -18,3 +18,13 @@ before_script:
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
+
+deploy:
+  provider: releases
+  api_key: '$GITHUB_ACCESS_TOKEN'
+  file:
+    - build/outputs/apk/obsqrt-zbar-debug.apk
+    - build/outputs/apk/obsqrt-gmsvision-debug.apk
+  skip_cleanup: true
+  on:
+    tags: true
