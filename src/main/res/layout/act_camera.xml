@@ -51,7 +51,7 @@
 				android:paddingRight="16dp"
 				android:paddingBottom="16dp"
 				>
-				<TextView
+				<trikita.obsqr.MaterialButton
 					android:id="@+id/tv_horizontal_cancel"
 					android:layout_width="wrap_content"
 					android:layout_height="36dp"
@@ -63,7 +63,7 @@
 					android:paddingLeft="16dp"
 					android:paddingRight="16dp"
 					/>
-				<TextView
+				<trikita.obsqr.MaterialButton
 					android:minWidth="88dp"
 					android:id="@+id/tv_horizontal_action"
 					android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
 				android:paddingRight="16dp"
 				android:paddingBottom="16dp"
 				>
-				<TextView
+				<trikita.obsqr.MaterialButton
 					android:id="@+id/tv_vertical_action"
 					android:layout_width="wrap_content"
 					android:layout_height="36dp"
@@ -95,7 +95,7 @@
 					android:paddingLeft="16dp"
 					android:paddingRight="16dp"
 					/>
-				<TextView
+				<trikita.obsqr.MaterialButton
 					android:id="@+id/tv_vertical_cancel"
 					android:layout_width="wrap_content"
 					android:layout_height="36dp"
