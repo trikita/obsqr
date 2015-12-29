@@ -1,5 +1,7 @@
 package trikita.obsqr;
 
+import android.content.Context;
+
 /* This class provides a wrapper for launching zbar library function
  * that implements qr code recognition
  */
