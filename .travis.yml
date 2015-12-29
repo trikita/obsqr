@@ -30,10 +30,10 @@ script:
 
 deploy:
   provider: releases
-  api_key: '$GITHUB_ACCESS_TOKEN'
+  api_key: $GITHUB_ACCESS_TOKEN
   file:
-    - build/outputs/apk/obsqrt-zbar-debug.apk
-    - build/outputs/apk/obsqrt-gmsvision-debug.apk
+    - build/outputs/apk/obsqr-zbar-debug.apk
+    - build/outputs/apk/obsqr-gmsvision-debug.apk
   skip_cleanup: true
   on:
     tags: true
