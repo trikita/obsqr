@@ -31,18 +31,12 @@ android {
 		release {
 			minifyEnabled false
 			signingConfig signingConfigs.release
-			applicationVariants.all { variant ->
-				variant.outputs.each { output ->
-					output.outputFile = new File(output.outputFile.parentFile,
-							output.outputFile.name.replace(".apk", "-${variant.versionName}.apk"));
-				}
-			}
 		}
 	}
 
 	productFlavors {
 		zbar {
-			buildConfigField "boolean", "HAS_WIFI_PERMISSIONS", "true"
+			buildConfigField "boolean", "HAS_WIFI_PERMISSIONS", "false"
 		}
 		gmsvision {
 			buildConfigField "boolean", "HAS_WIFI_PERMISSIONS", "false"
@@ -62,6 +56,5 @@ dependencies {
 	compile 'co.trikita:knork:1.3.0'
 	gmsvisionCompile 'com.google.android.gms:play-services:8.1.0'
 }
-
 
 apply from: 'https://raw.github.com/trikita/gradle-android-signing/master/gradle-android-signing.gradle'
