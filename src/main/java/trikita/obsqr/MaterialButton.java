@@ -10,9 +10,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
 import android.animation.Animator;
 import android.os.Handler;
-import android.annotation.TargetApi;
 
-@TargetApi(11)
 public class MaterialButton extends TextView implements Animator.AnimatorListener {
 
 	private float mDownX;
