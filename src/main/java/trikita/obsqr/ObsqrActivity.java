@@ -47,7 +47,7 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.act_camera);
+		setContentView(R.layout.main);
 		inject(getWindow().getDecorView(), this);
 
 		mHorizontalCancelView.setText(mHorizontalCancelView.getText().toString().toUpperCase());
