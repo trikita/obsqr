@@ -31,7 +31,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	/* It'll be 2 sec between two autoFocus() calls */
 	private final static int AUTOFOCUS_FREQUENCY = 2000;
 
-	private final Zbar zbar = new Zbar();
+	private final QrDecoder mDecoder;
 
 	private SurfaceHolder mHolder;
 
@@ -46,7 +46,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 
 	private OnQrDecodedListener mOnQrDecodedListener;
 
-	private final Handler mAutoFocusHandler = new Handler();
 	private final Runnable mAutoFocusRunnable = new Runnable() {
 		@Override
 		public void run() {
@@ -73,6 +72,8 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	@DebugLog
 	public CameraPreview(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+
+		mDecoder = new QrDecoder(context);
 
 		SurfaceView mSurfaceView = new SurfaceView(context);
 		addView(mSurfaceView);
@@ -223,7 +224,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 			setCameraDisplayOrientation(rotation);
 			mCamera.startPreview();
 			mCamera.setPreviewCallback(this);
-			mAutoFocusHandler.postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
+			postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
 		} else {
 			mCamera = openCamera();
 			if (mCamera == null) {
@@ -283,7 +284,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	}
 
 	public void releaseCamera() {
-		mAutoFocusHandler.removeCallbacks(mAutoFocusRunnable);
+		removeCallbacks(mAutoFocusRunnable);
 		if (mCamera != null) {
 			mCamera.stopPreview();
 			mCamera.cancelAutoFocus();
@@ -322,7 +323,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 			mCamera.setParameters(mParams);
 			mCamera.startPreview();
 			// Launch autofocus mode 
-			mAutoFocusHandler.postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
+			postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
 		}
 	}
 
@@ -355,7 +356,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		}
 
 		// Get decoded string
-		String s = zbar.process(width, height, data);
+		String s = mDecoder.decode(width, height, data);
 		if (s != null) {
 			Log.d(tag, "============= URL: " + s + " =================");
 			mOnQrDecodedListener.onQrDecoded(s);
@@ -369,7 +370,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	@DebugLog
 	@Override
 	public void onAutoFocus(boolean success, Camera camera) {
-		mAutoFocusHandler.postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
+		postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);
 		mFocusModeOn = false;
 	}
 }

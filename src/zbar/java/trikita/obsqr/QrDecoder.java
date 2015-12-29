@@ -4,10 +4,12 @@ package trikita.obsqr;
  * that implements qr code recognition
  */
 
-public class Zbar {
+public class QrDecoder {
 	static {
 		System.loadLibrary("zbar");
 	}
 
-	public native String process(int width, int height, byte []imgData);
+	public QrDecoder(Context c) {}
+
+	public native String decode(int width, int height, byte []imgData);
 }
