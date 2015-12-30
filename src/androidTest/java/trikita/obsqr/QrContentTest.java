@@ -7,12 +7,13 @@ import java.util.Map;
 
 public class QrContentTest extends AndroidTestCase {
 
-	public void testFoo() {
+	public void testBrokenRegexp() {
 		String s = "http://qrs.ly/z24icxy";
 		assertFalse(s.matches(QrContent.GooglePlayContent.MATCH));
+		// For some reason, Moto G's String.match() caused ANR on this string
 		s = "https://play.google.com/store/apps/details?id=com.mvl.ThunderValley";
 		assertFalse(s.matches(QrContent.GooglePlayContent.MATCH));
-		assertFalse(s.matches(QrContent.WebUrlContent.MATCH));
+		assertTrue(s.matches(QrContent.WebUrlContent.MATCH));
 	}
 
 	public void testGooglePlayMatcher() {
@@ -34,7 +35,7 @@ public class QrContentTest extends AndroidTestCase {
 		for (Map.Entry<String, String> e : new HashMap<String, String>() {{
 			put("http://example.com", "http://example.com");
 			put("https://example.com", "https://example.com");
-//			put("ftp://example.com", "ftp://example.com");
+			put("ftp://example.com", null);
 			put("example.com", "http://example.com");
 			put("link to http://example.com", null);
 		}}.entrySet()) {
@@ -69,7 +70,7 @@ public class QrContentTest extends AndroidTestCase {
 		content = QrContent.from(getContext(), "smsto:+123456789");
 		content = QrContent.from(getContext(), "smsto:+18554407400:I am interested in using Scanova");
 		// SMSTO
-		assertTrue(content instanceof QrContent.SmsContent);
+		assertEquals(QrContent.SmsContent.class, content.getClass());
 	}
 
 	public void testPhoneNumberMatcher() {
@@ -82,19 +83,19 @@ public class QrContentTest extends AndroidTestCase {
 	public void testWifiMatcher() {
 		QrContent content;
 		content = QrContent.from(getContext(), "WIFI:S:Example;T:WPA;P:example123;;");
-		assertTrue(content instanceof QrContent.WifiContent);
+		assertEquals(QrContent.WifiContent.class, content.getClass());
 	}
 
 	public void testContactMatcher() {
 		QrContent content;
 		// TODO lots of other examples
 		content = QrContent.from(getContext(), "MECARD:N:John Doe;EMAIL:john@example.com;;");
-		assertTrue(content instanceof QrContent.ContactContent);
+		assertEquals(QrContent.ContactContent.class, content.getClass());
 	}
 
 	public void testGeolocationMatcher() {
 		QrContent content;
 		content = QrContent.from(getContext(), "geo:0,0");
-		assertTrue(content instanceof QrContent.GeoLocationContent);
+		assertEquals(QrContent.GeoLocationContent.class, content.getClass());
 	}
 }

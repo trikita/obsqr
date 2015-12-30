@@ -1,11 +1,13 @@
 package trikita.obsqr;
 
 import android.content.ActivityNotFoundException;
+import android.content.ClipboardManager;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
-import android.content.ClipboardManager;
 import android.content.Intent;
+import android.net.MailTo;
+import android.net.ParseException;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.text.Spannable;
@@ -91,28 +93,28 @@ public abstract class QrContent {
 		return Spannable.Factory.getInstance().newSpannable(s);
 	}
 
-    public static QrContent from(Context c, String s) {
-		System.out.println("from " + s + "|");
-		if (s.matches(GooglePlayContent.MATCH)) {
+	public static QrContent from(Context c, String s) {
+		String m = s.toLowerCase();
+		if (m.matches(GooglePlayContent.MATCH)) {
 			return new GooglePlayContent(c, s);
-		} else if (s.matches(WebUrlContent.MATCH)) {
+		} else if (m.matches(WebUrlContent.MATCH)) {
 			return new WebUrlContent(c, s);
-		} else if (s.matches(EmailContent.MATCH)) {
+		} else if (m.matches(EmailContent.MATCH)) {
 			return new EmailContent(c, s);
-		} else if (s.matches(PhoneNumberContent.MATCH)) {
+		} else if (m.matches(PhoneNumberContent.MATCH)) {
 			return new PhoneNumberContent(c, s);
-		} else if (s.matches(SmsContent.MATCH)) {
+		} else if (m.matches(SmsContent.MATCH)) {
 			return new SmsContent(c, s);
-		} else if (s.matches(ContactContent.MATCH)) {
+		} else if (m.matches(ContactContent.MATCH)) {
 			return new ContactContent(c, s);
-		} else if (s.matches(GeoLocationContent.MATCH)) {
+		} else if (m.matches(GeoLocationContent.MATCH)) {
 			return new GeoLocationContent(c, s);
-		} else if (s.matches(WifiContent.MATCH)) {
+		} else if (m.matches(WifiContent.MATCH)) {
 			return new WifiContent(c, s);
 		} else {
 			return new QrMixedContent(c, s);
 		}
-    }
+	}
 
 	/** Mixed content: plain text that may contain some URLs, emails etc */
 	static class QrMixedContent extends QrContent {
@@ -126,10 +128,7 @@ public abstract class QrContent {
 
 	/** Web URL */
 	static class WebUrlContent extends QrContent {
-		public final static String MATCH =
-			android.util.Patterns.WEB_URL.pattern();
-			//"(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?";
-			//"(https?://)?([-0-9A-Za-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?";
+		public final static String MATCH = android.util.Patterns.WEB_URL.pattern();
 		public WebUrlContent(Context c, String s) {
 			super(c, s, c.getString(R.string.title_url), c.getString(R.string.action_url), url(s));
 		}
@@ -145,12 +144,30 @@ public abstract class QrContent {
 	static class EmailContent extends QrContent {
 		public final static String MATCH = "mailto:(.*)";
 		public EmailContent(Context c, String s) {
-			super(c, s, c.getString(R.string.title_email), c.getString(R.string.action_email), spannable(s.substring(7)));
+			super(c, s, c.getString(R.string.title_email),
+					c.getString(R.string.action_email), getContent(c, s));
+		}
+		private static Spannable getContent(Context c, String s) {
+			try {
+				MailTo uri = MailTo.parse("mailto:" + s.substring(7));
+				System.out.println("" + uri.getTo());
+				return spannable(uri.getTo());
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return spannable(s);
+			}
 		}
 		public Intent getActionIntent() {
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_EMAIL, new String[]{content.toString()});
+			try {
+				MailTo uri = MailTo.parse("mailto:" + rawContent.substring(7));
+				intent.putExtra(Intent.EXTRA_EMAIL, uri.getTo());
+				intent.putExtra(Intent.EXTRA_SUBJECT, uri.getSubject());
+				intent.putExtra(Intent.EXTRA_TEXT, uri.getBody());
+			} catch (ParseException e) {
+				intent.putExtra(Intent.EXTRA_EMAIL, new String[]{content.toString()});
+			}
 			String text = context.getString(R.string.email_qr_send_dlg_title);
 			return Intent.createChooser(intent, text);
 		}
@@ -240,7 +257,7 @@ public abstract class QrContent {
 
 	/** Contact information */
 	static class ContactContent extends QrContent {
-		public final static String MATCH = "MECARD:(.*)";
+		public final static String MATCH = "mecard:(.*)";
 		private static String FIELDS[] = new String[]{"N", "TEL", "ADR", "EMAIL", "ORG"};
 		private static int FIELD_NAMES[] = new int[]{
 				R.string.contact_qr_name_title,
@@ -305,7 +322,7 @@ public abstract class QrContent {
 
 	/** WiFi access point */
 	static class WifiContent extends QrContent {
-		public final static String MATCH = "WIFI:(.*)";
+		public final static String MATCH = "wifi:(.*)";
 		private final static String[] FIELDS = new String[]{"T", "S", "P"};
 		private final static int[] FIELD_NAMES = new int[]{
 				R.string.wifi_qr_security_title,
