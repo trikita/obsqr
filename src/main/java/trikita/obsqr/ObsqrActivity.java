@@ -44,17 +44,20 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (mQrContent == null) {
-			return super.onKeyDown(keyCode, event);
+			return super.dispatchKeyEvent(event);
 		}
 		// Pressing DPAD, Volume keys or Camera key would call the QR action
-		switch (keyCode) {
+		switch (event.getKeyCode()) {
 			case KeyEvent.KEYCODE_DPAD_CENTER:
+			case KeyEvent.KEYCODE_CAMERA:
+			case KeyEvent.KEYCODE_VOLUME_UP:
+			case KeyEvent.KEYCODE_VOLUME_DOWN:
 				mQrContent.performAction();
 				return true;
 		}
-		return super.onKeyDown(keyCode, event);
+		return super.dispatchKeyEvent(event);
 	}
 
 	@DebugLog
