@@ -1,59 +1,62 @@
 package trikita.obsqr;
 
-import android.view.View;
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.Context;
-import android.widget.TextView;
-import android.util.Log;
+import android.content.ClipboardManager;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.text.Spannable;
+import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import android.content.Intent;
-import android.provider.ContactsContract;
-import android.widget.Toast;
-import java.util.List;
-import java.util.ArrayList;
-import android.content.ActivityNotFoundException;
-import android.net.Uri;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
 
 public abstract class QrContent {
+    public final String rawContent;
 
-	public final static String tag = "QrContent";
+    public final String title;
+    public final String action;
+    public final Spannable content;
 
-	protected Context mContext;
-	protected String mText;
+	protected final Context context;
 
-	abstract int getTitleStringId();
-	abstract int getActionStringId();
-	abstract void action();
+    private QrContent(Context c, String s, String title, String action, Spannable content) {
+		this.context = c;
+        this.rawContent = s;
+        this.action = action;
+        this.title = title;
+        this.content = content;
+    }
 
-	private QrContent(Context c, String s) {
-		mContext = c;
-		mText = s;
+    public void performAction() {
+		try {
+			context.startActivity(getActionIntent());
+		} catch (ActivityNotFoundException e) {
+			// FIXME: wrong string resource
+			Toast.makeText(context, context.getString(R.string.alert_msg_invalid_market_link),
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
-	public String getTitle() {
-		return mContext.getString(getTitleStringId());
+	public Intent getActionIntent() {
+		return new Intent(Intent.ACTION_VIEW, Uri.parse(rawContent));
 	}
 
-	public String getAction() {
-		return mContext.getString(getActionStringId());
-	}
+	// Helper utils: copy text to primary clipboard, split qr string into tokens etc
+    private static void copyToClipboard(Context context, String s) {
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        cm.setPrimaryClip(ClipData.newPlainText(ClipDescription.MIMETYPE_TEXT_PLAIN, s));
+		Toast.makeText(context, context.getString(R.string.text_qr_action_name),
+				Toast.LENGTH_LONG).show();
+    }
 
-	public View render() {
-		TextView tv = new TextView(mContext);
-		tv.setTextSize(14);
-		tv.setTextColor(0x8a000000);
-		tv.setText(mText);
-		return tv;
-	}
-
-	public String getText() {
-		return mText;
-	}
-
-	public static List<String> getTokens(String s) {
-		List<String> tokens = new ArrayList<>();
+	private static Map<String, String> parse(String s, String... keys) {
+		Map<String, String> tokens = new HashMap<>();
 
 		int len = s.length();
 		StringBuilder builder = new StringBuilder();
@@ -67,7 +70,12 @@ public abstract class QrContent {
 				escaped = false;
 			} else {
 				if (s.charAt(i) == ';') {
-					tokens.add(builder.toString());
+					String token = builder.toString();
+					for (String key : keys) {
+						if (token.startsWith(key+":")) {
+							tokens.put(key, token.substring(key.length()+1));
+						}
+					}
 					builder = new StringBuilder();
 				} else if (s.charAt(i) == '\\') {
 					escaped = true;
@@ -79,7 +87,12 @@ public abstract class QrContent {
 		return tokens;
 	}
 
-	public static QrContent from(Context c, String s) {
+	public static Spannable spannable(String s) {
+		return Spannable.Factory.getInstance().newSpannable(s);
+	}
+
+    public static QrContent from(Context c, String s) {
+		System.out.println("from " + s + "|");
 		if (s.matches(GooglePlayContent.MATCH)) {
 			return new GooglePlayContent(c, s);
 		} else if (s.matches(WebUrlContent.MATCH)) {
@@ -99,447 +112,228 @@ public abstract class QrContent {
 		} else {
 			return new QrMixedContent(c, s);
 		}
-	}
+    }
 
-	/**
-	 * Mixed content: plain text that may contain some URLs, emails etc
-	 */
+	/** Mixed content: plain text that may contain some URLs, emails etc */
 	static class QrMixedContent extends QrContent {
-
 		public QrMixedContent(Context c, String s) {
-			super(c, s);
+			super(c, s, c.getString(R.string.title_text), c.getString(R.string.action_text), spannable(s));
 		}
-		public int getTitleStringId() { return R.string.title_text; }
-		public int getActionStringId() { return R.string.action_text; }
-
-		public void action() {
-			Log.d(tag, "action: copy to clipboard " + mText);
-			ClipboardManager.newInstance(mContext).setText(mText);
-			Toast.makeText(mContext, mContext.getString(R.string.text_qr_action_name),
-					Toast.LENGTH_LONG).show();
+		public void performAction() {
+			copyToClipboard(context, rawContent);
 		}
 	}
 
-	/**
-	 * Web URL
-	 */
+	/** Web URL */
 	static class WebUrlContent extends QrContent {
-		public final static String MATCH = 
-			"(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?";
+		public final static String MATCH =
+			android.util.Patterns.WEB_URL.pattern();
+			//"(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?";
+			//"(https?://)?([-0-9A-Za-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?";
 		public WebUrlContent(Context c, String s) {
-			super(c, s);
+			super(c, s, c.getString(R.string.title_url), c.getString(R.string.action_url), url(s));
 		}
-
-		public int getTitleStringId() { return R.string.title_url; }
-		public int getActionStringId() { return R.string.action_url; }
-
-		public void action() {
-			String s = mText;
+		private static Spannable url(String s) {
 			if (!s.startsWith("http:") && !s.startsWith("https:") && !s.startsWith("ftp:")) {
 				s = "http://" + s;
 			}
-			mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(s)));
+			return spannable(s);
 		}
 	}
 
-	/**
-	 * E-mail address
-	 */
+	/** E-mail address */
 	static class EmailContent extends QrContent {
-		// "^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$"
 		public final static String MATCH = "mailto:(.*)";
 		public EmailContent(Context c, String s) {
-			super(c, s);
+			super(c, s, c.getString(R.string.title_email), c.getString(R.string.action_email), spannable(s.substring(7)));
 		}
-
-		public int getTitleStringId() { return R.string.title_email; }
-		public int getActionStringId() { return R.string.action_email; }
-
-		public void action() {
+		public Intent getActionIntent() {
 			Intent intent = new Intent(Intent.ACTION_SEND);
-			intent.setType("text/plain"); 
-			intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mText.substring(7)});
-			String text = mContext.getString(R.string.email_qr_send_dlg_title);
-			mContext.startActivity(Intent.createChooser(intent, text));
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_EMAIL, new String[]{content.toString()});
+			String text = context.getString(R.string.email_qr_send_dlg_title);
+			return Intent.createChooser(intent, text);
 		}
 	}
 
-	/**
-	 * SMS
-	 */
+	/** SMS */
 	static class SmsContent extends QrContent {
 		public final static String MATCH = "smsto:(.*)";
-		private String mOriginalUri;
 		public SmsContent(Context c, String s) {
-			super(c, s);
-			mOriginalUri = s;
-			mText = toString();
+			super(c, s, c.getString(R.string.title_sms), c.getString(R.string.action_sms), getContent(c, s));
 		}
-
-		public int getTitleStringId() { return R.string.title_sms; }
-		public int getActionStringId() { return R.string.action_sms; }
-
-		public void action() {
-			String[] s = mOriginalUri.split(":");
+		private static Spannable getContent(Context c, String raw) {
+			String[] s = raw.split(":");
+			String text = c.getString(R.string.sms_qr_phone_title);
+			String res = text + " " + s[1];
+			if (s.length > 2) {
+				text = c.getString(R.string.sms_qr_message_title);
+				res = res + "\n" + text + " " + s[2];
+			}
+			return spannable(res);
+		}
+		public Intent getActionIntent() {
+			String[] s = rawContent.split(":");
 			String uri= s[0] + ":" + s[1];
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(uri));
 			intent.putExtra("compose_mode", true);
-
 			if (s.length > 2) {
 				intent.putExtra("sms_body", s[2]);
 			}
-			mContext.startActivity(intent);
+			return intent;
 		}
-
-		public String toString() {
-			String[] s = mText.split(":");
-			String text = mContext.getString(R.string.sms_qr_phone_title);
-			String res = text + " " + s[1];
-			if (s.length > 2) {
-				text = mContext.getString(R.string.sms_qr_message_title);
-				res = res + "\n" + text + " " + s[2];
-			}
-			return res;
-		}
-
 	}
 
-	/**
-	 * Phone number
-	 */
+	/** Phone number */
 	static class PhoneNumberContent extends QrContent {
 		public final static String MATCH = "tel:(.*)";
-		private String mOriginalUri;
 		public PhoneNumberContent(Context c, String s) {
-			super(c, s);
-			mOriginalUri = s;
-			mText = s.substring(4);
+			super(c, s, c.getString(R.string.title_phone), c.getString(R.string.action_phone), spannable(s.substring(4)));
 		}
-
-		public int getTitleStringId() { return R.string.title_phone; }
-		public int getActionStringId() { return R.string.action_phone; }
-
-		public void action() {
-			mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(mOriginalUri)));
+		public Intent getActionIntent() {
+			return new Intent(Intent.ACTION_DIAL, Uri.parse(rawContent));
 		}
 	}
 
-	/**
-	 * Geolocation
-	 */
+	/** Geolocation */
 	static class GeoLocationContent extends QrContent {
 		public final static String MATCH = "geo:(.*)";
-		private boolean mIsValidData;
-		private String mOriginalGeoUri;
-
 		public GeoLocationContent(Context c, String s) {
-			super(c, s);
-			mOriginalGeoUri = s;
-			mText = toString();
+			super(c, s, c.getString(R.string.title_geo), c.getString(R.string.action_geo), spannable(getContent(c, s)));
 		}
-
-		public int getTitleStringId() { return R.string.title_geo; }
-		public int getActionStringId() { return R.string.action_geo; }
-
-		public String toString() {
-			String[] tokens = mText.substring(4).split("\\?q=");
+		private static String getContent(Context context, String s) {
+			String[] tokens = s.substring(4).split("\\?q=");
 			StringBuilder res = new StringBuilder();
 			if (tokens.length == 2 && tokens[1].length() > 0) {
-				res.append(mContext.getString(R.string.geo_qr_title_title) +
+				res.append(context.getString(R.string.geo_qr_title_title) +
 						" " + tokens[1] + "\n");
 			}
 
 			String[] params = tokens[0].split(",");
 			if (params.length < 2 || params.length > 3) {
-				return mContext.getString(R.string.unsupported_data_text);
+				return context.getString(R.string.unsupported_data_text);
 			}
 
 			try {
 				float latitude = Float.parseFloat(params[0]);
-				String southMark = mContext.getString(R.string.geo_qr_latitude_south);
-				String northMark = mContext.getString(R.string.geo_qr_latitude_north);
-				res.append(mContext.getString(R.string.geo_qr_latitude_title) +
+				String southMark = context.getString(R.string.geo_qr_latitude_south);
+				String northMark = context.getString(R.string.geo_qr_latitude_north);
+				res.append(context.getString(R.string.geo_qr_latitude_title) +
 						" " + Math.abs(latitude) + "\u00b0 " + (latitude < 0 ? southMark : northMark));
-				float longtitude = Float.parseFloat(params[1]);	
-				String westMark = mContext.getString(R.string.geo_qr_longitude_west);
-				String eastMark = mContext.getString(R.string.geo_qr_longitude_east);
-				res.append("\n" + mContext.getString(R.string.geo_qr_longitude_title) + 
+				float longtitude = Float.parseFloat(params[1]);
+				String westMark = context.getString(R.string.geo_qr_longitude_west);
+				String eastMark = context.getString(R.string.geo_qr_longitude_east);
+				res.append("\n" + context.getString(R.string.geo_qr_longitude_title) +
 						" " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? westMark : eastMark));
 				if (params.length == 3) {
-					float altitude = Float.parseFloat(params[2]);	
-					res.append("\n" + mContext.getString(R.string.geo_qr_altitude_title) + 
-							" " + altitude + " " + 
-							mContext.getString(R.string.geo_qr_altitude_suffix));
+					float altitude = Float.parseFloat(params[2]);
+					res.append("\n" + context.getString(R.string.geo_qr_altitude_title) +
+							" " + altitude + " " +
+							context.getString(R.string.geo_qr_altitude_suffix));
 				}
-				mIsValidData = true;
 				return res.toString();
 			} catch (NumberFormatException e) {
-				return mContext.getString(R.string.unsupported_data_text);
-			}
-		}
-
-		public void action() {
-			if (mIsValidData) {
-				mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mOriginalGeoUri)));
+				return context.getString(R.string.unsupported_data_text);
 			}
 		}
 	}
 
-	/**
-	 * Contact information
-	 */
+	/** Contact information */
 	static class ContactContent extends QrContent {
 		public final static String MATCH = "MECARD:(.*)";
-
-		private String mName;
-		private String mPhone;
-		private String mAddress;
-		private String mEmail;
-		private String mCompany;
+		private static String FIELDS[] = new String[]{"N", "TEL", "ADR", "EMAIL", "ORG"};
+		private static int FIELD_NAMES[] = new int[]{
+				R.string.contact_qr_name_title,
+				R.string.contact_qr_phone_title,
+				R.string.contact_qr_address_title,
+				R.string.contact_qr_email_title,
+				R.string.contact_qr_company_title,
+		};
+		private static String INTENT_FIELDS[] = new String[]{
+				ContactsContract.Intents.Insert.NAME,
+				ContactsContract.Intents.Insert.PHONE,
+				ContactsContract.Intents.Insert.POSTAL,
+				ContactsContract.Intents.Insert.EMAIL,
+				ContactsContract.Intents.Insert.COMPANY,
+		};
 
 		public ContactContent(Context c, String s) {
-			super(c, s);
-			mText = toString();
+			super(c, s, c.getString(R.string.title_contact), c.getString(R.string.action_contact), getContent(c, s));
 		}
 
-		public int getTitleStringId() { return R.string.title_contact; }
-		public int getActionStringId() { return R.string.action_contact; }
-
-		private void parseContact() {
-			String contact = mText.substring(7);
-
-			List<String> tokens = getTokens(contact);
-			for (String token : tokens) {
-				if (token.startsWith("N:")) {
-					mName = token.substring(2);
-				}
-				if (token.startsWith("TEL:")) {
-					mPhone = token.substring(4);
-				}
-				if (token.startsWith("ADR:")) {
-					mAddress = token.substring(4);
-				}
-				if (token.startsWith("EMAIL:")) {
-					mEmail = token.substring(6);
-				}
-				if (token.startsWith("ORG:")) {
-					mCompany = token.substring(4);
-				}
-			}
-		}
-
-		public String toString() {
-			parseContact();
-
+		private static Spannable getContent(Context c, String s) {
 			StringBuilder res = new StringBuilder();
-			String text;
-			if (mName != null) { 
-				text = mContext.getString(R.string.contact_qr_name_title);
-				res.append(text + " " + mName + "\n");
+			Map<String, String> tokens = parse(s.substring(7), FIELDS);
+			for (int i = 0; i < FIELDS.length; i++) {
+				if (tokens.get(FIELDS[i]) != null) {
+					res.append(c.getString(FIELD_NAMES[i])).append(" ")
+							.append(tokens.get(FIELDS[i])).append('\n');
+				}
 			}
-			if (mPhone != null) {
-				text = mContext.getString(R.string.contact_qr_phone_title);
-				res.append(text + " " + mPhone + "\n");
-			}
-			if (mAddress != null) {
-				text = mContext.getString(R.string.contact_qr_address_title);
-				res.append(text + " " + mAddress + "\n");
-			}
-			if (mEmail != null) {
-				text = mContext.getString(R.string.contact_qr_email_title);
-				res.append(text + " " + mEmail + "\n");
-			}
-			if (mCompany != null) { 
-				text = mContext.getString(R.string.contact_qr_company_title);
-				res.append(text + " " + mCompany);
-			}
-			return res.toString();
+			return spannable(res.toString());
 		}
 
-		public void action() {
+		public Intent getActionIntent() {
 			Intent intent = new Intent(Intent.ACTION_INSERT);
 			intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-			if (mName != null) {
-				intent.putExtra(ContactsContract.Intents.Insert.NAME, mName);
+			Map<String, String> tokens = parse(rawContent.substring(7), FIELDS);
+			for (int i = 0; i < FIELDS.length; i++) {
+				if (tokens.get(FIELDS[i]) != null) {
+					intent.putExtra(INTENT_FIELDS[i], tokens.get(FIELDS[i]));
+				}
 			}
-			if (mPhone != null) {
-				intent.putExtra(ContactsContract.Intents.Insert.PHONE, mPhone);
-			}
-			if (mAddress != null) {
-				intent.putExtra(ContactsContract.Intents.Insert.POSTAL, mAddress);
-			}
-			if (mEmail != null) {
-				intent.putExtra(ContactsContract.Intents.Insert.EMAIL, mEmail);
-			}
-			if (mCompany != null) {
-				intent.putExtra(ContactsContract.Intents.Insert.COMPANY, mCompany);
-			}
-			
-			mContext.startActivity(intent);
+			return intent;
 		}
 	}
 
-	/**
-	 * Google Play URL
-	 */
+	/** Google Play URL */
 	static class GooglePlayContent extends QrContent {
-		public final static String MATCH = "market://(.*)";
-		public final static String GOOGLEPLAY_ID = "market://details\\?id=(.*)";
+		public final static String MATCH = "market://(details\\?id=)?(.*)";
 
 		public GooglePlayContent(Context c, String s) {
-			super(c, s);
-			if (s.matches(GOOGLEPLAY_ID)) {
-				Matcher m = Pattern.compile(GOOGLEPLAY_ID).matcher(s);
-				m.find();
-				mText = m.group(1);
-			}
+			super(c, s, c.getString(R.string.title_market), c.getString(R.string.action_market), getContent(s));
 		}
-
-		public int getTitleStringId() { return R.string.title_market; }
-		public int getActionStringId() { return R.string.action_market; }
-
-		public void action() {
-			try {
-				mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mText)));
-			} catch (ActivityNotFoundException e) {
-				Toast.makeText(mContext, mContext.getResources()
-						.getString(R.string.alert_msg_invalid_market_link),
-						Toast.LENGTH_SHORT).show();
+		private static Spannable getContent(String s) {
+			Matcher m = Pattern.compile(MATCH).matcher(s);
+			if (m.matches() && m.group(1) != null) {
+				return spannable(m.group(2));
+			} else {
+				return spannable(s);
 			}
 		}
 	}
 
-	/**
-	 * WiFi access point
-	 */
+	/** WiFi access point */
 	static class WifiContent extends QrContent {
 		public final static String MATCH = "WIFI:(.*)";
-
-		private String mType;
-		private String mNetworkSsid;
-		private String mPassword;
-		private String mOriginalUri;
-
+		private final static String[] FIELDS = new String[]{"T", "S", "P"};
+		private final static int[] FIELD_NAMES = new int[]{
+				R.string.wifi_qr_security_title,
+				R.string.wifi_qr_ssid_title,
+				R.string.wifi_qr_password_title,
+		};
 		public WifiContent(Context c, String s) {
-			super(c, s);
-			mOriginalUri = s;
-			mText = toString();
+			super(c, s, c.getString(R.string.title_wifi), c.getString(R.string.action_wifi), getContent(c, s));
 		}
-
-		public int getTitleStringId() { return R.string.title_wifi; }
-		public int getActionStringId() {
-			return BuildConfig.HAS_WIFI_PERMISSIONS ?
-				R.string.action_wifi : R.string.action_text;
-		}
-
-		private void parseWifi() {
-			String wifi = mOriginalUri.substring(5);
-
-			List<String> tokens = getTokens(wifi);
-			for (String token : tokens) {
-				if (token.startsWith("T:")) {
-					mType = token.substring(2);
-				}
-				if (token.startsWith("S:")) {
-					mNetworkSsid = token.substring(2);
-				}
-				if (token.startsWith("P:")) {
-					mPassword = token.substring(2);
-				}
-				if (token.startsWith("H:")) {
-				}
-			}
-
-			if (mType == null) {
-				mType = "nopass";
-			}
-		}
-
-		public String toString() {
-			parseWifi();
-
+		public static Spannable getContent(Context context, String s) {
 			StringBuilder res = new StringBuilder();
-			String text;
-			if (mType != null) { 
-				text = mContext.getString(R.string.wifi_qr_security_title);
-				res.append(text + " " + mType + "\n");
-			}
-			if (mNetworkSsid != null) {
-				text = mContext.getString(R.string.wifi_qr_ssid_title);
-				res.append(text + " " + mNetworkSsid + "\n");
-			}
-			if (mPassword != null) {
-				text = mContext.getString(R.string.wifi_qr_password_title);
-				res.append(text + " " + mPassword + "\n");
-			}
-
-			return res.toString();
-		}
-
-		public void action() {
-			if (BuildConfig.HAS_WIFI_PERMISSIONS) {
-				actionConnect();
-			} else {
-				actionCopyPassword();
-			}
-		}
-
-		public void actionConnect() {
-			WifiConfiguration conf = new WifiConfiguration();
-			conf.SSID = "\"" + mNetworkSsid + "\"";
-
-			if (mType.equals("WEP")) {
-				if (mPassword.matches("[0-9A-Fa-f]+")) {
-					conf.wepKeys[0] = mPassword;
-				} else {
-					conf.wepKeys[0] = "\"" + mPassword + "\""; 
+			Map<String, String> tokens = parse(s.substring(5), FIELDS);
+			for (int i = 0; i < FIELDS.length; i++) {
+				if (tokens.get(FIELDS[i]) != null) {
+					res.append(context.getString(FIELD_NAMES[i])).append(' ')
+							.append(tokens.get(FIELDS[i])).append('\n');
 				}
-				conf.wepTxKeyIndex = 0;
-
-				conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-				conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-			} else if (mType.equals("WPA")) {
-				conf.preSharedKey = "\""+ mPassword +"\"";
-			} else if (mType.equals("nopass")) {
-				conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-			} else {
-				Log.d(tag, "failed to read wifi configuration");
-				return;
 			}
-
-			WifiManager wifiManager = (WifiManager) mContext
-				.getSystemService(Context.WIFI_SERVICE); 
-			if (!wifiManager.isWifiEnabled()) {
-				Log.d(tag, "enable wifi");
-				wifiManager.setWifiEnabled(true);
-			} else {
-				Log.d(tag, "wifi is already enabled");
-			}
-
-			int networkId = wifiManager.addNetwork(conf);
-			wifiManager.saveConfiguration();
-			if (networkId != -1) {
-				Log.d(tag, "added new network " + mNetworkSsid + " successfully");
-				if (wifiManager.enableNetwork(networkId, true)) {
-					Toast.makeText(mContext,
-						mContext.getString(R.string.alert_msg_wifi_connected),
-						Toast.LENGTH_LONG).show();
-					Log.d(tag, "connected to network " + mNetworkSsid + " successfully");
-				} else {
-					Toast.makeText(mContext,
-						mContext.getString(R.string.alert_msg_wifi_failed),
-						Toast.LENGTH_LONG).show();
-					Log.d(tag, "failed to connect to network " + mNetworkSsid);
-				}
-			} else {
-				Log.d(tag, "failed to add new wifi network");
-			}
+			return spannable(res.toString());
 		}
 
-		public void actionCopyPassword() {
-			ClipboardManager.newInstance(mContext).setText(mPassword);
-			Toast.makeText(mContext, mContext.getString(R.string.text_qr_action_name),
-					Toast.LENGTH_LONG).show();
+		public void performAction() {
+			String passwd = parse(rawContent.substring(5), FIELDS).get("P");
+			if (passwd != null) {
+				copyToClipboard(context, passwd);
+			}
+			// TODO open wifi settings
 		}
 	}
 }
+

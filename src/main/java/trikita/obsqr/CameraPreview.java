@@ -358,7 +358,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		// Get decoded string
 		String s = mDecoder.decode(width, height, data);
 		if (s != null) {
-			Log.d(tag, "============= URL: " + s + " =================");
 			mOnQrDecodedListener.onQrDecoded(s);
 		} else {
 			mOnQrDecodedListener.onQrNotFound();

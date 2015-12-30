@@ -1,112 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent" >
 	<trikita.obsqr.CameraPreview
 		android:id="@+id/surface"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		/>
-	<FrameLayout
-		android:id="@+id/container"
-		android:layout_height="match_parent"
-		android:layout_width="match_parent"
-		android:visibility="invisible"
-		android:padding="24dp"
-		>
-		<LinearLayout
-			android:id="@+id/dialog_inside"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:layout_gravity="center_horizontal|center_vertical"
-			android:background="@drawable/dialog_full_holo_light"
-			>
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:padding="24dp"
-				android:orientation="vertical"
-				>
-				<TextView
-					android:id="@+id/tv_title"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:textSize="20sp"
-					android:textColor="#df000000"
-					android:layout_marginBottom="5dp"
-					/>
-				<trikita.obsqr.WrappingScrollView
-					android:id="@+id/dialog_content"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					/>
-			</LinearLayout>
-			<LinearLayout
-				android:id="@+id/horizontal_buttons_container"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="right"
-				android:paddingLeft="16dp"
-				android:paddingRight="16dp"
-				android:paddingBottom="16dp"
-				>
-				<trikita.obsqr.MaterialButton
-					android:id="@+id/tv_horizontal_cancel"
-					android:layout_width="wrap_content"
-					android:layout_height="36dp"
-					android:gravity="center|center_vertical"
-					android:textColor="#8a000000"
-					android:textSize="14sp"
-					android:text="@string/dlg_alert_cancel_btn_caption"
-					android:minWidth="88dp"
-					android:paddingLeft="16dp"
-					android:paddingRight="16dp"
-					/>
-				<trikita.obsqr.MaterialButton
-					android:minWidth="88dp"
-					android:id="@+id/tv_horizontal_action"
-					android:layout_width="wrap_content"
-					android:layout_height="36dp"
-					android:textSize="14sp"
-					android:gravity="center|center_vertical"
-					android:textColor="#8a03a9f4"
-					android:paddingLeft="16dp"
-					android:paddingRight="16dp"
-					/>
-			</LinearLayout>
-			<LinearLayout
-				android:id="@+id/vertical_buttons_container"
-				android:orientation="vertical"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="right"
-				android:paddingLeft="16dp"
-				android:paddingRight="16dp"
-				android:paddingBottom="16dp"
-				>
-				<trikita.obsqr.MaterialButton
-					android:id="@+id/tv_vertical_action"
-					android:layout_width="wrap_content"
-					android:layout_height="36dp"
-					android:textSize="14sp"
-					android:gravity="right|center_vertical"
-					android:textColor="#8a03a9f4"
-					android:paddingLeft="16dp"
-					android:paddingRight="16dp"
-					/>
-				<trikita.obsqr.MaterialButton
-					android:id="@+id/tv_vertical_cancel"
-					android:layout_width="wrap_content"
-					android:layout_height="36dp"
-					android:gravity="right|center_vertical"
-					android:textColor="#8a000000"
-					android:textSize="14sp"
-					android:text="@string/dlg_alert_cancel_btn_caption"
-					android:paddingLeft="16dp"
-					android:paddingRight="16dp"
-					/>
-			</LinearLayout>
-		</LinearLayout>
-	</FrameLayout>
+	<include layout="@layout/dialog" />
 </FrameLayout>

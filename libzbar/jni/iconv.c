@@ -10,9 +10,8 @@ iconv_t iconv_open (const char *tocode, const char *fromcode) {
 size_t iconv (iconv_t cd, char **inbuf, size_t *inbytesleft, 
 		char **outbuf, size_t *outbytesleft) {
 	size_t sz = *inbytesleft;
+	memset(*outbuf, 0, *outbytesleft);
 	memcpy(*outbuf, *inbuf, sz);
-
-	__android_log_print(ANDROID_LOG_DEBUG, "zbar", "convert: %s, sz=%d", *inbuf, sz);
 
 	*inbuf += sz;
 	*outbuf += sz;

@@ -22,8 +22,8 @@ public class ZBarDecoderTest extends InstrumentationTestCase {
 			try {
 				Bitmap bitmap =
 					BitmapFactory.decodeResource(getInstrumentation().getContext().getResources(), qr.getKey());
-				String s = new QrDecoder(getInstrumentation().getContext())
-					.decode(bitmap.getWidth(), bitmap.getHeight(), nv21(bitmap));
+				String s = new String(new QrDecoder(getInstrumentation().getContext())
+					.decode(bitmap.getWidth(), bitmap.getHeight(), nv21(bitmap)));
 				assertEquals(qr.getValue(), s);
 			} catch (Exception e) {
 				e.printStackTrace();

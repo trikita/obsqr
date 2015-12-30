@@ -46,13 +46,14 @@ JNIEXPORT jstring JNICALL Java_trikita_obsqr_QrDecoder_decode
 
 	sym = zbar_image_first_symbol(zgrayimage);
 	if (sym != NULL) {
-		const char *sym_data;
-		sym_data = zbar_symbol_get_data(sym);
-		__android_log_print(ANDROID_LOG_DEBUG, "zbar", "url: %s", sym_data);
+		const char *sym_data = zbar_symbol_get_data(sym);
 		s = (*env)->NewStringUTF(env, sym_data);
 	}
 
+	zbar_image_scanner_destroy(scanner);
+
 	(*env)->ReleaseByteArrayElements(env, img, pixbuf, 0);
+
 	return s;
 }
 
