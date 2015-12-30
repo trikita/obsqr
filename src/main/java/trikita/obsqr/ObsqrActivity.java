@@ -3,12 +3,17 @@ package trikita.obsqr;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
 import hugo.weaving.DebugLog;
 
 public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecodedListener {
+
+	public final static int PERMISSIONS_REQUEST = 100;
 
 	private CameraPreview mCameraPreview;
 	private QrContentDialog mDialog;
@@ -26,6 +31,12 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		mDialog = (QrContentDialog) findViewById(R.id.container);
 
 		mCameraPreview.setOnQrDecodedListener(this);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+				requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSIONS_REQUEST);
+			}
+		}
 	}
 
 	@Override
@@ -64,6 +75,11 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+				return;
+			}
+		}
 		boolean success = mCameraPreview.acquireCamera(getWindowManager()
 			.getDefaultDisplay().getRotation());
 		if (!success) {
@@ -95,5 +111,16 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		if (!mDialog.close()) {
 			super.onBackPressed();
 		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		if (requestCode == PERMISSIONS_REQUEST &&
+				grantResults.length == 1 &&
+				grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			recreate();
+			return;
+		}
+		finish();
 	}
 }
