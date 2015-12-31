@@ -344,12 +344,12 @@ public abstract class QrContent {
 			return spannable(res.toString());
 		}
 
-		public void performAction() {
+		public Intent getActionIntent() {
 			String passwd = parse(rawContent.substring(5), FIELDS).get("P");
 			if (passwd != null) {
 				copyToClipboard(context, passwd);
 			}
-			// TODO open wifi settings
+			return new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
 		}
 	}
 }
