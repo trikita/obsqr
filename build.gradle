@@ -54,7 +54,7 @@ repositories {
 }
 
 dependencies {
-	gmsvisionCompile 'com.google.android.gms:play-services:9.0.2'
+	gmsvisionCompile 'com.google.android.gms:play-services-vision:9.0.2'
 }
 
 apply from: 'https://raw.github.com/trikita/gradle-android-signing/master/gradle-android-signing.gradle'
