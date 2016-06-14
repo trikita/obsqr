@@ -2,13 +2,10 @@ package trikita.obsqr;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.test.AndroidTestCase;
 import android.test.InstrumentationTestCase;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import trikita.obsqr.test.R;
 
 public class ZBarDecoderTest extends InstrumentationTestCase {
 

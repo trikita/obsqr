@@ -6,7 +6,6 @@ import android.util.SparseArray;
 
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 
 import java.nio.ByteBuffer;
