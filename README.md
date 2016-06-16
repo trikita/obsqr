@@ -21,7 +21,7 @@ libzbar subdirectory, modified to be compiled with NDK, also added minimal
 iconv implementation.
 
 Since Android NDK is still a second-class citizen - the best way to deal with
-native code is to build it manually, then copy `*.so` into `src/main/jniLibs`
+native code is to build it manually, then copy `*.so` into `src/zbar/jniLibs`
 of the main project tree.
 
 To rebuild ZBar from the sources (optional step):
@@ -29,7 +29,7 @@ To rebuild ZBar from the sources (optional step):
 	cd libzbar
 	export NDK_PATH=/path/to/your/ndk
 	NDK_PROJECT_PATH=$(pwd) $NDK_PATH/ndk-build
-	cp -rv libs/* ../src/main/jniLibs/
+	cp -rv libs/* ../src/zbar/jniLibs/
 
 To build obsqr APK:
 
