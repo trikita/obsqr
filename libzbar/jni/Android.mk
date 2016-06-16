@@ -24,13 +24,17 @@ LOCAL_MODULE    := zbar
 LOCAL_SRC_FILES := convert.c decoder.c error.c image.c img_scanner.c \
 	refcnt.c scanner.c symbol.c video.c window.c \
 	\
-	bch15_5.c binarize.c isaac.c qrdec.c qrdectxt.c rs.c util.c \
+	qrcode/bch15_5.c qrcode/binarize.c qrcode/isaac.c qrcode/qrdec.c \
+	qrcode/qrdectxt.c qrcode/rs.c qrcode/util.c \
 	\
-	processor/null.c video/null.c window/null.c decoder/qr_finder.c \
+	processor/null.c video/null.c window/null.c \
+	\
+	decoder/codabar.c decoder/code128.c decoder/code39.c decoder/code93.c \
+	decoder/databar.c decoder/ean.c decoder/i25.c decoder/qr_finder.c \
+	\
 	iconv.c trikita_zbar.c
 	
 LOCAL_CFLAGS := -I$(LOCAL_PATH) -I$(LOCAL_PATH)/$(LIBICONV)
 LOCAL_LDLIBS := -llog
 
 include $(BUILD_SHARED_LIBRARY)
-
