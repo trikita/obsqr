@@ -33,3 +33,7 @@ proguard/
 # JNI files
 /*/libs/
 /*/obj/
+
+# Signing
+signing.properties
+*.keystore
