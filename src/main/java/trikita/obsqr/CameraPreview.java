@@ -12,8 +12,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import hugo.weaving.DebugLog;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -68,7 +66,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		this(context, attrs, 0);
 	}
 
-	@DebugLog
 	public CameraPreview(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
@@ -88,7 +85,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		mOnQrDecodedListener = l; 
 	}
 
-	@DebugLog
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		// We purposely disregard child measurements because act as a
@@ -103,7 +99,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		}
 	}
 
-	@DebugLog
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		if (changed && getChildCount() > 0) {
@@ -149,7 +144,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		}
 	}
 
-	@DebugLog
 	private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
 		final double ASPECT_TOLERANCE = 0.1;
 		double targetRatio = (double) w / h;
@@ -184,9 +178,8 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		}
 		return optimalSize;
 	}
-	
-	@DebugLog
-	private void setCameraDisplayOrientation(int rotation) {
+
+    private void setCameraDisplayOrientation(int rotation) {
 		if (mCamera == null) return;
 
 		CameraInfo info = new CameraInfo();
@@ -217,7 +210,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		mCamera.setDisplayOrientation(result);
 	}
 
-	@DebugLog
 	public boolean acquireCamera(int rotation) {
 		if (mCamera != null) {
 			setCameraDisplayOrientation(rotation);
@@ -241,7 +233,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 			requestFocus();
 			setCameraDisplayOrientation(rotation);
 		}
-
 		return true;
 	}
 
@@ -291,7 +282,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	}
 
 	// ----------------------- SurfaceHolder.Callbacks ------------------- //
-	@DebugLog
 	public void surfaceCreated(SurfaceHolder holder) {
 		// the Surface has been created, acquire the camera and tell it where
 		// to draw.
@@ -309,7 +299,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		}
 	}
 
-	@DebugLog
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 		// now that the size is known, set up the camera parameters and begin
 		// the preview.
@@ -326,7 +315,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 		}
 	}
 
-	@DebugLog
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// the surface will be destroyed when we return, so stop the preview.
 		if (mCamera != null) {
@@ -365,7 +353,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback,
 	}
 
 	/* ---------------------- AutoFocusCallback --------------------- */
-	@DebugLog
 	@Override
 	public void onAutoFocus(boolean success, Camera camera) {
 		postDelayed(mAutoFocusRunnable, AUTOFOCUS_FREQUENCY);

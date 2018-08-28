@@ -1,3 +1,5 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 buildscript {
 	repositories {
 		jcenter()
@@ -6,56 +8,74 @@ buildscript {
 
 	dependencies {
 		classpath 'com.android.tools.build:gradle:3.1.4'
-		classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-	}
-}
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.jakewharton.hugo'
-
-android {
-	compileSdkVersion 28
-	buildToolsVersion "28.0.2"
-
-	signingConfigs {
-		release
-	}
-
-	defaultConfig {
-		minSdkVersion 15
-		targetSdkVersion 28
-		versionCode 16
-		versionName "3.0"
-	}
-
-	buildTypes {
-		release {
-			minifyEnabled false
-			signingConfig signingConfigs.release
-		}
-	}
-
-	productFlavors {
-		zbar {
-			buildConfigField "boolean", "HAS_WIFI_PERMISSIONS", "false"
-			applicationId 'trikita.obsqr'
-		}
-		gmsvision {
-			buildConfigField "boolean", "HAS_WIFI_PERMISSIONS", "false"
-			applicationId 'trikita.googleplay.obsqr'
-		}
-	}
-
-	lintOptions {
-		abortOnError false
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
 	}
 }
 
 repositories {
-	jcenter()
+    jcenter()
+    google()
+}
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 17
+        versionName "3.1"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    signingConfigs {
+        release
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            zipAlignEnabled true
+        }
+    }
+
+    flavorDimensions "null"
+
+    productFlavors {
+        zbar {
+            dimension "null"
+            buildConfigField "boolean", "HAS_WIFI_PERMISSIONS", "false"
+            applicationId 'trikita.obsqr'
+        }
+        gmsvision {
+            dimension "null"
+            buildConfigField "boolean", "HAS_WIFI_PERMISSIONS", "false"
+            applicationId 'trikita.googleplay.obsqr'
+        }
+    }
 }
 
 dependencies {
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+
 	gmsvisionImplementation 'com.google.android.gms:play-services-vision:15.0.2'
 }
 
