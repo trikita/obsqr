@@ -1,15 +1,15 @@
 package trikita.obsqr;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
-import android.animation.Animator;
-import android.os.Handler;
 
 public class MaterialButton extends TextView implements Animator.AnimatorListener {
 
@@ -98,12 +98,7 @@ public class MaterialButton extends TextView implements Animator.AnimatorListene
 
 	@Override
 	public boolean performClick() {
-		mHandler.postDelayed(new Runnable() {
-			public void run() {
-				MaterialButton.super.performClick();
-			}
-		}, 200);
+        mHandler.postDelayed(MaterialButton.super::performClick, 200);
 		return true;
 	}
 }
-

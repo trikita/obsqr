@@ -1,15 +1,12 @@
 package trikita.obsqr;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.Manifest;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
-
-import hugo.weaving.DebugLog;
 
 public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecodedListener {
 
@@ -27,8 +24,8 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		mCameraPreview = (CameraPreview) findViewById(R.id.surface);
-		mDialog = (QrContentDialog) findViewById(R.id.container);
+        mCameraPreview = findViewById(R.id.surface);
+        mDialog = findViewById(R.id.container);
 
 		mCameraPreview.setOnQrDecodedListener(this);
 
@@ -71,7 +68,6 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		return super.dispatchKeyEvent(event);
 	}
 
-	@DebugLog
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -86,18 +82,14 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 			new AlertDialog.Builder(this)
 					.setMessage(getString(R.string.dlg_alert_msg))
 					.setCancelable(false)
-					.setPositiveButton(getString(R.string.dlg_alert_ok_btn_caption),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									ObsqrActivity.this.finish();
-									dialog.dismiss();
-								}
-							})
+                    .setPositiveButton(getString(R.string.dlg_alert_ok_btn_caption), (dialog, id) -> {
+                        ObsqrActivity.this.finish();
+                        dialog.dismiss();
+                    })
 					.create().show();
 		}
 	}
 
-	@DebugLog
 	@Override
 	protected void onPause() {
 		mDialog.close();
@@ -105,7 +97,6 @@ public class ObsqrActivity extends Activity implements CameraPreview.OnQrDecoded
 		super.onPause();
 	}
 
-	@DebugLog
 	@Override
 	public void onBackPressed() {
 		if (!mDialog.close()) {

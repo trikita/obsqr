@@ -14,11 +14,7 @@ public class QrContentDialog extends FrameLayout {
 
 	public final static int MAX_HORIZONTAL_BUTTON_TEXT_LENGTH = 12;
 
-	private Runnable mCloseDialogRunnable = new Runnable() {
-		public void run() {
-			close();
-		}
-	};
+    private Runnable mCloseDialogRunnable = this::close;
 	private QrContent mContent;
 
 	private TextView mTitleText;
@@ -40,20 +36,12 @@ public class QrContentDialog extends FrameLayout {
 
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-		mTitleText = (TextView) findViewById(R.id.tv_title);
-		mContentText = (TextView) findViewById(R.id.tv_content);
-		mActionButton = (TextView) findViewById(R.id.btn_action);
-		mActionButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				QrContentDialog.this.performAction();
-			}
-		});
-		mCancelButton = (TextView) findViewById(R.id.btn_cancel);
-		mCancelButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				QrContentDialog.this.close();
-			}
-		});
+        mTitleText = findViewById(R.id.tv_title);
+        mContentText = findViewById(R.id.tv_content);
+        mActionButton = findViewById(R.id.btn_action);
+        mActionButton.setOnClickListener(v -> QrContentDialog.this.performAction());
+        mCancelButton = findViewById(R.id.btn_cancel);
+        mCancelButton.setOnClickListener(v -> QrContentDialog.this.close());
 	}
 
 	public void open(QrContent content) {
@@ -93,4 +81,3 @@ public class QrContentDialog extends FrameLayout {
 		}
 	}
 }
-

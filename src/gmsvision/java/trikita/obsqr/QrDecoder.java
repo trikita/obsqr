@@ -4,9 +4,9 @@ import android.content.Context;
 import android.graphics.ImageFormat;
 import android.util.SparseArray;
 
+import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.android.gms.vision.Frame;
 
 import java.nio.ByteBuffer;
 
@@ -35,4 +35,3 @@ public class QrDecoder {
 		return result;
 	}
 }
-

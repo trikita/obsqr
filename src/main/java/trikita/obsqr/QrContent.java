@@ -1,9 +1,9 @@
 package trikita.obsqr;
 
 import android.content.ActivityNotFoundException;
-import android.content.ClipboardManager;
 import android.content.ClipData;
 import android.content.ClipDescription;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.MailTo;
@@ -235,18 +235,16 @@ public abstract class QrContent {
 				float latitude = Float.parseFloat(params[0]);
 				String southMark = context.getString(R.string.geo_qr_latitude_south);
 				String northMark = context.getString(R.string.geo_qr_latitude_north);
-				res.append(context.getString(R.string.geo_qr_latitude_title) +
-						" " + Math.abs(latitude) + "\u00b0 " + (latitude < 0 ? southMark : northMark));
-				float longtitude = Float.parseFloat(params[1]);
+                res.append(context.getString(R.string.geo_qr_latitude_title)).append(" ")
+                        .append(Math.abs(latitude)).append("\u00b0 ").append(latitude < 0 ? southMark : northMark);
+                float longitude = Float.parseFloat(params[1]);
 				String westMark = context.getString(R.string.geo_qr_longitude_west);
 				String eastMark = context.getString(R.string.geo_qr_longitude_east);
-				res.append("\n" + context.getString(R.string.geo_qr_longitude_title) +
-						" " + Math.abs(longtitude) + "\u00b0 " + (longtitude < 0 ? westMark : eastMark));
+                res.append("\n").append(context.getString(R.string.geo_qr_longitude_title)).append(" ")
+                        .append(Math.abs(longitude)).append("\u00b0 ").append(longitude < 0 ? westMark : eastMark);
 				if (params.length == 3) {
 					float altitude = Float.parseFloat(params[2]);
-					res.append("\n" + context.getString(R.string.geo_qr_altitude_title) +
-							" " + altitude + " " +
-							context.getString(R.string.geo_qr_altitude_suffix));
+                    res.append("\n").append(context.getString(R.string.geo_qr_altitude_title)).append(" ").append(altitude).append(" ").append(context.getString(R.string.geo_qr_altitude_suffix));
 				}
 				return res.toString();
 			} catch (NumberFormatException e) {
@@ -353,4 +351,3 @@ public abstract class QrContent {
 		}
 	}
 }
-

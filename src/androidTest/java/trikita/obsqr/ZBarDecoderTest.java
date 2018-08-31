@@ -1,13 +1,28 @@
 package trikita.obsqr;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.test.InstrumentationTestCase;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ZBarDecoderTest extends InstrumentationTestCase {
+import static org.junit.Assert.assertEquals;
+
+@RunWith(AndroidJUnit4.class)
+public class ZBarDecoderTest {
+    @Test
+    public void useAppContext() {
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+
+        assertEquals("trikita.obsqr", appContext.getPackageName());
+    }
 
 	public void testBitmaps() {
 		Map<Integer, String> qrs = new HashMap<Integer, String>() {{
@@ -19,8 +34,8 @@ public class ZBarDecoderTest extends InstrumentationTestCase {
 			try {
 				Bitmap bitmap =
 					BitmapFactory.decodeResource(getInstrumentation().getContext().getResources(), qr.getKey());
-				String s = new String(new QrDecoder(getInstrumentation().getContext())
-					.decode(bitmap.getWidth(), bitmap.getHeight(), nv21(bitmap)));
+                String s = new QrDecoder(getInstrumentation().getContext())
+                        .decode(bitmap.getWidth(), bitmap.getHeight(), nv21(bitmap));
 				assertEquals(qr.getValue(), s);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -43,14 +58,14 @@ public class ZBarDecoderTest extends InstrumentationTestCase {
 		int frameSize = width * height;
 		int yIndex = 0;
 		int uvIndex = frameSize;
-		int a, R, G, B, Y, U, V;
+        int A, R, G, B, Y, U, V;
 		int index = 0;
 		for (int j = 0; j < height; j++) {
 			for (int i = 0; i < width; i++) {
-				a = (argb[index] & 0xff000000) >> 24;
+                A = (argb[index] & 0xff000000) >> 24;
 				R = (argb[index] & 0xff0000) >> 16;
 				G = (argb[index] & 0xff00) >> 8;
-				B = (argb[index] & 0xff) >> 0;
+                B = (argb[index] & 0xff);
 
 				Y = ( (  66 * R + 129 * G +  25 * B + 128) >> 8) +  16;
 				U = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
