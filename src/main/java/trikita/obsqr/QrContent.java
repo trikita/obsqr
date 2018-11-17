@@ -133,7 +133,8 @@ public abstract class QrContent {
 			super(c, s, c.getString(R.string.title_url), c.getString(R.string.action_url), url(s));
 		}
 		private static Spannable url(String s) {
-			if (!s.startsWith("http:") && !s.startsWith("https:") && !s.startsWith("ftp:")) {
+			String lowerUrl = s.toLowerCase();
+			if (!lowerUrl.startsWith("http:") && !lowerUrl.startsWith("https:") && !lowerUrl.startsWith("ftp:")) {
 				s = "http://" + s;
 			}
 			return spannable(s);
