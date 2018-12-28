@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Obsqr</string>
+
+	<!-- Help prompts -->
+	<string name="action_text">Copier dans le presse-papiers</string>
+	<string name="action_contact">Voir les contacts</string>
+	<string name="action_market">Montrer dans le Google Play</string>
+	<string name="action_phone">Ouvrir le clavier</string>
+	<string name="action_geo">Voir sur une carte</string>
+	<string name="action_sms">Envoyer un SMS</string>
+	<string name="action_email">Envoyer un courriel</string>
+	<string name="action_url">Ouvrir</string>
+	<string name="action_wifi">Connecter</string>
+
+	<!-- QR types -->
+	<string name="title_text">Texte brut</string>
+	<string name="title_contact">Information du Contact</string>
+	<string name="title_market">Application sur le Market</string>
+	<string name="title_phone">Numéro de téléphone</string>
+	<string name="title_geo">Géo-localisation</string>
+	<string name="title_sms">SMS</string>
+	<string name="title_email">Courriel</string>
+	<string name="title_url">URL</string>
+	<string name="title_wifi">Point d\'accès Wi-Fi</string>
+
+	<string name="unsupported_data_text">Type de donnée non supporté</string>
+
+	<!-- Plain text -->
+	<string name="text_qr_action_name">Copier le texte dans le presse-papiers</string>
+
+	<!-- Contact information -->
+	<string name="contact_qr_name_title">Nom :</string>
+	<string name="contact_qr_phone_title">Téléphone :</string>
+	<string name="contact_qr_address_title">Adresse :</string>
+	<string name="contact_qr_email_title">Courriel :</string>
+	<string name="contact_qr_company_title">Compagnie :</string>
+
+	<!-- Geolocation -->
+	<string name="geo_qr_title_title">Titre :</string>
+	<string name="geo_qr_latitude_title">Latitude :</string>
+	<string name="geo_qr_latitude_south">S</string>
+	<string name="geo_qr_latitude_north">N</string>
+	<string name="geo_qr_longitude_title">Longitude :</string>
+	<string name="geo_qr_longitude_west">O</string>
+	<string name="geo_qr_longitude_east">E</string>
+	<string name="geo_qr_altitude_title">Altitude :</string>
+	<string name="geo_qr_altitude_suffix">mètres</string>
+
+	<!-- SMS -->
+	<string name="sms_qr_phone_title">Numéro de téléphone :</string>
+	<string name="sms_qr_message_title">Texte :</string>
+
+	<!-- Email -->
+	<string name="email_qr_send_dlg_title">Envoyer le courriel avec...</string>
+
+	<!-- WiFi-->
+	<string name="wifi_qr_security_title">Sécurité</string>
+	<string name="wifi_qr_ssid_title">SSID du réseau</string>
+	<string name="wifi_qr_password_title">Mot de passe</string>
+
+	<!-- Dialogs and alerts -->
+	<string name="dlg_alert_msg">Impossible d\'ouvrir un appareil photo</string>
+	<string name="dlg_alert_ok_btn_caption">OK</string>
+	<string name="dlg_alert_cancel_btn_caption">Annuler</string>
+
+	<string name="alert_msg_invalid_market_link">Impossible d\'ouvrir Google Play</string>
+	<string name="alert_msg_activity_not_found">Application introuvable</string>
+	<string name="alert_msg_wifi_connected">Connecté avec succès</string>
+	<string name="alert_msg_wifi_failed">Connexion impossible</string>
+</resources>
