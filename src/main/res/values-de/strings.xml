@@ -5,19 +5,19 @@
 	<!-- German translation by bl4ckb1rd @ XDA -->	
 	<!-- Help prompts -->
 	<string name="action_text">kopieren</string>
-	<string name="action_contact">anzuzeigen</string>
+	<string name="action_contact">anzeigen</string>
 	<string name="action_market">öffnen in Google Play</string>
-	<string name="action_phone">anzurufen</string>
-	<string name="action_geo">anzuzeigen den Standort</string>
-	<string name="action_sms">senden eine Nachricht</string>
-	<string name="action_email">senden eine E-Mail</string>
-	<string name="action_url">folgen dem Link</string>
+	<string name="action_phone">anrufen</string>
+	<string name="action_geo">Standort anzeigen</string>
+	<string name="action_sms">Nachricht senden</string>
+	<string name="action_email">E-Mail senden </string>
+	<string name="action_url">Link folgen</string>
 	<string name="action_wifi">verbinden</string>
 
 	<!-- QR types -->
 	<string name="title_text">Klartext</string>
 	<string name="title_contact">Kontaktinformationen</string>
-	<string name="title_market">Anwenung im Market</string>
+	<string name="title_market">Anwendung im Markt</string>
 	<string name="title_phone">Telefonnummer</string>
 	<string name="title_geo">Geolocation</string>
 	<string name="title_sms">SMS</string>
@@ -25,7 +25,7 @@
 	<string name="title_url">URL</string>
 	<string name="title_wifi">Wi-Fi-Zugangspunkt</string>
 
-	<string name="unsupported_data_text">Unbekannter Datentype</string>
+	<string name="unsupported_data_text">Unbekannter Datentyp</string>
 
 	<!-- Plain text -->
 	<string name="text_qr_action_name">Text in die Zwischenablage kopiert</string>
